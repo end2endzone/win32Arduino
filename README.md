@@ -3,7 +3,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github Releases](https://img.shields.io/github/release/end2endzone/win32Arduino.svg)](https://github.com/end2endzone/win32Arduino/releases)
-[![Build status](https://ci.appveyor.com/api/projects/status/q9k0ebb971o475qi/branch/master?svg=true)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/4jhi6oqgaji5e7pl/branch/master?svg=true)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master)
 [![Tests status](https://img.shields.io/appveyor/tests/end2endzone/win32Arduino/master.svg)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master/tests)
 
 AppVeyor build statistics:
