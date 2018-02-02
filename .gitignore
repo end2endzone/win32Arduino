@@ -1,0 +1,15 @@
+/src/*.ncb
+/src/*.sdf
+/src/*.suo
+/src/win32arduino/Win32/Debug
+/src/win32arduino/Win32/Release
+/src/bin
+/src/testWin32Arduino/Win32/Debug
+/src/testWin32Arduino/arduino.log
+/src/ipch
+/src/win32arduino/*.user
+/src/testWin32Arduino/*.user
+/src/testWin32Arduino/testWin32Arduino.testResults.xml
+/src/testWin32Arduino/bar.log
+/src/testWin32Arduino/foo.log
+/src/*.opensdf
