@@ -26,9 +26,6 @@
     <ClInclude Include="arduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="arduinoBaseTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SerialPrinter.h">
       <Filter>Header Files</Filter>
     </ClInclude>

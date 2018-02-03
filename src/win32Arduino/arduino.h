@@ -4,14 +4,14 @@
 #include <stdio.h>
 #include <sstream>
 #include <time.h>
+#include <stdint.h>
 
-#include "arduinoBaseTypes.h"
 #include "SerialPrinter.h"
 
 namespace arduino_stub
 {
   //realtime millis() support
-  static clock_t app_clock_init();  
+  static clock_t app_clock_init();
   static double diffclock(clock_t clockEnd,clock_t clockStart);
 
   //last command support
@@ -29,6 +29,8 @@ namespace arduino_stub
   void setMicrosResolution(uint32_t iResolution);
   void setMicrosCounter(uint32_t iCounter);
 }
+
+typedef unsigned char byte;
 
 //digital read/write
 #define HIGH 1

@@ -1,7 +1,7 @@
 #ifndef WIN32_SERIALPRINTER_H
 #define WIN32_SERIALPRINTER_H
 
-#include "arduinoBaseTypes.h"
+#include "arduino.h"
 
 class SerialPrinter
 {
