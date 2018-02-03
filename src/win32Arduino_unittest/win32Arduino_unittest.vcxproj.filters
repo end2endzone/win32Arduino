@@ -30,6 +30,9 @@
     <ClCompile Include="gtesthelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestGetLastCommand.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="demo.h">
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="gtesthelper.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestGetLastCommand.h">
+      <Filter>tests</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
