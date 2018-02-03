@@ -1,1 +1,1 @@
-!define PRODUCT_VERSION "1.3.40"
+!define PRODUCT_VERSION "1.4.0"
