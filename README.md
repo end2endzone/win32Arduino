@@ -49,11 +49,11 @@ Test are automatically build when building the solution. Please see the '*build 
 Test can be executed from the following two locations:
 
 1) From the Visual Studio IDE:
-   1) Select the project '*win32Arduino_unittest*' as StartUp project.
+   1) Select the project '*testWin32Arduino*' as StartUp project.
    2) Hit CTRL+F5 (Start Without Debugging)
 2) From the output binaries folder:
-   1) Open a file navigator and browse to the output folder(for example c:\projects\win32Arduino\msvc\Win32\Release)
-   2) Run the '*win32Arduino_unittest.exe*' executable.
+   1) Open a file navigator and browse to the output folder(for example c:\projects\win32Arduino\src\bin\Win32\Release)
+   2) Run the '*testWin32Arduino.exe*' executable.
 
 See also the latest test results at the beginning of the document.
 
