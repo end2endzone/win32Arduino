@@ -1,7 +1,7 @@
 #undef max
 #undef min
 
-#include "Tests.h"
+#include "TestWin32Arduino.h"
 #include <string>
 #include "arduino.h"
 #include "demo.h"
@@ -10,15 +10,15 @@ namespace arduino { namespace test
 {
 
   //--------------------------------------------------------------------------------------------------
-  void Tests::SetUp()
+  void TestWin32Arduino::SetUp()
   {
   }
   //--------------------------------------------------------------------------------------------------
-  void Tests::TearDown()
+  void TestWin32Arduino::TearDown()
   {
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testDigitalPinString)
+  TEST_F(TestWin32Arduino, testDigitalPinString)
   {
     std::string sHIGH = toDigitalPinString(HIGH);
     std::string sLOW = toDigitalPinString(LOW);
@@ -29,7 +29,7 @@ namespace arduino { namespace test
     ASSERT_TRUE(sHIGH != sOTHER && sLOW != sOTHER);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testBitOrderString)
+  TEST_F(TestWin32Arduino, testBitOrderString)
   {
     std::string sMSBFIRST = toBitOrderString(MSBFIRST);
     std::string sLSBFIRST = toBitOrderString(LSBFIRST);
@@ -40,7 +40,7 @@ namespace arduino { namespace test
     ASSERT_TRUE(sMSBFIRST != sOTHER && sLSBFIRST != sOTHER);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testPinModeString)
+  TEST_F(TestWin32Arduino, testPinModeString)
   {
     std::string sOUTPUT = toPinModeString(OUTPUT);
     std::string sINPUT = toPinModeString(INPUT);
@@ -53,7 +53,7 @@ namespace arduino { namespace test
     ASSERT_TRUE(sOUTPUT != sOTHER && sINPUT != sOTHER && sINPUT_PULLUP != sOTHER);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testPinMode)
+  TEST_F(TestWin32Arduino, testPinMode)
   {
     pinMode(13, OUTPUT);      // sets the digital pin 13 as output
     std::string pinOutput = arduino_stub::getLastCommand();
@@ -64,7 +64,7 @@ namespace arduino { namespace test
     ASSERT_EQ("pinMode(13, INPUT);\n", pinInput);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testDigitalWrite)
+  TEST_F(TestWin32Arduino, testDigitalWrite)
   {
     std::string lastCall;
 
@@ -77,7 +77,7 @@ namespace arduino { namespace test
     ASSERT_EQ("digitalWrite(13, LOW);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testAnalogWrite)
+  TEST_F(TestWin32Arduino, testAnalogWrite)
   {
     std::string lastCall;
 
@@ -90,7 +90,7 @@ namespace arduino { namespace test
     ASSERT_EQ("analogWrite(13, 255);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testDigitalRead)
+  TEST_F(TestWin32Arduino, testDigitalRead)
   {
     std::string lastCall;
     uint8_t value;
@@ -100,7 +100,7 @@ namespace arduino { namespace test
     ASSERT_EQ("digitalRead(13);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testAnalogRead)
+  TEST_F(TestWin32Arduino, testAnalogRead)
   {
     std::string lastCall;
     uint16_t value;
@@ -110,7 +110,7 @@ namespace arduino { namespace test
     ASSERT_EQ("analogRead(13);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testAnalogReadResolution)
+  TEST_F(TestWin32Arduino, testAnalogReadResolution)
   {
     std::string lastCall;
 
@@ -119,7 +119,7 @@ namespace arduino { namespace test
     ASSERT_EQ("analogReadResolution(8);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testAnalogWriteResolution)
+  TEST_F(TestWin32Arduino, testAnalogWriteResolution)
   {
     std::string lastCall;
 
@@ -128,7 +128,7 @@ namespace arduino { namespace test
     ASSERT_EQ("analogWriteResolution(7);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testShiftOut)
+  TEST_F(TestWin32Arduino, testShiftOut)
   {
     std::string lastCall;
 
@@ -141,7 +141,7 @@ namespace arduino { namespace test
     ASSERT_EQ("shiftOut(5, 6, LSBFIRST, 99);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testShiftIn)
+  TEST_F(TestWin32Arduino, testShiftIn)
   {
     std::string lastCall;
     uint8_t value;
@@ -155,7 +155,7 @@ namespace arduino { namespace test
     ASSERT_EQ("shiftIn(5, 6, LSBFIRST);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testPulseIn)
+  TEST_F(TestWin32Arduino, testPulseIn)
   {
     std::string lastCall;
     uint32_t value;
@@ -169,7 +169,7 @@ namespace arduino { namespace test
     ASSERT_EQ("pulseIn(4, LOW);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testMicrosRealtime)
+  TEST_F(TestWin32Arduino, testMicrosRealtime)
   {
     arduino_stub::setClockStrategy(arduino_stub::CLOCK_REALTIME);
     std::string lastCall;
@@ -187,7 +187,7 @@ namespace arduino { namespace test
     ASSERT_NEAR(10000, elapsedMicros, 5000); //no usec precision, only milliseconds. Allows 5ms diff
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testMillisRealtime)
+  TEST_F(TestWin32Arduino, testMillisRealtime)
   {
     arduino_stub::setClockStrategy(arduino_stub::CLOCK_REALTIME);
     std::string lastCall;
@@ -205,7 +205,7 @@ namespace arduino { namespace test
     ASSERT_NEAR(30, elapsedMillis, 4); //4ms epsilon
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testMicrosSimulation)
+  TEST_F(TestWin32Arduino, testMicrosSimulation)
   {
     arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
     std::string lastCall;
@@ -223,7 +223,7 @@ namespace arduino { namespace test
     ASSERT_NEAR(10000, elapsedMicros, 10); //10 usec max epsilon (emulated)
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testMillisSimulation)
+  TEST_F(TestWin32Arduino, testMillisSimulation)
   {
     arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
     std::string lastCall;
@@ -241,7 +241,7 @@ namespace arduino { namespace test
     ASSERT_EQ(30, elapsedMillis); //0ms epsilon
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testMath)
+  TEST_F(TestWin32Arduino, testMath)
   {
     std::string lastCall;
 
@@ -261,7 +261,7 @@ namespace arduino { namespace test
     ASSERT_EQ(10, map(1, 0, 10, 0, 100));
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testInterruptModeString)
+  TEST_F(TestWin32Arduino, testInterruptModeString)
   {
     std::string sCHANGE = toInterruptModeString(CHANGE);
     std::string sRISING = toInterruptModeString(RISING);
@@ -280,7 +280,7 @@ namespace arduino { namespace test
   void myInterruptFunction()
   {
   }
-  TEST_F(Tests, testAttachInterrupt)
+  TEST_F(TestWin32Arduino, testAttachInterrupt)
   {
     std::string lastCall;
 
@@ -290,7 +290,7 @@ namespace arduino { namespace test
     ASSERT_NE(std::string::npos, lastCall.find(", RISING);"));
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testDetachInterrupt)
+  TEST_F(TestWin32Arduino, testDetachInterrupt)
   {
     std::string lastCall;
 
@@ -299,7 +299,7 @@ namespace arduino { namespace test
     ASSERT_EQ("detachInterrupt(3);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testNoInterrupts)
+  TEST_F(TestWin32Arduino, testNoInterrupts)
   {
     std::string lastCall;
 
@@ -308,7 +308,7 @@ namespace arduino { namespace test
     ASSERT_EQ("noInterrupts();\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testInterrupts)
+  TEST_F(TestWin32Arduino, testInterrupts)
   {
     std::string lastCall;
 
@@ -317,7 +317,7 @@ namespace arduino { namespace test
     ASSERT_EQ("interrupts();\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testRandom)
+  TEST_F(TestWin32Arduino, testRandom)
   {
     int16_t seed = 0x5656;
     randomSeed(seed);
@@ -370,7 +370,7 @@ namespace arduino { namespace test
 
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testBitsAndBytes)
+  TEST_F(TestWin32Arduino, testBitsAndBytes)
   {
     uint32_t value = 0xC2000044;
 
@@ -451,7 +451,7 @@ namespace arduino { namespace test
     ASSERT_EQ(32768, bit(15));
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testSetMicrosResolution)
+  TEST_F(TestWin32Arduino, testSetMicrosResolution)
   {
     arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
     arduino_stub::setMicrosResolution(1);
@@ -465,7 +465,7 @@ namespace arduino { namespace test
     arduino_stub::setMicrosResolution(8);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testSetMicrosCounter)
+  TEST_F(TestWin32Arduino, testSetMicrosCounter)
   {
     arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
     arduino_stub::setMicrosResolution(1);
@@ -480,7 +480,7 @@ namespace arduino { namespace test
     arduino_stub::setMicrosCounter(before);
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testStatusRegister)
+  TEST_F(TestWin32Arduino, testStatusRegister)
   {
     uint8_t before = SREG;
     
@@ -495,14 +495,14 @@ namespace arduino { namespace test
     SREG = before;
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testSerial)
+  TEST_F(TestWin32Arduino, testSerial)
   {
     Serial.print("Hello World from ");
     Serial.print(__FUNCTION__);
     Serial.println("() function!");
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(Tests, testDemos)
+  TEST_F(TestWin32Arduino, testDemos)
   {
     demoSerial();
     demoMillis();

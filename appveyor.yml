@@ -77,7 +77,7 @@ test_script:
 #---------------------------------#
 
 artifacts:
-- path: src\bin\Win32\Release\win32Arduino_unittest.testResults.xml
+- path: src\bin\Win32\Release\win32Arduino_unittest.x86.release.xml
   name: win32ArduinoTest.x86.release.xml
 #- path: nsis\bin\*.zip
 #  name: win32Arduino win32 portable

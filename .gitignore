@@ -8,7 +8,7 @@
 /src/win32Arduino_unittest/arduino.log
 /src/win32Arduino/*.user
 /src/win32Arduino_unittest/*.user
-/src/win32Arduino_unittest/win32Arduino_unittest.testResults.xml
+/src/win32Arduino_unittest/win32Arduino_unittest.x86.release.xml
 /src/win32Arduino_unittest/bar.log
 /src/win32Arduino_unittest/foo.log
 /src/*.opensdf

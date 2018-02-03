@@ -24,8 +24,11 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tests.cpp">
+    <ClCompile Include="TestWin32Arduino.cpp">
       <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="gtesthelper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -35,8 +38,11 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tests.h">
+    <ClInclude Include="TestWin32Arduino.h">
       <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="gtesthelper.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
