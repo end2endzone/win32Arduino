@@ -1,3 +1,9 @@
+Changes for 1.4.0:
+
+* Fixed issue #4: Move non-arduino functions to the library namespace
+* New feature: Renamed testWin32Arduino to win32Arduino_unittest.
+* New feature: Renamed win32arduino to win32Arduino.
+
 Changes for 1.3.39:
 
 * New feature: Implemented support for forcing current time in SIMULATION mode.
