@@ -115,7 +115,7 @@ SerialPrinter Serial;
 //https://www.arduino.cc/en/Reference/HomePage
 
 //digital read/write
-const char * toDigitalPinString(uint8_t value)
+const char * arduino_stub::toDigitalPinString(uint8_t value)
 {
   if (value == HIGH)
     return "HIGH";
@@ -125,7 +125,7 @@ const char * toDigitalPinString(uint8_t value)
 }
 
 //pin modes
-const char * toPinModeString(uint8_t value)
+const char * arduino_stub::toPinModeString(uint8_t value)
 {
   if (value == OUTPUT)
     return "OUTPUT";
@@ -137,7 +137,7 @@ const char * toPinModeString(uint8_t value)
 }
 
 //shiftOut definition
-const char * toBitOrderString(uint8_t value)
+const char * arduino_stub::toBitOrderString(uint8_t value)
 {
   if (value == MSBFIRST)
     return "MSBFIRST";
@@ -150,7 +150,7 @@ void pinMode(uint8_t pin, uint8_t mode)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  const char * modeString = toPinModeString(mode);
+  const char * modeString = arduino_stub::toPinModeString(mode);
   sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, modeString);
   arduino_stub::log(buffer);
 }
@@ -159,7 +159,7 @@ void digitalWrite(uint8_t pin, uint8_t value)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  const char * digitalString = toDigitalPinString(value);
+  const char * digitalString = arduino_stub::toDigitalPinString(value);
   sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, digitalString);
   arduino_stub::log(buffer);
 
@@ -228,7 +228,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %d, %s, %d);\n", __FUNCTION__, dataPin, clockPin, toBitOrderString(bitOrder), data);
+  sprintf(buffer, "%s(%d, %d, %s, %d);\n", __FUNCTION__, dataPin, clockPin, arduino_stub::toBitOrderString(bitOrder), data);
   arduino_stub::log(buffer);
 }
 
@@ -236,7 +236,7 @@ uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %d, %s);\n", __FUNCTION__, dataPin, clockPin, toBitOrderString(bitOrder));
+  sprintf(buffer, "%s(%d, %d, %s);\n", __FUNCTION__, dataPin, clockPin, arduino_stub::toBitOrderString(bitOrder));
   arduino_stub::log(buffer);
 
   return 0;
@@ -246,7 +246,7 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState, uint32_t timeout)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %s, %d);\n", __FUNCTION__, pin, toDigitalPinString(digitalState), timeout);
+  sprintf(buffer, "%s(%d, %s, %d);\n", __FUNCTION__, pin, arduino_stub::toDigitalPinString(digitalState), timeout);
   arduino_stub::log(buffer);
 
   return 200; //200 usec
@@ -256,7 +256,7 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, toDigitalPinString(digitalState));
+  sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, arduino_stub::toDigitalPinString(digitalState));
   arduino_stub::log(buffer);
 
   return 200; //200 usec
@@ -419,7 +419,7 @@ void delayMicroseconds(uint16_t value)
 //sqrt(x)
 
 //typedef void (*ISR)();
-const char * toInterruptModeString(uint8_t value)
+const char * arduino_stub::toInterruptModeString(uint8_t value)
 {
   if (value == CHANGE)
     return "CHANGE";
@@ -434,7 +434,7 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, ISR=0x%x, %s);\n", __FUNCTION__, pin, func, toInterruptModeString(mode));
+  sprintf(buffer, "%s(%d, ISR=0x%x, %s);\n", __FUNCTION__, pin, func, arduino_stub::toInterruptModeString(mode));
   arduino_stub::log(buffer);
 }
 

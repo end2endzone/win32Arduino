@@ -28,6 +28,13 @@ namespace arduino_stub
   int getClockStrategy();
   void setMicrosResolution(uint32_t iResolution);
   void setMicrosCounter(uint32_t iCounter);
+
+  //enums to string functions
+  const char * toDigitalPinString(uint8_t value);
+  const char * toPinModeString(uint8_t value);
+  const char * toBitOrderString(uint8_t value);
+  const char * toInterruptModeString(uint8_t value);
+
 }
 
 typedef unsigned char byte;
@@ -54,11 +61,6 @@ void tone(byte iPin, uint16_t freq, uint32_t duration);
 void noTone(byte iPin);
 
 extern SerialPrinter Serial;
-
-//enums to string functions
-const char * toDigitalPinString(uint8_t value);
-const char * toPinModeString(uint8_t value);
-const char * toBitOrderString(uint8_t value);
 
 void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t value);
@@ -125,7 +127,6 @@ T map(T x, T in_min, T in_max, T out_min, T out_max)
 //sqrt(x)
 
 typedef void (*ISR)();
-const char * toInterruptModeString(uint8_t value);
 void attachInterrupt(uint8_t pin, ISR func, uint8_t mode);
 void detachInterrupt(uint8_t pin);
 

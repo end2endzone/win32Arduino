@@ -20,9 +20,9 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testDigitalPinString)
   {
-    std::string sHIGH = toDigitalPinString(HIGH);
-    std::string sLOW = toDigitalPinString(LOW);
-    std::string sOTHER = toDigitalPinString(234);
+    std::string sHIGH = arduino_stub::toDigitalPinString(HIGH);
+    std::string sLOW = arduino_stub::toDigitalPinString(LOW);
+    std::string sOTHER = arduino_stub::toDigitalPinString(234);
 
     ASSERT_EQ("HIGH", sHIGH);
     ASSERT_EQ("LOW", sLOW);
@@ -31,9 +31,9 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testBitOrderString)
   {
-    std::string sMSBFIRST = toBitOrderString(MSBFIRST);
-    std::string sLSBFIRST = toBitOrderString(LSBFIRST);
-    std::string sOTHER = toBitOrderString(234);
+    std::string sMSBFIRST = arduino_stub::toBitOrderString(MSBFIRST);
+    std::string sLSBFIRST = arduino_stub::toBitOrderString(LSBFIRST);
+    std::string sOTHER = arduino_stub::toBitOrderString(234);
 
     ASSERT_EQ("MSBFIRST", sMSBFIRST);
     ASSERT_EQ("LSBFIRST", sLSBFIRST);
@@ -42,10 +42,10 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testPinModeString)
   {
-    std::string sOUTPUT = toPinModeString(OUTPUT);
-    std::string sINPUT = toPinModeString(INPUT);
-    std::string sINPUT_PULLUP = toPinModeString(INPUT_PULLUP);
-    std::string sOTHER = toPinModeString(234);
+    std::string sOUTPUT = arduino_stub::toPinModeString(OUTPUT);
+    std::string sINPUT = arduino_stub::toPinModeString(INPUT);
+    std::string sINPUT_PULLUP = arduino_stub::toPinModeString(INPUT_PULLUP);
+    std::string sOTHER = arduino_stub::toPinModeString(234);
 
     ASSERT_EQ("OUTPUT", sOUTPUT);
     ASSERT_EQ("INPUT", sINPUT);
@@ -135,10 +135,10 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testInterruptModeString)
   {
-    std::string sCHANGE = toInterruptModeString(CHANGE);
-    std::string sRISING = toInterruptModeString(RISING);
-    std::string sFALLING = toInterruptModeString(FALLING);
-    std::string sOTHER = toInterruptModeString(234);
+    std::string sCHANGE = arduino_stub::toInterruptModeString(CHANGE);
+    std::string sRISING = arduino_stub::toInterruptModeString(RISING);
+    std::string sFALLING = arduino_stub::toInterruptModeString(FALLING);
+    std::string sOTHER = arduino_stub::toInterruptModeString(234);
 
     ASSERT_EQ("CHANGE", sCHANGE);
     ASSERT_EQ("RISING", sRISING);
