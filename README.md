@@ -31,7 +31,7 @@ An arduino library source code must be added to an existing win32 project to be 
 
 1)  Create an executable project and configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro.
 
-2)  Create a static library project which will “wrap” all the arduino files of the library you need to test.
+2)  Create a static library project which will "wrap" all the arduino files of the library you need to test.
 
 3)  Modify the static library’s Additionnal Include Directories to point to win32Arduino library. This allows the wrapping library to resolve all arduino.h includes and all arduino symbols using the win32Arduino library.
 
