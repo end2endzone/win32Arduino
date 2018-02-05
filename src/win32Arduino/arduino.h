@@ -22,10 +22,13 @@ namespace testarduino
   void log(const char * iValue);
 
   //clock hanlding
-  static const int CLOCK_REALTIME   = 0;
-  static const int CLOCK_SIMULATION = 1;
-  void setClockStrategy(int iClock);
-  int getClockStrategy();
+  enum CLOCK_STRATEGY
+  {
+    CLOCK_REALTIME = 0,
+    CLOCK_SIMULATION,
+  };
+  void setClockStrategy(CLOCK_STRATEGY iClock);
+  CLOCK_STRATEGY getClockStrategy();
   void setMicrosResolution(uint32_t iResolution);
   void setMicrosCounter(uint32_t iCounter);
 
@@ -37,6 +40,7 @@ namespace testarduino
 
 }
 
+//types definitions
 typedef unsigned char byte;
 
 //digital read/write

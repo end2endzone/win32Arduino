@@ -67,13 +67,13 @@ namespace testarduino
   }
 
   //clock hanlding
-  static int gClockStrategy = CLOCK_SIMULATION;
-  void setClockStrategy(int iClockStrategy)
+  static CLOCK_STRATEGY gClockStrategy = CLOCK_SIMULATION;
+  void setClockStrategy(CLOCK_STRATEGY iClockStrategy)
   {
     gClockStrategy = iClockStrategy;
   }
 
-  int getClockStrategy()
+  CLOCK_STRATEGY getClockStrategy()
   {
     return gClockStrategy;
   }
