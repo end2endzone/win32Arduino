@@ -5,14 +5,14 @@
 
 #include "arduino.h"
 
-namespace arduino_stub
+namespace testarduino
 {
   //millis() support
   static clock_t app_clock_init()
   {
     return ::clock();
   }
-  static clock_t gClockAppStartTime = arduino_stub::app_clock_init();
+  static clock_t gClockAppStartTime = testarduino::app_clock_init();
   
   static double diffclock(clock_t clockEnd,clock_t clockStart)
   {
@@ -97,14 +97,14 @@ void tone(byte iPin, uint16_t freq, uint32_t duration)
 {
   char buffer[10240];
   sprintf(buffer, "tone(%d,%d,%d);\n", iPin, freq, duration);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 }
 
 void noTone(byte iPin)
 {
   char buffer[10240];
   sprintf(buffer, "noTone(%d);\n", iPin);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 }
 
 //declare global Serial object
@@ -115,7 +115,7 @@ SerialPrinter Serial;
 //https://www.arduino.cc/en/Reference/HomePage
 
 //digital read/write
-const char * arduino_stub::toDigitalPinString(uint8_t value)
+const char * testarduino::toDigitalPinString(uint8_t value)
 {
   if (value == HIGH)
     return "HIGH";
@@ -125,7 +125,7 @@ const char * arduino_stub::toDigitalPinString(uint8_t value)
 }
 
 //pin modes
-const char * arduino_stub::toPinModeString(uint8_t value)
+const char * testarduino::toPinModeString(uint8_t value)
 {
   if (value == OUTPUT)
     return "OUTPUT";
@@ -137,7 +137,7 @@ const char * arduino_stub::toPinModeString(uint8_t value)
 }
 
 //shiftOut definition
-const char * arduino_stub::toBitOrderString(uint8_t value)
+const char * testarduino::toBitOrderString(uint8_t value)
 {
   if (value == MSBFIRST)
     return "MSBFIRST";
@@ -150,24 +150,24 @@ void pinMode(uint8_t pin, uint8_t mode)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  const char * modeString = arduino_stub::toPinModeString(mode);
+  const char * modeString = testarduino::toPinModeString(mode);
   sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, modeString);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 }
 
 void digitalWrite(uint8_t pin, uint8_t value)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  const char * digitalString = arduino_stub::toDigitalPinString(value);
+  const char * digitalString = testarduino::toDigitalPinString(value);
   sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, digitalString);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //update pin state
   if (value == LOW)
-    arduino_stub::pinStates[pin] = LOW;
+    testarduino::pinStates[pin] = LOW;
   else
-    arduino_stub::pinStates[pin] = HIGH;
+    testarduino::pinStates[pin] = HIGH;
 }
 
 uint8_t digitalRead(uint8_t pin)
@@ -175,12 +175,12 @@ uint8_t digitalRead(uint8_t pin)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", __FUNCTION__, pin);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //update pin state
   static const uint8_t DIGITAL_LOW = (uint8_t)LOW;
   static const uint8_t DIGITAL_HIGH = (uint8_t)HIGH;
-  if (arduino_stub::pinStates[pin] == 0)
+  if (testarduino::pinStates[pin] == 0)
     return DIGITAL_LOW;
   else
     return DIGITAL_HIGH;
@@ -191,10 +191,10 @@ void analogWrite(uint8_t pin, uint16_t value)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d, %d);\n", __FUNCTION__, pin, (int)value);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //update pin state
-  arduino_stub::pinStates[pin] = value;
+  testarduino::pinStates[pin] = value;
 }
 
 uint16_t analogRead(uint8_t pin)
@@ -202,10 +202,10 @@ uint16_t analogRead(uint8_t pin)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", __FUNCTION__, pin);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //update pin state
-  return arduino_stub::pinStates[pin];
+  return testarduino::pinStates[pin];
 }
 
 void analogReadResolution(uint8_t bits)
@@ -213,7 +213,7 @@ void analogReadResolution(uint8_t bits)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", __FUNCTION__, bits);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 }
 
 void analogWriteResolution(uint8_t bits)
@@ -221,23 +221,23 @@ void analogWriteResolution(uint8_t bits)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", __FUNCTION__, bits);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 }
 
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %d, %s, %d);\n", __FUNCTION__, dataPin, clockPin, arduino_stub::toBitOrderString(bitOrder), data);
-  arduino_stub::log(buffer);
+  sprintf(buffer, "%s(%d, %d, %s, %d);\n", __FUNCTION__, dataPin, clockPin, testarduino::toBitOrderString(bitOrder), data);
+  testarduino::log(buffer);
 }
 
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %d, %s);\n", __FUNCTION__, dataPin, clockPin, arduino_stub::toBitOrderString(bitOrder));
-  arduino_stub::log(buffer);
+  sprintf(buffer, "%s(%d, %d, %s);\n", __FUNCTION__, dataPin, clockPin, testarduino::toBitOrderString(bitOrder));
+  testarduino::log(buffer);
 
   return 0;
 }
@@ -246,8 +246,8 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState, uint32_t timeout)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %s, %d);\n", __FUNCTION__, pin, arduino_stub::toDigitalPinString(digitalState), timeout);
-  arduino_stub::log(buffer);
+  sprintf(buffer, "%s(%d, %s, %d);\n", __FUNCTION__, pin, testarduino::toDigitalPinString(digitalState), timeout);
+  testarduino::log(buffer);
 
   return 200; //200 usec
 }
@@ -256,8 +256,8 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, arduino_stub::toDigitalPinString(digitalState));
-  arduino_stub::log(buffer);
+  sprintf(buffer, "%s(%d, %s);\n", __FUNCTION__, pin, testarduino::toDigitalPinString(digitalState));
+  testarduino::log(buffer);
 
   return 200; //200 usec
 }
@@ -272,12 +272,12 @@ uint32_t micros()
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", "micros");
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //copy millis() implementation
   //realtime
   clock_t now = ::clock();
-  double diffMs = arduino_stub::diffclock(now, arduino_stub::gClockAppStartTime);
+  double diffMs = testarduino::diffclock(now, testarduino::gClockAppStartTime);
   double diffMicros = diffMs * 1000;
 
   static const uint32_t MAX_MICROS = (uint32_t)0xFFFFFFFF;
@@ -294,11 +294,11 @@ uint32_t millis()
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", "millis");
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //realtime
   clock_t now = ::clock();
-  double diffMs = arduino_stub::diffclock(now, arduino_stub::gClockAppStartTime);
+  double diffMs = testarduino::diffclock(now, testarduino::gClockAppStartTime);
   uint32_t diffFinal = (uint32_t)diffMs;
   return diffFinal;
 }
@@ -308,7 +308,7 @@ void delay(uint32_t value)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", "delay", value);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //realtime
   Sleep(value);
@@ -319,7 +319,7 @@ void delayMicroseconds(uint16_t value)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", "delayMicroseconds");
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //realtime
   uint32_t microSeconds = value;
@@ -340,10 +340,10 @@ uint32_t micros()
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", "micros");
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
-  arduino_stub::gMicroCounter += arduino_stub::gMicroResolution;
-  return arduino_stub::gMicroCounter;
+  testarduino::gMicroCounter += testarduino::gMicroResolution;
+  return testarduino::gMicroCounter;
 }
 
 uint32_t millis()
@@ -351,12 +351,12 @@ uint32_t millis()
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", "millis");
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   //based on micro
-  arduino_stub::gMicroCounter += arduino_stub::gMicroResolution;
+  testarduino::gMicroCounter += testarduino::gMicroResolution;
   
-  uint32_t microSeconds = arduino_stub::gMicroCounter;
+  uint32_t microSeconds = testarduino::gMicroCounter;
   uint32_t milliSeconds = microSeconds/1000;
   return milliSeconds;
 }
@@ -385,7 +385,7 @@ void delayMicroseconds(uint16_t value)
 
 uint32_t micros()
 {
-  if (arduino_stub::gClockStrategy == arduino_stub::CLOCK_SIMULATION)
+  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
     return simulation::micros();
   else
     return realtime::micros();
@@ -393,7 +393,7 @@ uint32_t micros()
 
 uint32_t millis()
 {
-  if (arduino_stub::gClockStrategy == arduino_stub::CLOCK_SIMULATION)
+  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
     return simulation::millis();
   else
     return realtime::millis();
@@ -401,7 +401,7 @@ uint32_t millis()
 
 void delay(uint32_t value)
 {
-  if (arduino_stub::gClockStrategy == arduino_stub::CLOCK_SIMULATION)
+  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
     return simulation::delay(value);
   else
     return realtime::delay(value);
@@ -409,7 +409,7 @@ void delay(uint32_t value)
 
 void delayMicroseconds(uint16_t value)
 {
-  if (arduino_stub::gClockStrategy == arduino_stub::CLOCK_SIMULATION)
+  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
     return simulation::delayMicroseconds(value);
   else
     return realtime::delayMicroseconds(value);
@@ -419,7 +419,7 @@ void delayMicroseconds(uint16_t value)
 //sqrt(x)
 
 //typedef void (*ISR)();
-const char * arduino_stub::toInterruptModeString(uint8_t value)
+const char * testarduino::toInterruptModeString(uint8_t value)
 {
   if (value == CHANGE)
     return "CHANGE";
@@ -434,8 +434,8 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
 {
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s(%d, ISR=0x%x, %s);\n", __FUNCTION__, pin, func, arduino_stub::toInterruptModeString(mode));
-  arduino_stub::log(buffer);
+  sprintf(buffer, "%s(%d, ISR=0x%x, %s);\n", __FUNCTION__, pin, func, testarduino::toInterruptModeString(mode));
+  testarduino::log(buffer);
 }
 
 void detachInterrupt(uint8_t pin)
@@ -443,7 +443,7 @@ void detachInterrupt(uint8_t pin)
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", __FUNCTION__, pin);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 }
 
 static const uint8_t DEFAULT_STATUS_REGISTER = 130;
@@ -460,7 +460,7 @@ void noInterrupts()
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", __FUNCTION__);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   SREG = DEFAULT_NO_INTERRUPTS_STATUS_REGISTER;
 }
@@ -470,7 +470,7 @@ void interrupts()
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", __FUNCTION__);
-  arduino_stub::log(buffer);
+  testarduino::log(buffer);
 
   SREG = DEFAULT_STATUS_REGISTER;
 }

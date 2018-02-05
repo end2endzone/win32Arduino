@@ -21,11 +21,11 @@ namespace arduino { namespace test
   TEST_F(TestGetLastCommand, testPinMode)
   {
     pinMode(13, OUTPUT);      // sets the digital pin 13 as output
-    std::string pinOutput = arduino_stub::getLastCommand();
+    std::string pinOutput = testarduino::getLastCommand();
     ASSERT_EQ("pinMode(13, OUTPUT);\n", pinOutput);
 
     pinMode(13, INPUT);      // sets the digital pin 7 as input
-    std::string pinInput = arduino_stub::getLastCommand();
+    std::string pinInput = testarduino::getLastCommand();
     ASSERT_EQ("pinMode(13, INPUT);\n", pinInput);
   }
   //--------------------------------------------------------------------------------------------------
@@ -34,11 +34,11 @@ namespace arduino { namespace test
     std::string lastCall;
 
     digitalWrite(13, HIGH);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("digitalWrite(13, HIGH);\n", lastCall);
 
     digitalWrite(13, LOW);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("digitalWrite(13, LOW);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -47,11 +47,11 @@ namespace arduino { namespace test
     std::string lastCall;
 
     analogWrite(13, 56);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("analogWrite(13, 56);\n", lastCall);
 
     analogWrite(13, 255);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("analogWrite(13, 255);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ namespace arduino { namespace test
     uint8_t value;
 
     value = digitalRead(13);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("digitalRead(13);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace arduino { namespace test
     uint16_t value;
 
     value = analogRead(13);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("analogRead(13);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     analogReadResolution(8);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("analogReadResolution(8);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     analogWriteResolution(7);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("analogWriteResolution(7);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -98,11 +98,11 @@ namespace arduino { namespace test
     std::string lastCall;
 
     shiftOut(3, 4, MSBFIRST, 78);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("shiftOut(3, 4, MSBFIRST, 78);\n", lastCall);
 
     shiftOut(5, 6, LSBFIRST, 99);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("shiftOut(5, 6, LSBFIRST, 99);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -112,11 +112,11 @@ namespace arduino { namespace test
     uint8_t value;
 
     value = shiftIn(3, 4, MSBFIRST);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("shiftIn(3, 4, MSBFIRST);\n", lastCall);
 
     value = shiftIn(5, 6, LSBFIRST);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("shiftIn(5, 6, LSBFIRST);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -126,11 +126,11 @@ namespace arduino { namespace test
     uint32_t value;
 
     value = pulseIn(3, HIGH);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("pulseIn(3, HIGH);\n", lastCall);
 
     value = pulseIn(4, LOW);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("pulseIn(4, LOW);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     uint32_t value1 = micros();
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("micros();\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     uint32_t value1 = millis();
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("millis();\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     attachInterrupt(2, &myInterruptFunction, RISING);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_NE(std::string::npos, lastCall.find("attachInterrupt(2, "));
     ASSERT_NE(std::string::npos, lastCall.find(", RISING);"));
   }
@@ -170,7 +170,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     detachInterrupt(3);
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("detachInterrupt(3);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     noInterrupts();
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("noInterrupts();\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
@@ -188,7 +188,7 @@ namespace arduino { namespace test
     std::string lastCall;
 
     interrupts();
-    lastCall = arduino_stub::getLastCommand();
+    lastCall = testarduino::getLastCommand();
     ASSERT_EQ("interrupts();\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------

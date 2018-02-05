@@ -20,9 +20,9 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testDigitalPinString)
   {
-    std::string sHIGH = arduino_stub::toDigitalPinString(HIGH);
-    std::string sLOW = arduino_stub::toDigitalPinString(LOW);
-    std::string sOTHER = arduino_stub::toDigitalPinString(234);
+    std::string sHIGH = testarduino::toDigitalPinString(HIGH);
+    std::string sLOW = testarduino::toDigitalPinString(LOW);
+    std::string sOTHER = testarduino::toDigitalPinString(234);
 
     ASSERT_EQ("HIGH", sHIGH);
     ASSERT_EQ("LOW", sLOW);
@@ -31,9 +31,9 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testBitOrderString)
   {
-    std::string sMSBFIRST = arduino_stub::toBitOrderString(MSBFIRST);
-    std::string sLSBFIRST = arduino_stub::toBitOrderString(LSBFIRST);
-    std::string sOTHER = arduino_stub::toBitOrderString(234);
+    std::string sMSBFIRST = testarduino::toBitOrderString(MSBFIRST);
+    std::string sLSBFIRST = testarduino::toBitOrderString(LSBFIRST);
+    std::string sOTHER = testarduino::toBitOrderString(234);
 
     ASSERT_EQ("MSBFIRST", sMSBFIRST);
     ASSERT_EQ("LSBFIRST", sLSBFIRST);
@@ -42,10 +42,10 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testPinModeString)
   {
-    std::string sOUTPUT = arduino_stub::toPinModeString(OUTPUT);
-    std::string sINPUT = arduino_stub::toPinModeString(INPUT);
-    std::string sINPUT_PULLUP = arduino_stub::toPinModeString(INPUT_PULLUP);
-    std::string sOTHER = arduino_stub::toPinModeString(234);
+    std::string sOUTPUT = testarduino::toPinModeString(OUTPUT);
+    std::string sINPUT = testarduino::toPinModeString(INPUT);
+    std::string sINPUT_PULLUP = testarduino::toPinModeString(INPUT_PULLUP);
+    std::string sOTHER = testarduino::toPinModeString(234);
 
     ASSERT_EQ("OUTPUT", sOUTPUT);
     ASSERT_EQ("INPUT", sINPUT);
@@ -55,7 +55,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosRealtime)
   {
-    arduino_stub::setClockStrategy(arduino_stub::CLOCK_REALTIME);
+    testarduino::setClockStrategy(testarduino::CLOCK_REALTIME);
     std::string lastCall;
 
     uint32_t value1 = micros();
@@ -70,7 +70,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisRealtime)
   {
-    arduino_stub::setClockStrategy(arduino_stub::CLOCK_REALTIME);
+    testarduino::setClockStrategy(testarduino::CLOCK_REALTIME);
     std::string lastCall;
 
     uint32_t value1 = millis();
@@ -85,7 +85,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosSimulation)
   {
-    arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
+    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
     std::string lastCall;
 
     uint32_t value1 = micros();
@@ -100,7 +100,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisSimulation)
   {
-    arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
+    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
     std::string lastCall;
 
     uint32_t value1 = millis();
@@ -135,10 +135,10 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testInterruptModeString)
   {
-    std::string sCHANGE = arduino_stub::toInterruptModeString(CHANGE);
-    std::string sRISING = arduino_stub::toInterruptModeString(RISING);
-    std::string sFALLING = arduino_stub::toInterruptModeString(FALLING);
-    std::string sOTHER = arduino_stub::toInterruptModeString(234);
+    std::string sCHANGE = testarduino::toInterruptModeString(CHANGE);
+    std::string sRISING = testarduino::toInterruptModeString(RISING);
+    std::string sFALLING = testarduino::toInterruptModeString(FALLING);
+    std::string sOTHER = testarduino::toInterruptModeString(234);
 
     ASSERT_EQ("CHANGE", sCHANGE);
     ASSERT_EQ("RISING", sRISING);
@@ -285,8 +285,8 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosResolution)
   {
-    arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
-    arduino_stub::setMicrosResolution(1);
+    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
+    testarduino::setMicrosResolution(1);
 
     uint32_t a = micros();
     uint32_t b = micros();
@@ -294,22 +294,22 @@ namespace arduino { namespace test
     EXPECT_NEAR(a, b, 1);
 
     //back to default
-    arduino_stub::setMicrosResolution(8);
+    testarduino::setMicrosResolution(8);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosCounter)
   {
-    arduino_stub::setClockStrategy(arduino_stub::CLOCK_SIMULATION);
-    arduino_stub::setMicrosResolution(1);
+    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
+    testarduino::setMicrosResolution(1);
     uint32_t before = micros();
-    arduino_stub::setMicrosCounter(256);
+    testarduino::setMicrosCounter(256);
 
     uint32_t a = micros();
 
     EXPECT_NEAR(a, 256, 1);
 
     //back to previous value
-    arduino_stub::setMicrosCounter(before);
+    testarduino::setMicrosCounter(before);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testStatusRegister)

@@ -8,7 +8,7 @@
 
 #include "SerialPrinter.h"
 
-namespace arduino_stub
+namespace testarduino
 {
   //realtime millis() support
   static clock_t app_clock_init();

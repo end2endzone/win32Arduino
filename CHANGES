@@ -1,3 +1,7 @@
+Changes for 2.0.0:
+
+* Fixed issue #1 - Rename library namespace to a better name
+
 Changes for 1.4.0:
 
 * Fixed issue #4: Move non-arduino functions to the library namespace

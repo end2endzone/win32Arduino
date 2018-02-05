@@ -37,11 +37,11 @@ void demoMillis()
 
 void demoLog()
 {
-  arduino_stub::setLogFile("foo.log");
+  testarduino::setLogFile("foo.log");
   Serial.println("this is line 1 of 3 in foo.txt");
   Serial.println("this is line 2 of 3 in foo.txt");
   Serial.println("this is line 3 of 3 in foo.txt");
-  arduino_stub::setLogFile("bar.log");
+  testarduino::setLogFile("bar.log");
   Serial.println("this is line 1 of 4 in bar.txt");
   Serial.println("this is line 2 of 4 in bar.txt");
   Serial.println("this is line 3 of 4 in bar.txt");
