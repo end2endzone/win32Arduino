@@ -56,7 +56,6 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testMicrosRealtime)
   {
     testarduino::setClockStrategy(testarduino::CLOCK_REALTIME);
-    std::string lastCall;
 
     uint32_t value1 = micros();
     delay(10);
@@ -71,7 +70,6 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testMillisRealtime)
   {
     testarduino::setClockStrategy(testarduino::CLOCK_REALTIME);
-    std::string lastCall;
 
     uint32_t value1 = millis();
     delay(30);
@@ -86,7 +84,6 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testMicrosSimulation)
   {
     testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-    std::string lastCall;
 
     uint32_t value1 = micros();
     delay(10);
@@ -101,7 +98,6 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testMillisSimulation)
   {
     testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-    std::string lastCall;
 
     uint32_t value1 = millis();
     delay(30);
@@ -115,8 +111,6 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMath)
   {
-    std::string lastCall;
-
     ASSERT_EQ(5, abs(5));
     ASSERT_EQ(5, abs(-5));
 
@@ -286,7 +280,7 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testSetMicrosResolution)
   {
     testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-    testarduino::setMicrosResolution(1);
+    testarduino::setMicrosecondsResolution(1);
 
     uint32_t a = micros();
     uint32_t b = micros();
@@ -294,22 +288,22 @@ namespace arduino { namespace test
     EXPECT_NEAR(a, b, 1);
 
     //back to default
-    testarduino::setMicrosResolution(8);
+    testarduino::setMicrosecondsResolution(8);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosCounter)
   {
     testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-    testarduino::setMicrosResolution(1);
+    testarduino::setMicrosecondsResolution(1);
     uint32_t before = micros();
-    testarduino::setMicrosCounter(256);
+    testarduino::setMicrosecondsCounter(256);
 
     uint32_t a = micros();
 
     EXPECT_NEAR(a, 256, 1);
 
     //back to previous value
-    testarduino::setMicrosCounter(before);
+    testarduino::setMicrosecondsCounter(before);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testStatusRegister)
@@ -339,6 +333,14 @@ namespace arduino { namespace test
     demoSerial();
     demoMillis();
     demoLog();
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testClockDiff)
+  {
+    clock_t timeStart = 200;
+    clock_t timeEnd   = 201;
+    double diff = testarduino::clockDiff(timeEnd, timeStart);
+    EXPECT_NEAR(diff, 1.0, 0.000001);
   }
   //--------------------------------------------------------------------------------------------------
 } // End namespace test

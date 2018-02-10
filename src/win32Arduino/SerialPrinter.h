@@ -2,6 +2,7 @@
 #define WIN32_SERIALPRINTER_H
 
 #include "arduino.h"
+#include <sstream>
 
 class SerialPrinter
 {

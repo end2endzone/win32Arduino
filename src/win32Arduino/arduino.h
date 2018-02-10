@@ -1,36 +1,86 @@
 #ifndef WIN32_ARDUINO_H
 #define WIN32_ARDUINO_H
 
-#include <stdio.h>
-#include <sstream>
-#include <time.h>
-#include <stdint.h>
+#include <time.h>     //for clock_t
+#include <stdint.h>   //for uintxx_t, intxx_t
 
 #include "SerialPrinter.h"
 
 namespace testarduino
 {
-  //realtime millis() support
-  static clock_t app_clock_init();
-  static double diffclock(clock_t clockEnd,clock_t clockStart);
-
   //last command support
+  ///<summary>
+  ///Provides the last arduino command that was called.
+  ///</summary>
+  ///<returns>Returns a string which describes the last arduino command that was called.</returns>
   const char * getLastCommand();
 
   //logging support
+  ///<summary>
+  ///Defines the path of the log file. See also function log()
+  ///</summary>
   void setLogFile(const char * iFilePath);
+
+  ///<summary>
+  ///Adds the given text string to the log file defined by setLogFile()
+  ///</summary>
+  ///<param name="iValue">The text string value to add to the log file</param>
   void log(const char * iValue);
 
-  //clock hanlding
+  //clock strategy handling
+  ///<summary>
+  ///an enumerator for each time handling strategies
+  ///</summary>
   enum CLOCK_STRATEGY
   {
+    ///<summary>
+    ///The clock timing is based on the computer's internal clock.
+    ///millis() function is supported.
+    ///micros() function is estimated from millis().
+    ///</summary>
     CLOCK_REALTIME = 0,
+
+    ///<summary>
+    ///The clock timing is set manually.
+    ///Each call to a time function increases the internal time counter.
+    ///millis() and micros() functions are supported.
+    ///</summary>
     CLOCK_SIMULATION,
   };
+
+  ///<summary>
+  ///Set the desired clock strategy.
+  ///</summary>
+  ///<param name="iClock">The new value for the clock strategy.</param>
   void setClockStrategy(CLOCK_STRATEGY iClock);
+
+  ///<summary>
+  ///Provides the selected clock strategy.
+  ///</summary>
+  ///<returns>Returns the selected clock strategy.</returns>
   CLOCK_STRATEGY getClockStrategy();
-  void setMicrosResolution(uint32_t iResolution);
-  void setMicrosCounter(uint32_t iCounter);
+
+  //realtime clock support
+  ///<summary>
+  ///Calculate the elapsed time in milliseconds between two clock_t events.
+  ///</summary>
+  ///<param name="clockEnd">The time when the event ends.</param>
+  ///<param name="clockStart">The time when the event starts.</param>
+  ///<returns>Returns elapsed time in milliseconds between two clock_t events.</returns>
+  double clockDiff(clock_t clockEnd, clock_t clockStart);
+
+  //simulation clock support
+  ///<summary>
+  ///Defines the minimum increments of the internal microseconds counter for every call to the micros() function.
+  ///</summary>
+  ///<param name="iResolution">The resolution of the microseconds counter.</param>
+  void setMicrosecondsResolution(uint32_t iResolution);
+
+  ///<summary>
+  ///Defines the absolute value of the internal microseconds counter.
+  ///</summary>
+  ///<param name="iResolution">The new value for the counter.</param>
+  void setMicrosecondsCounter(uint32_t iCounter);
 
   //enums to string functions
   const char * toDigitalPinString(uint8_t value);
@@ -61,6 +111,13 @@ typedef unsigned char byte;
 #define LSBFIRST 0
 #define MSBFIRST 1
 
+//math definitions
+#define PI 3.1415926535897932384626433832795
+#define HALF_PI 1.5707963267948966192313216916398
+#define TWO_PI 6.283185307179586476925286766559
+#define DEG_TO_RAD 0.017453292519943295769236907684886
+#define RAD_TO_DEG 57.295779513082320876798154814105
+
 void tone(byte iPin, uint16_t freq, uint32_t duration);
 void noTone(byte iPin);
 
@@ -82,43 +139,51 @@ uint32_t millis();
 void delay(uint32_t value);
 void delayMicroseconds(uint16_t value);
 
-template<typename T>
-T abs(T x)
-{
-  if (x < 0)
-    return -x;
-  else
-    return x;
-}
+//math macros
 
-template<typename T>
-T max(T x, T y)
-{
-  if (x > y)
-    return x;
-  else
-    return y;
-}
+#define abs(x) ((x)>0?(x):-(x))
+//template<typename T>
+//T abs(T x)
+//{
+//  if (x < 0)
+//    return -x;
+//  else
+//    return x;
+//}
 
-template<typename T>
-T min(T x, T y)
-{
-  if (x < y)
-    return x;
-  else
-    return y;
-}
+#define max(a,b) ((a)>(b)?(a):(b))
+//template<typename T>
+//T max(T x, T y)
+//{
+//  if (x > y)
+//    return x;
+//  else
+//    return y;
+//}
 
-template<typename T>
-T constrain(T x, T a, T b)
-{
-  if (x < a)
-    return a;
-  else if (x > b)
-    return b;
-  else
-    return x;
-}
+#define min(a,b) ((a)<(b)?(a):(b))
+//template<typename T>
+//T min(T x, T y)
+//{
+//  if (x < y)
+//    return x;
+//  else
+//    return y;
+//}
+
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+//template<typename T>
+//T constrain(T x, T a, T b)
+//{
+//  if (x < a)
+//    return a;
+//  else if (x > b)
+//    return b;
+//  else
+//    return x;
+//}
+
+#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 
 template<typename T>
 T map(T x, T in_min, T in_max, T out_min, T out_max)
@@ -161,57 +226,65 @@ int32_t random(int32_t min, int32_t max);
 int32_t random(int32_t max);
 
 //Bits and Bytes
-//-lowByte() 
-//-highByte() 
-//-bitRead() 
-//-bitWrite() 
-//-bitSet() 
-//-bitClear() 
-//-bit() 
-template<typename T>
-uint8_t lowByte(T x)
-{
-  const uint8_t * bytes = (uint8_t*)&x;
-  uint8_t lowByteIndex = 0;
-  return bytes[lowByteIndex];
-}
+//-lowByte()
+//-highByte()
+//-bitRead()
+//-bitWrite()
+//-bitSet()
+//-bitClear()
+//-bit()
 
-template<typename T>
-uint8_t highByte(T x)
-{
-  const uint8_t * bytes = (uint8_t*)&x;
-  uint8_t highByteIndex = sizeof(T)-1;
-  return bytes[highByteIndex];
-}
+#define lowByte(w) ((uint8_t) ((w) & 0xff))
+//template<typename T>
+//uint8_t lowByte(T x)
+//{
+//  const uint8_t * bytes = (uint8_t*)&x;
+//  uint8_t lowByteIndex = 0;
+//  return bytes[lowByteIndex];
+//}
 
-template<typename T>
-T bitRead(const T & x, T n)
-{
-  return ( (x & (1<<n)) >> n );
-}
+#define highByte(w) ((uint8_t) ((w) >> 8))
+//template<typename T>
+//uint8_t highByte(T x)
+//{
+//  const uint8_t * bytes = (uint8_t*)&x;
+//  uint8_t highByteIndex = sizeof(T)-1;
+//  return bytes[highByteIndex];
+//}
 
-template<typename T>
-void bitWrite(T & x, T n, T b)
-{
-  x = (x & ~(1<<n)) | (b<<n);
-}
+#define bitRead(value, bit) (((value) >> (bit)) & 0x01)
+//template<typename T>
+//T bitRead(const T & x, T n)
+//{
+//  return ( (x & (1<<n)) >> n );
+//}
 
-template<typename T>
-void bitSet(T & x, T n)
-{
-  x |= (1<<n);
-}
+#define bitSet(value, bit) ((value) |= (1UL << (bit)))
+//template<typename T>
+//void bitSet(T & x, T n)
+//{
+//  x |= (1<<n);
+//}
 
-template<typename T>
-void bitClear(T & x, T n)
-{
-  x &= ~((T)1<<n);
-}
+#define bitClear(value, bit) ((value) &= ~(1UL << (bit)))
+//template<typename T>
+//void bitClear(T & x, T n)
+//{
+//  x &= ~((T)1<<n);
+//}
 
-template<typename T>
-T bit(T n)
-{
-  return ((T)1<<n);
-}
+#define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
+//template<typename T>
+//void bitWrite(T & x, T n, T b)
+//{
+//  x = (x & ~(1<<n)) | (b<<n);
+//}
+
+#define bit(b) (1UL << (b))
+//template<typename T>
+//T bit(T n)
+//{
+//  return ((T)1<<n);
+//}
 
 #endif //WIN32_ARDUINO_H

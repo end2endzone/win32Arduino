@@ -138,7 +138,7 @@ namespace arduino { namespace test
   {
     std::string lastCall;
 
-    uint32_t value1 = micros();
+    micros();
     lastCall = testarduino::getLastCommand();
     ASSERT_EQ("micros();\n", lastCall);
   }
@@ -147,7 +147,7 @@ namespace arduino { namespace test
   {
     std::string lastCall;
 
-    uint32_t value1 = millis();
+    millis();
     lastCall = testarduino::getLastCommand();
     ASSERT_EQ("millis();\n", lastCall);
   }

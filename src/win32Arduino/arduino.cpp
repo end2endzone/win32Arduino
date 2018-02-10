@@ -14,10 +14,11 @@ namespace testarduino
   }
   static clock_t gClockAppStartTime = testarduino::app_clock_init();
   
-  static double diffclock(clock_t clockEnd,clock_t clockStart)
+  double clockDiff(clock_t clockEnd, clock_t clockStart)
   {
+    static double CLOCKS_PER_MS = CLOCKS_PER_SEC/1000;
     clock_t diffticks=clockEnd-clockStart;
-    double diffms=(diffticks)/(CLOCKS_PER_SEC/1000.0);
+    double diffms=(diffticks)/CLOCKS_PER_MS;
     return diffms;
   }
 
@@ -66,7 +67,7 @@ namespace testarduino
     gLastCommand = iValue;
   }
 
-  //clock hanlding
+  //clock handling
   static CLOCK_STRATEGY gClockStrategy = CLOCK_SIMULATION;
   void setClockStrategy(CLOCK_STRATEGY iClockStrategy)
   {
@@ -81,12 +82,12 @@ namespace testarduino
   static uint32_t gMicroResolution = 8; //8 usec resolution (increment for each calls)
   static uint32_t gMicroCounter = 0;
 
-  void setMicrosResolution(uint32_t iResolution)
+  void setMicrosecondsResolution(uint32_t iResolution)
   {
     gMicroResolution = iResolution;
   }
 
-  void setMicrosCounter(uint32_t iCounter)
+  void setMicrosecondsCounter(uint32_t iCounter)
   {
     gMicroCounter = iCounter;
   }
@@ -277,7 +278,7 @@ uint32_t micros()
   //copy millis() implementation
   //realtime
   clock_t now = ::clock();
-  double diffMs = testarduino::diffclock(now, testarduino::gClockAppStartTime);
+  int32_t diffMs = testarduino::clockDiff(now, testarduino::gClockAppStartTime);
   double diffMicros = diffMs * 1000;
 
   static const uint32_t MAX_MICROS = (uint32_t)0xFFFFFFFF;
@@ -298,7 +299,7 @@ uint32_t millis()
 
   //realtime
   clock_t now = ::clock();
-  double diffMs = testarduino::diffclock(now, testarduino::gClockAppStartTime);
+  double diffMs = testarduino::clockDiff(now, testarduino::gClockAppStartTime);
   uint32_t diffFinal = (uint32_t)diffMs;
   return diffFinal;
 }
