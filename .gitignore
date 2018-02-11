@@ -13,3 +13,4 @@
 /src/win32Arduino_unittest/foo.log
 /src/*.opensdf
 /third_party
+/cmake/build
