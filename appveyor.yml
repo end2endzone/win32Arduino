@@ -80,16 +80,15 @@ test_script:
 #---------------------------------#
 
 artifacts:
-- path: src\bin\Win32\Release\win32Arduino_unittest.x86.release.xml
+- path: cmake\build\bin\Release\win32Arduino_unittest.x86.release.xml
   name: win32ArduinoTest.x86.release.xml
   
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
 
-deploy:
-
 #prepare deplying to github. See prepare_github_deploy.ps1 for more details.
+deploy:
 - provider: GitHub
   tag: $(GITHUB_TAG_NAME)
   release: $(GITHUB_RELEASE_NAME)
