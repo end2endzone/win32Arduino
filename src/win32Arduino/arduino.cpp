@@ -278,7 +278,7 @@ uint32_t micros()
   //copy millis() implementation
   //realtime
   clock_t now = ::clock();
-  int32_t diffMs = testarduino::clockDiff(now, testarduino::gClockAppStartTime);
+  double diffMs = testarduino::clockDiff(now, testarduino::gClockAppStartTime);
   double diffMicros = diffMs * 1000;
 
   static const uint32_t MAX_MICROS = (uint32_t)0xFFFFFFFF;
