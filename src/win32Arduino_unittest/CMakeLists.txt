@@ -1,8 +1,8 @@
 include_directories(${CMAKE_SOURCE_DIR}/win32Arduino)
-include_directories(${CMAKE_SOURCE_DIR}/../third_party/googletest/include)
+include_directories($ENV{GTEST_INCLUDE})
 
 link_directories(${LIBRARY_OUTPUT_PATH})
-link_directories(${CMAKE_SOURCE_DIR}/../third_party/googletest/msvc2010)
+link_directories($ENV{GTEST_LIBRARY_DIR})
 
 add_executable(win32Arduino_unittest demo.cpp demo.h gtesthelper.cpp gtesthelper.h main.cpp TestGetLastCommand.h TestGetLastCommand.cpp TestWin32Arduino.h TestWin32Arduino.cpp )
 
