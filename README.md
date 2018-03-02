@@ -14,26 +14,94 @@ AppVeyor build statistics:
 
 # win32Arduino
 
-win32Arduino is a Windows implementation of the most used arduino functions which allows an arduino library developer to unit test his code outside of the arduino platform.
+win32Arduino is a Windows (win32) implementation of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
 
-This library allows a windows user to easily unit test an arduino library using your testing framework of choice. For instance, the unit tests of win32Arduino library are executed using the [Google Test framework](http://github.com/google/googletest).
+The library allows to easily unit test an arduino library using your testing framework of choice. For instance, the unit tests of win32Arduino library are executed using the [Google Test framework](http://github.com/google/googletest).
 
 It's main features are:
 
 *  Implements most arduino functions.
-*  Allows a developer to tests a library outside of the arduino platform.
+*  Allows a developer to test a library outside of the arduino platform.
 *  Quicker unit test execution.
 *  Supports realtime millis() function or simulated millis() and micros() functions.
 
 # Usage
 
-An arduino library source code must be added to an existing win32 project to be tested. The following instructions show how to easily test an arduino library using the Google Test framework. It assumes that you are already familiar with the test API.
+The following instructions show how to test an arduino library. 
 
-1)  Create an executable project and configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro.
+## Disabling win32Arduino's unit tests
 
-2)  Create a static library project which will "wrap" all the arduino files of the library you need to test.
+This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
 
-3)  Modify the static library’s Additionnal Include Directories to point to win32Arduino library. This allows the wrapping library to resolve all arduino.h includes and all arduino symbols using the win32Arduino library.
+1) Edit the file /src/CMakeLists.txt
+2) Comment each lines that contains a reference to '*win32Arduino_unittest*' by adding a # character at the beginning of the line.
+1) Compile source code according to instructions specified in [INSTALL.md](INSTALL.md) file.
+3) Binaries are available in /cmake/build/bin/$(Configuration)
+
+## Create a test project
+
+The following instructions show how to easily test an arduino library. For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
+   
+An arduino library source code must be added to a win32 project to be compiled and tested. The following instructions show how to compile an arduino library on the Windows platform. In the example below, the win32Arduino library is used to resolve all arduino functions called by the library.
+
+1) Create a new win32 console application.
+
+2) Configure source code according to the googletest practices. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md). Configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro.
+
+2) Create a static library project which will "wrap" all the arduino files of the library you need to test.
+
+3) Modify the static library’s '*Additionnal Include Directories*' to point to win32Arduino project source code. This allows the wrapping library to resolve all arduino.h includes and all arduino symbols using the win32Arduino library.
+
+## Example
+The following section shows an example of using win32Arduino to test an arduino function.
+
+Assume a developer needs to test a library which contains the following functions:
+```cpp
+void wait5Seconds() {
+  unsigned long start = millis();
+  while( millis() - start < 5000 )
+  {
+  }
+}
+
+bool waitForButtonPress(uint8_t buttonPin, unsigned long timeout) {
+  unsigned long start = millis();
+  while( millis() - start < timeout )
+  {
+    //look for button state
+    int buttonValue = digitalRead(buttonPin);
+    if (buttonValue == HIGH)
+      return true;
+  }
+  //timeout
+  return false;
+}
+```
+
+Using Google Test framework, one can write the following unit test to validate the expectations of each functions:
+
+```cpp
+TEST(TestMyLibrary, testWait5Seconds) {
+  testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
+  testarduino::setMicrosecondsCounter(0);
+  testarduino::setMicrosecondsResolution(1000); //increase simulated clock by 1ms for every calls to micros()
+  uint32_t before = millis();
+  wait5Seconds();
+  uint32_t after = millis();
+  ASSERT_GE(after - before, 5000);
+}
+
+TEST(TestMyLibrary, testWaitForButtonPressTimeout) {
+  testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
+  testarduino::setMicrosecondsCounter(0);
+  testarduino::setMicrosecondsResolution(1000); //increase simulated clock by 1ms for every calls to micros()
+  uint32_t before = millis();
+  uint8_t buttonPin = 2;
+  waitForButtonPress(buttonPin, 5000);
+  uint32_t after = millis();
+  ASSERT_GE(after - before, 5000);
+}
+```
 
 # Installing
 
