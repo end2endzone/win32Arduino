@@ -4,6 +4,8 @@
 #include "TestWin32Arduino.h"
 #include <string>
 #include "arduino.h"
+#include "RealtimeStrategy.h"
+#include "IncrementalTimeStrategy.h"
 #include "demo.h"
 
 namespace arduino { namespace test
@@ -55,53 +57,59 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosRealtime)
   {
-    testarduino::setClockStrategy(testarduino::CLOCK_REALTIME);
+    testarduino::setClockStrategy(&testarduino::RealtimeStrategy::getInstance());
 
     uint32_t value1 = micros();
-    delay(10);
+    delay(1000);
     uint32_t value2 = micros();
 
     ASSERT_GT(value2, value1);
 
     uint32_t elapsedMicros = value2-value1;
-    ASSERT_NEAR(10000, elapsedMicros, 5000); //no usec precision, only milliseconds. Allows 5ms diff
+    ASSERT_NEAR(1000000, elapsedMicros, 10000); //no usec precision, only milliseconds. Allows 10ms epsilon
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisRealtime)
   {
-    testarduino::setClockStrategy(testarduino::CLOCK_REALTIME);
+    testarduino::setClockStrategy(&testarduino::RealtimeStrategy::getInstance());
 
     uint32_t value1 = millis();
-    delay(30);
+    delay(1000);
     uint32_t value2 = millis();
 
     ASSERT_GT(value2, value1);
 
     uint32_t elapsedMillis = value2-value1;
-    ASSERT_NEAR(30, elapsedMillis, 4); //4ms epsilon
+    ASSERT_NEAR(1000, elapsedMillis, 10); //10ms epsilon
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosSimulation)
   {
-    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
+    testarduino::IncrementalTimeStrategy & clock = testarduino::IncrementalTimeStrategy::getInstance();
+    testarduino::setClockStrategy(&clock);
+    clock.setMicrosecondsResolution(1);
+    clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
 
     uint32_t value1 = micros();
-    delay(10);
-    uint32_t value2 = micros();
+    delay(10); //~10*1000 usec
+    uint32_t value2 = micros(); // 1 usec
 
     ASSERT_GT(value2, value1);
 
     uint32_t elapsedMicros = value2-value1;
-    ASSERT_NEAR(10000, elapsedMicros, 10); //10 usec max epsilon (emulated)
+    ASSERT_EQ(10001, elapsedMicros); //0 usec epsilon
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisSimulation)
   {
-    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
+    testarduino::IncrementalTimeStrategy & clock = testarduino::IncrementalTimeStrategy::getInstance();
+    testarduino::setClockStrategy(&clock);
+    clock.setMicrosecondsResolution(100); //0.1ms increments
+    clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
 
     uint32_t value1 = millis();
-    delay(30);
-    uint32_t value2 = millis();
+    delay(30); // 30ms
+    uint32_t value2 = millis(); // 1ms
 
     ASSERT_GT(value2, value1);
 
@@ -198,7 +206,8 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testBitsAndBytes)
   {
-    uint32_t value = 0xC2000044;
+    {
+    uint16_t value = 0xC244;
 
     ASSERT_EQ(0x44, lowByte(value));
     ASSERT_EQ(0xC2, highByte(value));
@@ -214,17 +223,18 @@ namespace arduino { namespace test
     ASSERT_EQ(0, bitRead(value, (uint32_t)7));
 
     //assert bitRead(), 0xC2 high byte
-    ASSERT_EQ(0, bitRead(value, (uint32_t)24));
-    ASSERT_EQ(1, bitRead(value, (uint32_t)25));
-    ASSERT_EQ(0, bitRead(value, (uint32_t)26));
-    ASSERT_EQ(0, bitRead(value, (uint32_t)27));
-    ASSERT_EQ(0, bitRead(value, (uint32_t)28));
-    ASSERT_EQ(0, bitRead(value, (uint32_t)29));
-    ASSERT_EQ(1, bitRead(value, (uint32_t)30));
-    ASSERT_EQ(1, bitRead(value, (uint32_t)31));
+    ASSERT_EQ(0, bitRead(value, (uint32_t)8));
+    ASSERT_EQ(1, bitRead(value, (uint32_t)9));
+    ASSERT_EQ(0, bitRead(value, (uint32_t)10));
+    ASSERT_EQ(0, bitRead(value, (uint32_t)11));
+    ASSERT_EQ(0, bitRead(value, (uint32_t)12));
+    ASSERT_EQ(0, bitRead(value, (uint32_t)13));
+    ASSERT_EQ(1, bitRead(value, (uint32_t)14));
+    ASSERT_EQ(1, bitRead(value, (uint32_t)15));
+    }
 
     //assert bitWrite(), high byte
-    ASSERT_EQ(0xC2000044, value);
+    uint32_t value = 0xC2000044;
     bitWrite(value, (uint32_t)31, (uint32_t)0);
     ASSERT_EQ(0x42000044, value);
     bitWrite(value, (uint32_t)30, (uint32_t)0);
@@ -279,8 +289,8 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosResolution)
   {
-    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-    testarduino::setMicrosecondsResolution(1);
+    testarduino::setClockStrategy(&testarduino::IncrementalTimeStrategy::getInstance());
+    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsResolution(1);
 
     uint32_t a = micros();
     uint32_t b = micros();
@@ -288,22 +298,22 @@ namespace arduino { namespace test
     EXPECT_NEAR(a, b, 1);
 
     //back to default
-    testarduino::setMicrosecondsResolution(8);
+    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsResolution(8);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosCounter)
   {
-    testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-    testarduino::setMicrosecondsResolution(1);
+    testarduino::setClockStrategy(&testarduino::IncrementalTimeStrategy::getInstance());
+    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsResolution(1);
     uint32_t before = micros();
-    testarduino::setMicrosecondsCounter(256);
+    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsCounter(256);
 
     uint32_t a = micros();
 
     EXPECT_NEAR(a, 256, 1);
 
     //back to previous value
-    testarduino::setMicrosecondsCounter(before);
+    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsCounter(before);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testStatusRegister)
@@ -339,7 +349,7 @@ namespace arduino { namespace test
   {
     clock_t timeStart = 200;
     clock_t timeEnd   = 201;
-    double diff = testarduino::clockDiff(timeEnd, timeStart);
+    double diff = testarduino::RealtimeStrategy::clockDiff(timeEnd, timeStart);
     EXPECT_NEAR(diff, 1.0, 0.000001);
   }
   //--------------------------------------------------------------------------------------------------
