@@ -1,4 +1,4 @@
-#include "RealtimeStrategy.h"
+#include "RealtimeClockStrategy.h"
 
 #include <time.h>     //for clock_t
 
@@ -12,21 +12,21 @@ namespace testarduino
 
   static clock_t gClockAppStartTime = app_clock_init();
 
-  RealtimeStrategy::RealtimeStrategy()
+  RealtimeClockStrategy::RealtimeClockStrategy()
   {
   }
 
-  RealtimeStrategy::~RealtimeStrategy()
+  RealtimeClockStrategy::~RealtimeClockStrategy()
   {
   }
 
-  RealtimeStrategy & RealtimeStrategy::getInstance()
+  RealtimeClockStrategy & RealtimeClockStrategy::getInstance()
   {
-    static RealtimeStrategy _instance;
+    static RealtimeClockStrategy _instance;
     return _instance;
   }
 
-  double RealtimeStrategy::clockDiff(clock_t clockEnd, clock_t clockStart)
+  double RealtimeClockStrategy::clockDiff(clock_t clockEnd, clock_t clockStart)
   {
     static double CLOCKS_PER_MS = CLOCKS_PER_SEC/1000;
     clock_t diffticks=clockEnd-clockStart;
@@ -34,7 +34,7 @@ namespace testarduino
     return diffms;
   }
 
-  uint32_t RealtimeStrategy::millis()
+  uint32_t RealtimeClockStrategy::millis()
   {
     clock_t now = ::clock();
     double diffMs = clockDiff(now, testarduino::gClockAppStartTime);
@@ -42,7 +42,7 @@ namespace testarduino
     return diffFinal;
   }
 
-  uint32_t RealtimeStrategy::micros()
+  uint32_t RealtimeClockStrategy::micros()
   {
     //based on millis() implementation.
 

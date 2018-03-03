@@ -1,17 +1,17 @@
-#ifndef INCREMENTALTIMESTRATEGY_H
-#define INCREMENTALTIMESTRATEGY_H
+#ifndef INCREMENTALCLOCKSTRATEGY_H
+#define INCREMENTALCLOCKSTRATEGY_H
 
-#include "ITimeStrategy.h"
+#include "IClockStrategy.h"
 
 namespace testarduino
 {
-  class IncrementalTimeStrategy : public virtual ITimeStrategy
+  class IncrementalClockStrategy : public virtual IClockStrategy
   {
   private:
-    IncrementalTimeStrategy();
-    virtual ~IncrementalTimeStrategy();
+    IncrementalClockStrategy();
+    virtual ~IncrementalClockStrategy();
   public:
-    static IncrementalTimeStrategy & getInstance();
+    static IncrementalClockStrategy & getInstance();
     virtual uint32_t millis();
     virtual uint32_t micros();
 
@@ -29,4 +29,4 @@ namespace testarduino
   };
 } //testarduino
 
-#endif //INCREMENTALTIMESTRATEGY_H
+#endif //INCREMENTALCLOCKSTRATEGY_H

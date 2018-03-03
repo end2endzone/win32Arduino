@@ -6,8 +6,8 @@
 #undef min
 
 #include "arduino.h"
-#include "IncrementalTimeStrategy.h"
-#include "RealtimeStrategy.h"
+#include "IncrementalClockStrategy.h"
+#include "RealtimeClockStrategy.h"
 
 namespace testarduino
 {
@@ -90,13 +90,13 @@ namespace testarduino
   }
 
   //clock handling
-  static ITimeStrategy * gClockStrategy = &IncrementalTimeStrategy::getInstance();
-  void setClockStrategy(ITimeStrategy * iClockStrategy)
+  static IClockStrategy * gClockStrategy = &IncrementalClockStrategy::getInstance();
+  void setClockStrategy(IClockStrategy * iClockStrategy)
   {
     gClockStrategy = iClockStrategy;
   }
 
-  ITimeStrategy * getClockStrategy()
+  IClockStrategy * getClockStrategy()
   {
     return gClockStrategy;
   }
@@ -114,7 +114,7 @@ namespace testarduino
   void reset()
   {
     gLogFile = "arduino.log";
-    gClockStrategy = &IncrementalTimeStrategy::getInstance();
+    gClockStrategy = &IncrementalClockStrategy::getInstance();
     for(size_t i=0; i<NUM_PINS; i++)
     {
       pins[i].value = 0;

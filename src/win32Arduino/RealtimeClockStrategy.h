@@ -1,18 +1,18 @@
-#ifndef REALTIMESTRATEGY_H
-#define REALTIMESTRATEGY_H
+#ifndef REALTIMECLOCKSTRATEGY_H
+#define REALTIMECLOCKSTRATEGY_H
 
-#include "ITimeStrategy.h"
+#include "IClockStrategy.h"
 #include <time.h> //for clock_t
 
 namespace testarduino
 {
-  class RealtimeStrategy : public virtual ITimeStrategy
+  class RealtimeClockStrategy : public virtual IClockStrategy
   {
   private:
-    RealtimeStrategy();
-    virtual ~RealtimeStrategy();
+    RealtimeClockStrategy();
+    virtual ~RealtimeClockStrategy();
   public:
-    static RealtimeStrategy & getInstance();
+    static RealtimeClockStrategy & getInstance();
 
     ///<summary>
     ///Calculate the elapsed time in milliseconds between two clock_t events.
@@ -27,4 +27,4 @@ namespace testarduino
   };
 } //testarduino
 
-#endif //REALTIMESTRATEGY_H
+#endif //REALTIMECLOCKSTRATEGY_H

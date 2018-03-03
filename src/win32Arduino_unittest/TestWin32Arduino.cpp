@@ -4,8 +4,8 @@
 #include "TestWin32Arduino.h"
 #include <string>
 #include "arduino.h"
-#include "RealtimeStrategy.h"
-#include "IncrementalTimeStrategy.h"
+#include "RealtimeClockStrategy.h"
+#include "IncrementalClockStrategy.h"
 #include "demo.h"
 
 namespace arduino { namespace test
@@ -57,7 +57,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosRealtime)
   {
-    testarduino::setClockStrategy(&testarduino::RealtimeStrategy::getInstance());
+    testarduino::setClockStrategy(&testarduino::RealtimeClockStrategy::getInstance());
 
     uint32_t value1 = micros();
     delay(1000);
@@ -71,7 +71,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisRealtime)
   {
-    testarduino::setClockStrategy(&testarduino::RealtimeStrategy::getInstance());
+    testarduino::setClockStrategy(&testarduino::RealtimeClockStrategy::getInstance());
 
     uint32_t value1 = millis();
     delay(1000);
@@ -85,7 +85,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosSimulation)
   {
-    testarduino::IncrementalTimeStrategy & clock = testarduino::IncrementalTimeStrategy::getInstance();
+    testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
     clock.setMicrosecondsResolution(1);
     clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
@@ -102,7 +102,7 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisSimulation)
   {
-    testarduino::IncrementalTimeStrategy & clock = testarduino::IncrementalTimeStrategy::getInstance();
+    testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
     clock.setMicrosecondsResolution(100); //0.1ms increments
     clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
@@ -289,8 +289,8 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosResolution)
   {
-    testarduino::setClockStrategy(&testarduino::IncrementalTimeStrategy::getInstance());
-    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsResolution(1);
+    testarduino::setClockStrategy(&testarduino::IncrementalClockStrategy::getInstance());
+    testarduino::IncrementalClockStrategy::getInstance().setMicrosecondsResolution(1);
 
     uint32_t a = micros();
     uint32_t b = micros();
@@ -298,22 +298,22 @@ namespace arduino { namespace test
     EXPECT_NEAR(a, b, 1);
 
     //back to default
-    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsResolution(8);
+    testarduino::IncrementalClockStrategy::getInstance().setMicrosecondsResolution(8);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testSetMicrosCounter)
   {
-    testarduino::setClockStrategy(&testarduino::IncrementalTimeStrategy::getInstance());
-    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsResolution(1);
+    testarduino::setClockStrategy(&testarduino::IncrementalClockStrategy::getInstance());
+    testarduino::IncrementalClockStrategy::getInstance().setMicrosecondsResolution(1);
     uint32_t before = micros();
-    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsCounter(256);
+    testarduino::IncrementalClockStrategy::getInstance().setMicrosecondsCounter(256);
 
     uint32_t a = micros();
 
     EXPECT_NEAR(a, 256, 1);
 
     //back to previous value
-    testarduino::IncrementalTimeStrategy::getInstance().setMicrosecondsCounter(before);
+    testarduino::IncrementalClockStrategy::getInstance().setMicrosecondsCounter(before);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testStatusRegister)
@@ -349,7 +349,7 @@ namespace arduino { namespace test
   {
     clock_t timeStart = 200;
     clock_t timeEnd   = 201;
-    double diff = testarduino::RealtimeStrategy::clockDiff(timeEnd, timeStart);
+    double diff = testarduino::RealtimeClockStrategy::clockDiff(timeEnd, timeStart);
     EXPECT_NEAR(diff, 1.0, 0.000001);
   }
   //--------------------------------------------------------------------------------------------------

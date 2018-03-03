@@ -1,4 +1,4 @@
-#include "IncrementalTimeStrategy.h"
+#include "IncrementalClockStrategy.h"
 
 namespace testarduino
 {
@@ -6,21 +6,21 @@ namespace testarduino
   static uint32_t gMicroResolution = 8; //8 usec resolution (increment for each calls)
   static uint32_t gMicroCounter = 0;
 
-  IncrementalTimeStrategy::IncrementalTimeStrategy()
+  IncrementalClockStrategy::IncrementalClockStrategy()
   {
   }
 
-  IncrementalTimeStrategy::~IncrementalTimeStrategy()
+  IncrementalClockStrategy::~IncrementalClockStrategy()
   {
   }
 
-  IncrementalTimeStrategy & IncrementalTimeStrategy::getInstance()
+  IncrementalClockStrategy & IncrementalClockStrategy::getInstance()
   {
-    static IncrementalTimeStrategy _instance;
+    static IncrementalClockStrategy _instance;
     return _instance;
   }
 
-  uint32_t IncrementalTimeStrategy::millis()
+  uint32_t IncrementalClockStrategy::millis()
   {
     //based on micro
     testarduino::gMicroCounter += testarduino::gMicroResolution;
@@ -30,29 +30,29 @@ namespace testarduino
     return milliSeconds;
   }
 
-  uint32_t IncrementalTimeStrategy::micros()
+  uint32_t IncrementalClockStrategy::micros()
   {
     //counter increments
     testarduino::gMicroCounter += testarduino::gMicroResolution;
     return testarduino::gMicroCounter;
   }
 
-  void IncrementalTimeStrategy::setMicrosecondsResolution(uint32_t iResolution)
+  void IncrementalClockStrategy::setMicrosecondsResolution(uint32_t iResolution)
   {
     gMicroResolution = iResolution;
   }
 
-  const uint32_t & IncrementalTimeStrategy::getMicrosecondsResolution() const
+  const uint32_t & IncrementalClockStrategy::getMicrosecondsResolution() const
   {
     return gMicroResolution;
   }
 
-  void IncrementalTimeStrategy::setMicrosecondsCounter(uint32_t iCounter)
+  void IncrementalClockStrategy::setMicrosecondsCounter(uint32_t iCounter)
   {
     gMicroCounter = iCounter;
   }
 
-  const uint32_t & IncrementalTimeStrategy::getMicrosecondsCounter() const
+  const uint32_t & IncrementalClockStrategy::getMicrosecondsCounter() const
   {
     return gMicroCounter;
   }

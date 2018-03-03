@@ -1,11 +1,11 @@
-#ifndef ITIMESTRATEGY_H
-#define ITIMESTRATEGY_H
+#ifndef ICLOCKSTRATEGY_H
+#define ICLOCKSTRATEGY_H
 
 #include <stdint.h>
 
 namespace testarduino
 {
-  class ITimeStrategy
+  class IClockStrategy
   {
   public:
 
@@ -25,4 +25,4 @@ namespace testarduino
   };
 } //testarduino
 
-#endif //ITIMESTRATEGY_H
+#endif //ICLOCKSTRATEGY_H

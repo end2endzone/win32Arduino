@@ -4,7 +4,7 @@
 #include <stdint.h>   //for uintxx_t, intxx_t
 
 #include "SerialPrinter.h"
-#include "ITimeStrategy.h"
+#include "IClockStrategy.h"
 
 namespace testarduino
 {
@@ -71,13 +71,13 @@ namespace testarduino
   ///Set the desired clock strategy.
   ///</summary>
   ///<param name="iClock">The new value for the clock strategy.</param>
-  void setClockStrategy(ITimeStrategy * iClockStrategy);
+  void setClockStrategy(IClockStrategy * iClockStrategy);
 
   ///<summary>
   ///Provides the selected clock strategy.
   ///</summary>
   ///<returns>Returns the selected clock strategy.</returns>
-  ITimeStrategy * getClockStrategy();
+  IClockStrategy * getClockStrategy();
 
   //enums to string functions
   const char * toDigitalPinString(uint8_t value);
