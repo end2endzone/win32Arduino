@@ -1,29 +1,34 @@
-#include <stdarg.h>
-#include <shlobj.h>
+#include <vector>
+
+#include <stdarg.h> //for ..., Sleep()
+#include <shlobj.h> //for ..., Sleep()
 #undef max
 #undef min
 
 #include "arduino.h"
+#include "IncrementalTimeStrategy.h"
+#include "RealtimeStrategy.h"
 
 namespace testarduino
 {
-  //millis() support
-  static clock_t app_clock_init()
-  {
-    return ::clock();
-  }
-  static clock_t gClockAppStartTime = testarduino::app_clock_init();
-  
-  double clockDiff(clock_t clockEnd, clock_t clockStart)
-  {
-    static double CLOCKS_PER_MS = CLOCKS_PER_SEC/1000;
-    clock_t diffticks=clockEnd-clockStart;
-    double diffms=(diffticks)/CLOCKS_PER_MS;
-    return diffms;
-  }
-
   //pins data
-  static uint16_t pinStates[256] = {0}; //uint16_t to support analog values
+  struct Interrupt
+  {
+    ISR func;
+    uint8_t mode; //CHANGE, FALLING, RISING
+  };
+
+  typedef std::vector<Interrupt> InterruptList;
+
+  //define PIN
+  struct PIN_REGISTRY
+  {
+    uint16_t value; //10 bits to support analog values
+    InterruptList interrupts;
+  };
+
+  static const size_t NUM_PINS = 256;
+  static PIN_REGISTRY pins[NUM_PINS] = {0};
 
   //last command support
   static std::string gLastCommand;
@@ -39,7 +44,7 @@ namespace testarduino
   {
     gLogFile = iFilePath;
   }
-  void log(const char * iValue)
+  void _log(const char * iValue)
   {
     //if no logging required, leave now
     if (gLogFile == "")
@@ -66,32 +71,56 @@ namespace testarduino
     //remember last command
     gLastCommand = iValue;
   }
+  void log(const char * iFormat, ...)
+  {
+    std::string formattedStr;
+
+    va_list args;
+    va_start(args, iFormat);
+
+    static const int BUFFER_SIZE = 10240;
+    char buffer[BUFFER_SIZE];
+    buffer[0] = '\0';
+    vsprintf_s(buffer, BUFFER_SIZE, iFormat, args);
+    formattedStr = buffer;
+
+    va_end (args);
+
+    _log(formattedStr.c_str());
+  }
 
   //clock handling
-  static CLOCK_STRATEGY gClockStrategy = CLOCK_SIMULATION;
-  void setClockStrategy(CLOCK_STRATEGY iClockStrategy)
+  static ITimeStrategy * gClockStrategy = &IncrementalTimeStrategy::getInstance();
+  void setClockStrategy(ITimeStrategy * iClockStrategy)
   {
     gClockStrategy = iClockStrategy;
   }
 
-  CLOCK_STRATEGY getClockStrategy()
+  ITimeStrategy * getClockStrategy()
   {
     return gClockStrategy;
   }
 
-  static uint32_t gMicroResolution = 8; //8 usec resolution (increment for each calls)
-  static uint32_t gMicroCounter = 0;
-
-  void setMicrosecondsResolution(uint32_t iResolution)
+  void setPinValue(const uint8_t & pin, const uint16_t & value)
   {
-    gMicroResolution = iResolution;
+    pins[pin].value = value;
   }
 
-  void setMicrosecondsCounter(uint32_t iCounter)
+  uint16_t getPinValue(const uint8_t & pin)
   {
-    gMicroCounter = iCounter;
+    return pins[pin].value;
   }
 
+  void reset()
+  {
+    gLogFile = "arduino.log";
+    gClockStrategy = &IncrementalTimeStrategy::getInstance();
+    for(size_t i=0; i<NUM_PINS; i++)
+    {
+      pins[i].value = 0;
+      pins[i].interrupts.clear();
+    }
+  }
 }
 
 void tone(byte iPin, uint16_t freq, uint32_t duration)
@@ -166,9 +195,9 @@ void digitalWrite(uint8_t pin, uint8_t value)
 
   //update pin state
   if (value == LOW)
-    testarduino::pinStates[pin] = LOW;
+    testarduino::setPinValue(pin, LOW);
   else
-    testarduino::pinStates[pin] = HIGH;
+    testarduino::setPinValue(pin, HIGH);
 }
 
 uint8_t digitalRead(uint8_t pin)
@@ -181,7 +210,7 @@ uint8_t digitalRead(uint8_t pin)
   //update pin state
   static const uint8_t DIGITAL_LOW = (uint8_t)LOW;
   static const uint8_t DIGITAL_HIGH = (uint8_t)HIGH;
-  if (testarduino::pinStates[pin] == 0)
+  if (testarduino::getPinValue(pin) == 0)
     return DIGITAL_LOW;
   else
     return DIGITAL_HIGH;
@@ -195,7 +224,7 @@ void analogWrite(uint8_t pin, uint16_t value)
   testarduino::log(buffer);
 
   //update pin state
-  testarduino::pinStates[pin] = value;
+  testarduino::setPinValue(pin, value);
 }
 
 uint16_t analogRead(uint8_t pin)
@@ -206,7 +235,7 @@ uint16_t analogRead(uint8_t pin)
   testarduino::log(buffer);
 
   //update pin state
-  return testarduino::pinStates[pin];
+  return testarduino::getPinValue(pin);
 }
 
 void analogReadResolution(uint8_t bits)
@@ -263,31 +292,14 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState)
   return 200; //200 usec
 }
 
-namespace realtime
-{
-
 uint32_t micros()
 {
-  //based on millis() implementation.
-
   static const int BUFFER_SIZE = 1024;
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s();\n", "micros");
   testarduino::log(buffer);
 
-  //copy millis() implementation
-  //realtime
-  clock_t now = ::clock();
-  double diffMs = testarduino::clockDiff(now, testarduino::gClockAppStartTime);
-  double diffMicros = diffMs * 1000;
-
-  static const uint32_t MAX_MICROS = (uint32_t)0xFFFFFFFF;
-  while(diffMicros > (double)MAX_MICROS)
-  {
-    diffMicros -= (double)(MAX_MICROS);
-  }
-  uint32_t finalMicros = (uint32_t)diffMicros;
-  return finalMicros;
+  return testarduino::gClockStrategy->micros();
 }
 
 uint32_t millis()
@@ -297,11 +309,7 @@ uint32_t millis()
   sprintf(buffer, "%s();\n", "millis");
   testarduino::log(buffer);
 
-  //realtime
-  clock_t now = ::clock();
-  double diffMs = testarduino::clockDiff(now, testarduino::gClockAppStartTime);
-  uint32_t diffFinal = (uint32_t)diffMs;
-  return diffFinal;
+  return testarduino::gClockStrategy->millis();
 }
 
 void delay(uint32_t value)
@@ -311,109 +319,27 @@ void delay(uint32_t value)
   sprintf(buffer, "%s(%d);\n", "delay", value);
   testarduino::log(buffer);
 
-  //realtime
-  Sleep(value);
-}
-
-void delayMicroseconds(uint16_t value)
-{
-  static const int BUFFER_SIZE = 1024;
-  char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s();\n", "delayMicroseconds");
-  testarduino::log(buffer);
-
-  //realtime
-  uint32_t microSeconds = value;
-  uint32_t milliSeconds = microSeconds/1000;
-  if (milliSeconds == 0)
-    milliSeconds = 1;
-  Sleep(milliSeconds);
-}
-
-}; //namespace realtime
-
-namespace simulation
-{
-
-uint32_t micros()
-{
-  //counter increments
-  static const int BUFFER_SIZE = 1024;
-  char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s();\n", "micros");
-  testarduino::log(buffer);
-
-  testarduino::gMicroCounter += testarduino::gMicroResolution;
-  return testarduino::gMicroCounter;
-}
-
-uint32_t millis()
-{
-  static const int BUFFER_SIZE = 1024;
-  char buffer[BUFFER_SIZE];
-  sprintf(buffer, "%s();\n", "millis");
-  testarduino::log(buffer);
-
-  //based on micro
-  testarduino::gMicroCounter += testarduino::gMicroResolution;
-  
-  uint32_t microSeconds = testarduino::gMicroCounter;
-  uint32_t milliSeconds = microSeconds/1000;
-  return milliSeconds;
-}
-
-void delay(uint32_t value)
-{
   //based on millis() timing
-  uint32_t startTime = millis();
+  uint32_t startTime = testarduino::gClockStrategy->millis();
   uint32_t endTime = startTime + value;
-  while( millis() < endTime )
+  while( testarduino::gClockStrategy->millis() != endTime )
   {
   }
 }
 
 void delayMicroseconds(uint16_t value)
 {
+  static const int BUFFER_SIZE = 1024;
+  char buffer[BUFFER_SIZE];
+  sprintf(buffer, "%s(%d);\n", "delayMicroseconds", value);
+  testarduino::log(buffer);
+
   //based on micros() timing
-  uint32_t startTime = micros();
+  uint32_t startTime = testarduino::gClockStrategy->micros();
   uint32_t endTime = startTime + value;
-  while( micros() < endTime )
+  while( testarduino::gClockStrategy->micros() != endTime )
   {
   }
-}
-
-}; //namespace simulation
-
-uint32_t micros()
-{
-  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
-    return simulation::micros();
-  else
-    return realtime::micros();
-}
-
-uint32_t millis()
-{
-  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
-    return simulation::millis();
-  else
-    return realtime::millis();
-}
-
-void delay(uint32_t value)
-{
-  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
-    return simulation::delay(value);
-  else
-    return realtime::delay(value);
-}
-
-void delayMicroseconds(uint16_t value)
-{
-  if (testarduino::gClockStrategy == testarduino::CLOCK_SIMULATION)
-    return simulation::delayMicroseconds(value);
-  else
-    return realtime::delayMicroseconds(value);
 }
 
 //pow(base, exponent)
@@ -437,6 +363,7 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d, ISR=0x%x, %s);\n", __FUNCTION__, pin, func, testarduino::toInterruptModeString(mode));
   testarduino::log(buffer);
+
 }
 
 void detachInterrupt(uint8_t pin)

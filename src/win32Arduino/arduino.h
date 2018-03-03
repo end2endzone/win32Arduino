@@ -1,13 +1,32 @@
 #ifndef WIN32_ARDUINO_H
 #define WIN32_ARDUINO_H
 
-#include <time.h>     //for clock_t
 #include <stdint.h>   //for uintxx_t, intxx_t
 
 #include "SerialPrinter.h"
+#include "ITimeStrategy.h"
 
 namespace testarduino
 {
+  ///<summary>
+  ///Sets the value of a pin for tests.
+  ///</summary>
+  ///<param name="pin">The pin number</param>
+  ///<param name="value">The new value of the pin</param>
+  void setPinValue(const uint8_t & pin, const uint16_t & value);
+
+  ///<summary>
+  ///Reads the value of a pin.
+  ///</summary>
+  ///<param name="pin">The pin number</param>
+  ///<returns>Returns the internal value of the pin.</returns>
+  uint16_t getPinValue(const uint8_t & pin);
+
+  ///<summary>
+  ///Resets all internal states to their default values.
+  ///</summary>
+  void reset();
+
   //last command support
   ///<summary>
   ///Provides the last arduino command that was called.
@@ -22,10 +41,10 @@ namespace testarduino
   void setLogFile(const char * iFilePath);
 
   ///<summary>
-  ///Adds the given text string to the log file defined by setLogFile()
+  ///Adds the given arguments to the log file defined by setLogFile().
   ///</summary>
-  ///<param name="iValue">The text string value to add to the log file</param>
-  void log(const char * iValue);
+  ///<param name="iFormat">The format of the arguments. (same as printf format)</param>
+  void log(const char * iFormat, ...);
 
   //clock strategy handling
   ///<summary>
@@ -52,35 +71,13 @@ namespace testarduino
   ///Set the desired clock strategy.
   ///</summary>
   ///<param name="iClock">The new value for the clock strategy.</param>
-  void setClockStrategy(CLOCK_STRATEGY iClock);
+  void setClockStrategy(ITimeStrategy * iClockStrategy);
 
   ///<summary>
   ///Provides the selected clock strategy.
   ///</summary>
   ///<returns>Returns the selected clock strategy.</returns>
-  CLOCK_STRATEGY getClockStrategy();
-
-  //realtime clock support
-  ///<summary>
-  ///Calculate the elapsed time in milliseconds between two clock_t events.
-  ///</summary>
-  ///<param name="clockEnd">The time when the event ends.</param>
-  ///<param name="clockStart">The time when the event starts.</param>
-  ///<returns>Returns elapsed time in milliseconds between two clock_t events.</returns>
-  double clockDiff(clock_t clockEnd, clock_t clockStart);
-
-  //simulation clock support
-  ///<summary>
-  ///Defines the minimum increments of the internal microseconds counter for every call to the micros() function.
-  ///</summary>
-  ///<param name="iResolution">The resolution of the microseconds counter.</param>
-  void setMicrosecondsResolution(uint32_t iResolution);
-
-  ///<summary>
-  ///Defines the absolute value of the internal microseconds counter.
-  ///</summary>
-  ///<param name="iResolution">The new value for the counter.</param>
-  void setMicrosecondsCounter(uint32_t iCounter);
+  ITimeStrategy * getClockStrategy();
 
   //enums to string functions
   const char * toDigitalPinString(uint8_t value);
@@ -195,7 +192,7 @@ T map(T x, T in_min, T in_max, T out_min, T out_max)
 //pow(base, exponent)
 //sqrt(x)
 
-typedef void (*ISR)();
+typedef void (*ISR)(); //interrupt service routine
 void attachInterrupt(uint8_t pin, ISR func, uint8_t mode);
 void detachInterrupt(uint8_t pin);
 
