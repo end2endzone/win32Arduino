@@ -9,18 +9,32 @@
 namespace testarduino
 {
   ///<summary>
-  ///Sets the value of a pin for tests.
+  ///Sets the analog value of a pin for tests.
   ///</summary>
   ///<param name="pin">The pin number</param>
-  ///<param name="value">The new value of the pin</param>
-  void setPinValue(const uint8_t & pin, const uint16_t & value);
+  ///<param name="value">The new analog value of the pin</param>
+  void setPinAnalogValue(const uint8_t & pin, const uint16_t & value);
 
   ///<summary>
-  ///Reads the value of a pin.
+  ///Reads the analog value of a pin.
   ///</summary>
   ///<param name="pin">The pin number</param>
-  ///<returns>Returns the internal value of the pin.</returns>
-  uint16_t getPinValue(const uint8_t & pin);
+  ///<returns>Returns the internal analog value of the pin.</returns>
+  uint16_t getPinAnalogValue(const uint8_t & pin);
+
+  ///<summary>
+  ///Sets the digital value of a pin for tests.
+  ///</summary>
+  ///<param name="pin">The pin number</param>
+  ///<param name="value">The new digital value of the pin</param>
+  void setPinDigitalValue(const uint8_t & pin, const uint16_t & value);
+
+  ///<summary>
+  ///Reads the digital value of a pin.
+  ///</summary>
+  ///<param name="pin">The pin number</param>
+  ///<returns>Returns the internal digital value of the pin.</returns>
+  uint16_t getPinDigitalValue(const uint8_t & pin);
 
   ///<summary>
   ///Resets all internal states to their default values.
@@ -45,27 +59,6 @@ namespace testarduino
   ///</summary>
   ///<param name="iFormat">The format of the arguments. (same as printf format)</param>
   void log(const char * iFormat, ...);
-
-  //clock strategy handling
-  ///<summary>
-  ///an enumerator for each time handling strategies
-  ///</summary>
-  enum CLOCK_STRATEGY
-  {
-    ///<summary>
-    ///The clock timing is based on the computer's internal clock.
-    ///millis() function is supported.
-    ///micros() function is estimated from millis().
-    ///</summary>
-    CLOCK_REALTIME = 0,
-
-    ///<summary>
-    ///The clock timing is set manually.
-    ///Each call to a time function increases the internal time counter.
-    ///millis() and micros() functions are supported.
-    ///</summary>
-    CLOCK_SIMULATION,
-  };
 
   ///<summary>
   ///Set the desired clock strategy.

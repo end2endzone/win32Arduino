@@ -100,7 +100,7 @@ namespace arduino { namespace test
     ASSERT_EQ(10001, elapsedMicros); //0 usec epsilon
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(TestWin32Arduino, testMillisSimulation)
+  TEST_F(TestWin32Arduino, testMillisSimulation) // test delay() function
   {
     testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
@@ -351,6 +351,155 @@ namespace arduino { namespace test
     clock_t timeEnd   = 201;
     double diff = testarduino::RealtimeClockStrategy::clockDiff(timeEnd, timeStart);
     EXPECT_NEAR(diff, 1.0, 0.000001);
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testDelayMicroseconds)
+  {
+    testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
+    testarduino::setClockStrategy(&clock);
+    clock.setMicrosecondsResolution(1);
+    clock.setMicrosecondsCounter(50);
+
+    uint32_t value1 = micros(); //51 usec
+    delayMicroseconds(30); //30 usec
+    uint32_t value2 = micros(); // 1 usec
+
+    ASSERT_GT(value2, value1);
+
+    uint32_t elapsedMicros = value2-value1;
+    ASSERT_EQ(32, elapsedMicros); //0 usec epsilon
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testDelay)
+  {
+    testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
+    testarduino::setClockStrategy(&clock);
+    clock.setMicrosecondsResolution(100); //0.1ms increments
+    clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
+
+    uint32_t value1 = millis();
+    delay(30); // 30ms
+    uint32_t value2 = millis(); // 1ms
+
+    ASSERT_GT(value2, value1);
+
+    uint32_t elapsedMillis = value2-value1;
+    ASSERT_EQ(30, elapsedMillis); //0ms epsilon
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testPinValues)
+  {
+    static const uint16_t POWER = 17;
+    static const uint16_t MULTIPLICATOR = 31;
+    static const uint16_t ADD = 59;
+
+    for(int pin=0; pin<=255; pin++)
+    {
+      uint16_t value = POWER*POWER*pin + MULTIPLICATOR*pin + ADD+pin;
+      value = value % (1<<10);
+      testarduino::setPinAnalogValue(pin, 123);
+      ASSERT_EQ(123, testarduino::getPinAnalogValue(pin));
+    }
+
+    //test too big values
+    static const uint8_t pin = 2;
+    testarduino::setPinAnalogValue(pin, 1024);
+    ASSERT_EQ(0, testarduino::getPinAnalogValue(pin));
+    testarduino::setPinAnalogValue(pin, 1025);
+    ASSERT_EQ(1, testarduino::getPinAnalogValue(pin));
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testReset)
+  {
+    //test pin values
+    for(int pin=0; pin<=255; pin++)
+    {
+      testarduino::setPinAnalogValue(pin, 111);
+    }
+    testarduino::reset();
+    for(int pin=0; pin<=255; pin++)
+    {
+      ASSERT_EQ(0, testarduino::getPinAnalogValue(pin));
+    }
+
+    //test interrupts
+    //?
+  }
+  //--------------------------------------------------------------------------------------------------
+  static int gTestInterrupts_CHANGE = 0;
+  void testInterruptsISR_CHANGE()
+  {
+    gTestInterrupts_CHANGE++;
+  }
+  static int gTestInterrupts_FALLING = 0;
+  void testInterruptsISR_FALLING()
+  {
+    gTestInterrupts_FALLING++;
+  }
+  static int gTestInterrupts_RISING = 0;
+  void testInterruptsISR_RISING()
+  {
+    gTestInterrupts_RISING++;
+  }
+  TEST_F(TestWin32Arduino, testInterrupts)
+  {
+    static const uint8_t pin = 2;
+
+    //CHANGE
+    gTestInterrupts_CHANGE = 0;
+    gTestInterrupts_FALLING = 0;
+    gTestInterrupts_RISING = 0;
+    testarduino::setPinDigitalValue(pin, LOW);
+    attachInterrupt(pin, testInterruptsISR_CHANGE, CHANGE);
+    testarduino::setPinDigitalValue(pin, HIGH);
+    ASSERT_EQ(1, gTestInterrupts_CHANGE);
+    ASSERT_EQ(0, gTestInterrupts_FALLING);
+    ASSERT_EQ(0, gTestInterrupts_RISING);
+
+    detachInterrupt(pin);
+    testarduino::setPinDigitalValue(pin, LOW);
+    testarduino::setPinDigitalValue(pin, HIGH);
+    ASSERT_EQ(1, gTestInterrupts_CHANGE);
+    ASSERT_EQ(0, gTestInterrupts_FALLING);
+    ASSERT_EQ(0, gTestInterrupts_RISING);
+
+
+    //FALLING
+    gTestInterrupts_CHANGE = 0;
+    gTestInterrupts_FALLING = 0;
+    gTestInterrupts_RISING = 0;
+    testarduino::setPinDigitalValue(pin, HIGH);
+    attachInterrupt(pin, testInterruptsISR_FALLING, FALLING);
+    testarduino::setPinDigitalValue(pin, LOW); //from HIGH to LOW
+    ASSERT_EQ(0, gTestInterrupts_CHANGE);
+    ASSERT_EQ(1, gTestInterrupts_FALLING);
+    ASSERT_EQ(0, gTestInterrupts_RISING);
+
+    detachInterrupt(pin);
+    testarduino::setPinDigitalValue(pin, HIGH);
+    testarduino::setPinDigitalValue(pin, LOW);
+    ASSERT_EQ(0, gTestInterrupts_CHANGE);
+    ASSERT_EQ(1, gTestInterrupts_FALLING);
+    ASSERT_EQ(0, gTestInterrupts_RISING);
+
+
+    //RISING
+    gTestInterrupts_CHANGE = 0;
+    gTestInterrupts_FALLING = 0;
+    gTestInterrupts_RISING = 0;
+    testarduino::setPinDigitalValue(pin, LOW);
+    attachInterrupt(pin, testInterruptsISR_RISING, RISING);
+    testarduino::setPinDigitalValue(pin, HIGH); //from LOW to HIGH
+    ASSERT_EQ(0, gTestInterrupts_CHANGE);
+    ASSERT_EQ(0, gTestInterrupts_FALLING);
+    ASSERT_EQ(1, gTestInterrupts_RISING);
+
+    detachInterrupt(pin);
+    testarduino::setPinDigitalValue(pin, LOW);
+    testarduino::setPinDigitalValue(pin, HIGH);
+    ASSERT_EQ(0, gTestInterrupts_CHANGE);
+    ASSERT_EQ(0, gTestInterrupts_FALLING);
+    ASSERT_EQ(1, gTestInterrupts_RISING);
   }
   //--------------------------------------------------------------------------------------------------
 } // End namespace test

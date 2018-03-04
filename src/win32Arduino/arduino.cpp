@@ -9,8 +9,14 @@
 #include "IncrementalClockStrategy.h"
 #include "RealtimeClockStrategy.h"
 
+static const uint8_t DEFAULT_STATUS_REGISTER = 130;
+static const uint8_t DEFAULT_NO_INTERRUPTS_STATUS_REGISTER = 2;
+uint8_t SREG = DEFAULT_STATUS_REGISTER;
+
 namespace testarduino
 {
+  static const uint16_t MAX_PIN_VALUE = 1023;
+
   //pins data
   struct Interrupt
   {
@@ -18,13 +24,11 @@ namespace testarduino
     uint8_t mode; //CHANGE, FALLING, RISING
   };
 
-  typedef std::vector<Interrupt> InterruptList;
-
   //define PIN
   struct PIN_REGISTRY
   {
     uint16_t value; //10 bits to support analog values
-    InterruptList interrupts;
+    Interrupt interrupt;
   };
 
   static const size_t NUM_PINS = 256;
@@ -101,24 +105,67 @@ namespace testarduino
     return gClockStrategy;
   }
 
-  void setPinValue(const uint8_t & pin, const uint16_t & value)
+  void setPinAnalogValue(const uint8_t & pin, const uint16_t & value)
   {
-    pins[pin].value = value;
+    uint16_t newValue = value;
+    newValue = (newValue)%(1<<10);  //limit pin values to 10 bits
+
+    uint16_t oldDigitalValue = getPinDigitalValue(pin);
+    pins[pin].value = newValue; //update existing value
+    uint16_t newDigitalValue = getPinDigitalValue(pin);
+
+    //process interrupts
+    if (SREG == DEFAULT_STATUS_REGISTER && pins[pin].interrupt.func)
+    {
+      bool low2high = (oldDigitalValue == LOW && newDigitalValue == HIGH);
+      bool high2low = (oldDigitalValue == HIGH && newDigitalValue == LOW);
+      if (pins[pin].interrupt.mode == CHANGE && (low2high || high2low))
+        pins[pin].interrupt.func();
+      else if (pins[pin].interrupt.mode == RISING && low2high)
+        pins[pin].interrupt.func();
+      else if (pins[pin].interrupt.mode == FALLING && high2low)
+        pins[pin].interrupt.func();
+    }
   }
 
-  uint16_t getPinValue(const uint8_t & pin)
+  uint16_t getPinAnalogValue(const uint8_t & pin)
   {
     return pins[pin].value;
+  }
+
+  void setPinDigitalValue(const uint8_t & pin, const uint16_t & value)
+  {
+    if (value == LOW)
+      setPinAnalogValue(pin, 0);
+    else
+      setPinAnalogValue(pin, MAX_PIN_VALUE);
+  }
+
+  uint16_t getPinDigitalValue(const uint8_t & pin)
+  {
+    uint16_t value = getPinAnalogValue(pin);
+    if (value == 0)
+      return LOW;
+    else
+      return HIGH;
   }
 
   void reset()
   {
     gLogFile = "arduino.log";
-    gClockStrategy = &IncrementalClockStrategy::getInstance();
+
+    //reset clock
+    IncrementalClockStrategy & clock = IncrementalClockStrategy::getInstance();
+    clock.setMicrosecondsResolution(1);
+    clock.setMicrosecondsCounter(0);
+    gClockStrategy = &clock;
+
+    //reset pins
     for(size_t i=0; i<NUM_PINS; i++)
     {
       pins[i].value = 0;
-      pins[i].interrupts.clear();
+      pins[i].interrupt.func = 0;
+      pins[i].interrupt.mode = 0;
     }
   }
 }
@@ -195,9 +242,9 @@ void digitalWrite(uint8_t pin, uint8_t value)
 
   //update pin state
   if (value == LOW)
-    testarduino::setPinValue(pin, LOW);
+    testarduino::setPinDigitalValue(pin, LOW);
   else
-    testarduino::setPinValue(pin, HIGH);
+    testarduino::setPinDigitalValue(pin, HIGH);
 }
 
 uint8_t digitalRead(uint8_t pin)
@@ -210,7 +257,7 @@ uint8_t digitalRead(uint8_t pin)
   //update pin state
   static const uint8_t DIGITAL_LOW = (uint8_t)LOW;
   static const uint8_t DIGITAL_HIGH = (uint8_t)HIGH;
-  if (testarduino::getPinValue(pin) == 0)
+  if (testarduino::getPinDigitalValue(pin) == 0)
     return DIGITAL_LOW;
   else
     return DIGITAL_HIGH;
@@ -224,7 +271,7 @@ void analogWrite(uint8_t pin, uint16_t value)
   testarduino::log(buffer);
 
   //update pin state
-  testarduino::setPinValue(pin, value);
+  testarduino::setPinAnalogValue(pin, value);
 }
 
 uint16_t analogRead(uint8_t pin)
@@ -235,7 +282,7 @@ uint16_t analogRead(uint8_t pin)
   testarduino::log(buffer);
 
   //update pin state
-  return testarduino::getPinValue(pin);
+  return testarduino::getPinAnalogValue(pin);
 }
 
 void analogReadResolution(uint8_t bits)
@@ -364,6 +411,8 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
   sprintf(buffer, "%s(%d, ISR=0x%x, %s);\n", __FUNCTION__, pin, func, testarduino::toInterruptModeString(mode));
   testarduino::log(buffer);
 
+  testarduino::pins[pin].interrupt.func = func;
+  testarduino::pins[pin].interrupt.mode = mode;
 }
 
 void detachInterrupt(uint8_t pin)
@@ -372,11 +421,10 @@ void detachInterrupt(uint8_t pin)
   char buffer[BUFFER_SIZE];
   sprintf(buffer, "%s(%d);\n", __FUNCTION__, pin);
   testarduino::log(buffer);
-}
 
-static const uint8_t DEFAULT_STATUS_REGISTER = 130;
-static const uint8_t DEFAULT_NO_INTERRUPTS_STATUS_REGISTER = 2;
-uint8_t SREG = DEFAULT_STATUS_REGISTER;
+  testarduino::pins[pin].interrupt.func = NULL;
+  testarduino::pins[pin].interrupt.mode = 0;
+}
 
 void cli()
 {
