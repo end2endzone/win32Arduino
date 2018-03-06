@@ -10,5 +10,5 @@ if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-target_link_libraries(win32Arduino_unittest debug     win32Arduino.lib gtest.lib)
-target_link_libraries(win32Arduino_unittest optimized win32Arduino.lib gtest.lib)
+target_link_libraries(win32Arduino_unittest debug     win32Arduino.lib common.lib gtest.lib)
+target_link_libraries(win32Arduino_unittest optimized win32Arduino.lib common.lib gtest.lib)

@@ -22,11 +22,11 @@ namespace arduino { namespace test
   {
     pinMode(13, OUTPUT);      // sets the digital pin 13 as output
     std::string pinOutput = testarduino::getLastCommand();
-    ASSERT_EQ("pinMode(13, OUTPUT);\n", pinOutput);
+    ASSERT_EQ("pinMode(13,OUTPUT);\n", pinOutput);
 
     pinMode(13, INPUT);      // sets the digital pin 7 as input
     std::string pinInput = testarduino::getLastCommand();
-    ASSERT_EQ("pinMode(13, INPUT);\n", pinInput);
+    ASSERT_EQ("pinMode(13,INPUT);\n", pinInput);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testDigitalWrite)
@@ -35,11 +35,11 @@ namespace arduino { namespace test
 
     digitalWrite(13, HIGH);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("digitalWrite(13, HIGH);\n", lastCall);
+    ASSERT_EQ("digitalWrite(13,HIGH);\n", lastCall);
 
     digitalWrite(13, LOW);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("digitalWrite(13, LOW);\n", lastCall);
+    ASSERT_EQ("digitalWrite(13,LOW);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testAnalogWrite)
@@ -48,11 +48,11 @@ namespace arduino { namespace test
 
     analogWrite(13, 56);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("analogWrite(13, 56);\n", lastCall);
+    ASSERT_EQ("analogWrite(13,56);\n", lastCall);
 
     analogWrite(13, 255);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("analogWrite(13, 255);\n", lastCall);
+    ASSERT_EQ("analogWrite(13,255);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testDigitalRead)
@@ -99,11 +99,11 @@ namespace arduino { namespace test
 
     shiftOut(3, 4, MSBFIRST, 78);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("shiftOut(3, 4, MSBFIRST, 78);\n", lastCall);
+    ASSERT_EQ("shiftOut(3,4,MSBFIRST,78);\n", lastCall);
 
     shiftOut(5, 6, LSBFIRST, 99);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("shiftOut(5, 6, LSBFIRST, 99);\n", lastCall);
+    ASSERT_EQ("shiftOut(5,6,LSBFIRST,99);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testShiftIn)
@@ -113,11 +113,11 @@ namespace arduino { namespace test
 
     value = shiftIn(3, 4, MSBFIRST);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("shiftIn(3, 4, MSBFIRST);\n", lastCall);
+    ASSERT_EQ("shiftIn(3,4,MSBFIRST);\n", lastCall);
 
     value = shiftIn(5, 6, LSBFIRST);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("shiftIn(5, 6, LSBFIRST);\n", lastCall);
+    ASSERT_EQ("shiftIn(5,6,LSBFIRST);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testPulseIn)
@@ -127,11 +127,11 @@ namespace arduino { namespace test
 
     value = pulseIn(3, HIGH);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("pulseIn(3, HIGH);\n", lastCall);
+    ASSERT_EQ("pulseIn(3,HIGH);\n", lastCall);
 
     value = pulseIn(4, LOW);
     lastCall = testarduino::getLastCommand();
-    ASSERT_EQ("pulseIn(4, LOW);\n", lastCall);
+    ASSERT_EQ("pulseIn(4,LOW);\n", lastCall);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testMicros)
@@ -161,8 +161,8 @@ namespace arduino { namespace test
 
     attachInterrupt(2, &myInterruptFunction, RISING);
     lastCall = testarduino::getLastCommand();
-    ASSERT_NE(std::string::npos, lastCall.find("attachInterrupt(2, "));
-    ASSERT_NE(std::string::npos, lastCall.find(", RISING);"));
+    ASSERT_NE(std::string::npos, lastCall.find("attachInterrupt(2,"));
+    ASSERT_NE(std::string::npos, lastCall.find(",RISING);"));
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testDetachInterrupt)
