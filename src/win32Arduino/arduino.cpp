@@ -150,6 +150,116 @@ namespace testarduino
       return HIGH;
   }
 
+  enum FunctionAttachMode
+  {
+    PRECALL,
+    POSTCALL,
+  };
+ 
+  struct FunctionCallback
+  {
+    std::string functionName;
+    Callback func;
+    FunctionAttachMode mode;
+  };
+  typedef std::vector<FunctionCallback> FunctionCallbackList;
+  FunctionCallbackList gFunctionCallbacks;
+ static const size_t INVALID_FUNCTIONCALLBACK_INDEX = (size_t)-1;
+ 
+  size_t findFunctionCallback(const std::string & iFunctionName)
+  {
+    for(size_t i=0; i<gFunctionCallbacks.size(); i++)
+    {
+      FunctionCallback & fCallback = gFunctionCallbacks[i];
+      if (fCallback.functionName == iFunctionName)
+        return i;
+    }
+    return INVALID_FUNCTIONCALLBACK_INDEX;
+  }
+ 
+  size_t findFunctionCallback(const std::string & iFunctionName, FunctionAttachMode mode)
+  {
+    size_t index = findFunctionCallback(iFunctionName);
+    if (index != INVALID_FUNCTIONCALLBACK_INDEX)
+    {
+      FunctionCallback & fCallback = gFunctionCallbacks[index];
+      if (fCallback.mode == mode)
+        return index;
+    }
+    return INVALID_FUNCTIONCALLBACK_INDEX;
+  }
+ 
+  void invokeFunctionCallback(const std::string & iFunctionName, FunctionAttachMode mode)
+  {
+    size_t existingCallback = findFunctionCallback(iFunctionName, mode);
+    if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
+    {
+      FunctionCallback & fCallback = gFunctionCallbacks[existingCallback];
+      fCallback.func();
+    }
+  }
+ 
+  void attachFunctionCallback(const char * name, Callback func, FunctionAttachMode mode)
+  {
+    //allow only 1 callback per function name
+   size_t existingCallback = findFunctionCallback(name);
+    if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
+    {
+      FunctionCallback & fCallback = gFunctionCallbacks[existingCallback];
+     
+      //replace old function by new one
+      fCallback.func = func;
+      fCallback.mode = mode;
+    }
+    else
+    {
+      //add a new callback to the list
+      FunctionCallback fCallback;
+      fCallback.functionName = name;
+      fCallback.func = func;
+      fCallback.mode = mode;
+      gFunctionCallbacks.push_back(fCallback);
+    }
+  }
+ 
+  void attachPreFunctionCallback(const char * name, Callback func)
+  {
+    attachFunctionCallback(name, func, PRECALL);
+  }
+ 
+  void attachPostFunctionCallback(const char * name, Callback func)
+  {
+    attachFunctionCallback(name, func, POSTCALL);
+  }
+ 
+  void detachFunctionCallback(const char * name)
+  {
+    size_t existingCallback = findFunctionCallback(name);
+    if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
+    {
+      gFunctionCallbacks.erase(gFunctionCallbacks.begin() + existingCallback);
+    }
+  }
+ 
+  class FunctionCallbackHandler
+  {
+  public:
+    FunctionCallbackHandler(const char * iFunctionName)
+    {
+      functionName = iFunctionName;
+ 
+      //invoke PRECALL mode
+      invokeFunctionCallback(functionName, PRECALL);
+    }
+    ~FunctionCallbackHandler()
+    {
+      //destructor. must invoke POSTCALL mode
+      invokeFunctionCallback(functionName, POSTCALL);
+    }
+  private:
+    std::string functionName;
+  };
+ 
   void reset()
   {
     gLogFile = "arduino.log";

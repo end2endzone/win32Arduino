@@ -78,6 +78,30 @@ namespace testarduino
   const char * toBitOrderString(uint8_t value);
   const char * toInterruptModeString(uint8_t value);
 
+  ///<summary>
+  ///Type definition for function callbacks.
+  ///</summary>
+  typedef void (*Callback)();
+
+  ///<summary>
+  ///Attach a function callback that is run at the beginning of the specified function.
+  ///</summary>
+  ///<param name="name">The name of the function to monitor.</param>
+  ///<param name="func">Pointer to a callback function.</param>
+  void attachPreFunctionCallback(const char * name, Callback func);
+
+  ///<summary>
+  ///Attach a function callback that is run at the end of the specified function.
+  ///</summary>
+  ///<param name="name">The name of the function to monitor.</param>
+  ///<param name="func">Pointer to a callback function.</param>
+  void attachPostFunctionCallback(const char * name, Callback func);
+
+  ///<summary>
+  ///Detach any function callback of the specified function.
+  ///</summary>
+  ///<param name="name">The name of the function to monitor.</param>
+  void detachFunctionCallback(const char * name);
 }
 
 //types definitions
