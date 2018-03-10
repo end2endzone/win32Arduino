@@ -103,6 +103,35 @@ namespace testarduino
   ///</summary>
   ///<param name="name">The name of the function to monitor.</param>
   void detachFunctionCallback(const char * name);
+
+  ///<summary>
+  ///Attach a function callback that is run at a specific time.
+  ///</summary>
+  ///<remarks>The callback is only evaluated when a library or a program is running the millis() arduino function.</remarks>
+  ///<param name="time">The time in milliseconds at which the callback must be run.</param>
+  ///<param name="func">Pointer to a callback function that is run at a specific time.</param>
+  void attachMillisecondsCallback(uint32_t time, Callback func);
+ 
+  ///<summary>
+  ///Detach a function callback that is run at a specific time.
+  ///</summary>
+  ///<param name="func">Pointer to a callback function that is run at a specific time.</param>
+  void detachMillisecondsCallback(Callback func);
+ 
+  ///<summary>
+  ///Attach a function callback that is run at a specific time.
+  ///</summary>
+  ///<remarks>The callback is only evaluated when a library or a program is running the micros() arduino function.</remarks>
+  ///<param name="time">The time in milliseconds at which the callback must be run.</param>
+  ///<param name="func">Pointer to a callback function that is run at a specific time.</param>
+  void attachMicrosecondsCallback(uint32_t time, Callback func);
+ 
+  ///<summary>
+  ///Detach a function callback that is run at a specific time.
+  ///</summary>
+  ///<param name="func">Pointer to a callback function that is run at a specific time.</param>
+  void detachMicrosecondsCallback(Callback func);
+ 
 }
 
 //types definitions

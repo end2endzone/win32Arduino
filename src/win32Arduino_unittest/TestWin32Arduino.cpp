@@ -575,5 +575,81 @@ namespace arduino { namespace test
     ASSERT_EQ(100, testarduino::getPinAnalogValue(gTestAttachFunctionCallback.pin));
   }
   //--------------------------------------------------------------------------------------------------
+  struct TESTATTACHMILLISECONDSCALLBACK_STRUCT
+  {
+    int count;
+    uint32_t callbackTime;
+  } gTestAttachMillisecondsCallback;
+  void testAttachMillisecondsCallback_ISR()
+  {
+    gTestAttachMillisecondsCallback.count++;
+    gTestAttachMillisecondsCallback.callbackTime = millis();
+  }
+  TEST_F(TestWin32Arduino, testAttachMillisecondsCallback)
+  {
+    //arrange
+    gTestAttachMillisecondsCallback.count = 0;
+    gTestAttachMillisecondsCallback.callbackTime = 0;
+    testarduino::reset();
+    testarduino::setLogFile(""); //disable logging
+   
+    testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
+    testarduino::setClockStrategy(&clock);
+    clock.setMicrosecondsCounter(230*1000); //set current time at 230ms
+    clock.setMicrosecondsResolution(100);
+
+    //act
+    const uint32_t EXPECTEDCALLBACKTIME = 2500;
+    testarduino::attachMillisecondsCallback(EXPECTEDCALLBACKTIME, testAttachMillisecondsCallback_ISR);
+ 
+    //wait for 5 seconds
+    uint32_t startTime = millis();
+    delay(5000);
+    uint32_t exitTime = millis();
+
+    //assert
+    ASSERT_EQ(1, gTestAttachMillisecondsCallback.count); //assert callback was called
+    ASSERT_EQ(exitTime, startTime+5000); //assert loop duration was really 5 seconds
+    ASSERT_EQ(EXPECTEDCALLBACKTIME, gTestAttachMillisecondsCallback.callbackTime); //assert actual callback time
+  }
+  //--------------------------------------------------------------------------------------------------
+  struct TESTATTACHMICROSECONDSCALLBACK_STRUCT
+  {
+    int count;
+    uint32_t callbackTime;
+  } gTestAttachMicrosecondsCallback;
+  void testAttachMicrosecondsCallback_ISR()
+  {
+    gTestAttachMicrosecondsCallback.count++;
+    gTestAttachMicrosecondsCallback.callbackTime = micros();
+  }
+  TEST_F(TestWin32Arduino, testAttachMicrosecondsCallback)
+  {
+    //arrange
+    gTestAttachMicrosecondsCallback.count = 0;
+    gTestAttachMicrosecondsCallback.callbackTime = 0;
+    testarduino::reset();    
+    testarduino::setLogFile(""); //disable logging
+   
+    testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
+    testarduino::setClockStrategy(&clock);
+    clock.setMicrosecondsCounter(270); //set current time at 270us
+    clock.setMicrosecondsResolution(1);
+
+    //act
+    const uint32_t EXPECTEDCALLBACKTIME = 2500;  
+    testarduino::attachMicrosecondsCallback(EXPECTEDCALLBACKTIME, testAttachMicrosecondsCallback_ISR);
+ 
+    //wait for 3ms
+    uint32_t startTime = micros();
+    delayMicroseconds(3000);
+    uint32_t exitTime = micros();
+
+    //assert
+    ASSERT_EQ(1, gTestAttachMicrosecondsCallback.count); //assert callback was called
+    ASSERT_NEAR(exitTime, startTime+3000, 2); //assert loop duration was really 3ms (with 2us epsilon)
+    ASSERT_NEAR(EXPECTEDCALLBACKTIME, gTestAttachMicrosecondsCallback.callbackTime, 1); //assert actual callback time (with 1us epsilon)
+  }
+  //--------------------------------------------------------------------------------------------------
 } // End namespace test
 } // End namespace arduino
