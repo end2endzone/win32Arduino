@@ -97,6 +97,8 @@ namespace testarduino
     _log(formattedStr.c_str());
   }
 
+  //---------------------------------------------------------------------------
+
   //clock handling
   static IClockStrategy * gClockStrategy = &IncrementalClockStrategy::getInstance();
   void setClockStrategy(IClockStrategy * iClockStrategy)
@@ -108,6 +110,8 @@ namespace testarduino
   {
     return gClockStrategy;
   }
+
+  //---------------------------------------------------------------------------
 
   void setPinAnalogValue(const uint8_t & pin, const uint16_t & value)
   {
@@ -153,6 +157,8 @@ namespace testarduino
     else
       return HIGH;
   }
+
+  //---------------------------------------------------------------------------
 
   enum FunctionAttachMode
   {
@@ -265,6 +271,8 @@ namespace testarduino
     std::string functionName;
   };
  
+  //---------------------------------------------------------------------------
+
   void reset()
   {
     gLogFile = "arduino.log";
