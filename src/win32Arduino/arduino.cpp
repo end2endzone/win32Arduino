@@ -293,6 +293,9 @@ void tone(byte iPin, uint16_t freq, uint32_t duration)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << iPin << "," << freq << "," << duration << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 }
 
 void noTone(byte iPin)
@@ -300,6 +303,9 @@ void noTone(byte iPin)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << iPin << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 }
 
 //declare global Serial object
@@ -346,6 +352,9 @@ void pinMode(uint8_t pin, uint8_t mode)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << "," << testarduino::toPinModeString(mode) << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 }
 
 void digitalWrite(uint8_t pin, uint8_t value)
@@ -353,6 +362,9 @@ void digitalWrite(uint8_t pin, uint8_t value)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << "," << testarduino::toDigitalPinString(value) << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   if (value == LOW)
@@ -366,6 +378,9 @@ uint8_t digitalRead(uint8_t pin)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   static const uint8_t DIGITAL_LOW = (uint8_t)LOW;
@@ -381,6 +396,9 @@ void analogWrite(uint8_t pin, uint16_t value)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << "," << value << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   testarduino::setPinAnalogValue(pin, value);
@@ -391,6 +409,9 @@ uint16_t analogRead(uint8_t pin)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   return testarduino::getPinAnalogValue(pin);
@@ -401,6 +422,9 @@ void analogReadResolution(uint8_t bits)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << bits << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 }
 
 void analogWriteResolution(uint8_t bits)
@@ -408,6 +432,9 @@ void analogWriteResolution(uint8_t bits)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << bits << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 }
 
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data)
@@ -415,6 +442,9 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << dataPin << "," << clockPin << "," << testarduino::toBitOrderString(bitOrder) << "," << data << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 }
 
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
@@ -422,6 +452,9 @@ uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << dataPin << "," << clockPin << "," << testarduino::toBitOrderString(bitOrder) << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   return 0;
 }
@@ -431,6 +464,9 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState, uint32_t timeout)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << "," << testarduino::toDigitalPinString(digitalState) << "," << timeout << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   return 200; //200 usec
 }
@@ -440,6 +476,9 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << "," << testarduino::toDigitalPinString(digitalState) << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   return 200; //200 usec
 }
@@ -449,6 +488,9 @@ uint32_t micros()
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "();";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   return testarduino::gClockStrategy->micros();
 }
@@ -458,6 +500,9 @@ uint32_t millis()
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "();";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   return testarduino::gClockStrategy->millis();
 }
@@ -467,6 +512,9 @@ void delay(uint32_t value)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << value << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //based on millis() timing
   uint32_t startTime = testarduino::gClockStrategy->millis();
@@ -481,6 +529,9 @@ void delayMicroseconds(uint16_t value)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << value << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //based on micros() timing
   uint32_t startTime = testarduino::gClockStrategy->micros();
@@ -510,6 +561,9 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << "," << (void*)func << "," << testarduino::toInterruptModeString(mode) << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   testarduino::pins[pin].interrupt.func = func;
   testarduino::pins[pin].interrupt.mode = mode;
@@ -520,6 +574,9 @@ void detachInterrupt(uint8_t pin)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << pin << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   testarduino::pins[pin].interrupt.func = NULL;
   testarduino::pins[pin].interrupt.mode = 0;
@@ -530,6 +587,9 @@ void cli()
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "();";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   noInterrupts();
 }
@@ -539,6 +599,9 @@ void noInterrupts()
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "();";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   SREG = DEFAULT_NO_INTERRUPTS_STATUS_REGISTER;
 }
@@ -548,6 +611,9 @@ void interrupts()
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "();";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   SREG = DEFAULT_STATUS_REGISTER;
 }
@@ -712,6 +778,9 @@ void randomSeed(int16_t value)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << value << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   ::srand(value);
 }
@@ -720,6 +789,9 @@ void randomSeed(int32_t value)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << value << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   ::srand(value);
 }
@@ -729,6 +801,9 @@ int32_t random(int32_t min, int32_t max)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << min << "," << max << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   int systemMax = RAND_MAX;
   int value = rand(); //between 0 (inclusive) and RAND_MAX (exclusive).
@@ -742,6 +817,9 @@ int32_t random(int32_t max)
   //log function call
   const std::string funcArgs = std::string(__FUNCTION__) << "(" << max << ");";
   testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   return random(0, max);
 }

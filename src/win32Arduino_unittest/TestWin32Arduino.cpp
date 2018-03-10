@@ -502,5 +502,25 @@ namespace arduino { namespace test
     ASSERT_EQ(1, gTestInterrupts_RISING);
   }
   //--------------------------------------------------------------------------------------------------
+  static int gTestFunctionCallbacks_MILLIS = 0;
+  void testFunctionCallbacks_MILLIS()
+  {
+    gTestFunctionCallbacks_MILLIS++;
+  }
+  TEST_F(TestWin32Arduino, testFunctionCallbacks)
+  {
+    gTestFunctionCallbacks_MILLIS = 0;
+ 
+    testarduino::attachPreFunctionCallback("millis", testFunctionCallbacks_MILLIS);
+    ASSERT_EQ(0, gTestFunctionCallbacks_MILLIS);
+    uint32_t time1 = millis();
+    ASSERT_EQ(1, gTestFunctionCallbacks_MILLIS);
+    uint32_t time2 = millis();
+    ASSERT_EQ(2, gTestFunctionCallbacks_MILLIS);
+    testarduino::detachFunctionCallback("millis");
+    uint32_t time3 = millis();
+    ASSERT_EQ(2, gTestFunctionCallbacks_MILLIS);
+  }
+  //--------------------------------------------------------------------------------------------------
 } // End namespace test
 } // End namespace arduino
