@@ -444,7 +444,7 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testInterrupts)
   {
     static const uint8_t pin = 2;
-
+ 
     //CHANGE
     gTestInterrupts_CHANGE = 0;
     gTestInterrupts_FALLING = 0;
@@ -455,15 +455,15 @@ namespace arduino { namespace test
     ASSERT_EQ(1, gTestInterrupts_CHANGE);
     ASSERT_EQ(0, gTestInterrupts_FALLING);
     ASSERT_EQ(0, gTestInterrupts_RISING);
-
+ 
     detachInterrupt(pin);
     testarduino::setPinDigitalValue(pin, LOW);
     testarduino::setPinDigitalValue(pin, HIGH);
     ASSERT_EQ(1, gTestInterrupts_CHANGE);
     ASSERT_EQ(0, gTestInterrupts_FALLING);
     ASSERT_EQ(0, gTestInterrupts_RISING);
-
-
+ 
+ 
     //FALLING
     gTestInterrupts_CHANGE = 0;
     gTestInterrupts_FALLING = 0;
@@ -474,15 +474,15 @@ namespace arduino { namespace test
     ASSERT_EQ(0, gTestInterrupts_CHANGE);
     ASSERT_EQ(1, gTestInterrupts_FALLING);
     ASSERT_EQ(0, gTestInterrupts_RISING);
-
+ 
     detachInterrupt(pin);
     testarduino::setPinDigitalValue(pin, HIGH);
     testarduino::setPinDigitalValue(pin, LOW);
     ASSERT_EQ(0, gTestInterrupts_CHANGE);
     ASSERT_EQ(1, gTestInterrupts_FALLING);
     ASSERT_EQ(0, gTestInterrupts_RISING);
-
-
+ 
+ 
     //RISING
     gTestInterrupts_CHANGE = 0;
     gTestInterrupts_FALLING = 0;
@@ -493,7 +493,7 @@ namespace arduino { namespace test
     ASSERT_EQ(0, gTestInterrupts_CHANGE);
     ASSERT_EQ(0, gTestInterrupts_FALLING);
     ASSERT_EQ(1, gTestInterrupts_RISING);
-
+ 
     detachInterrupt(pin);
     testarduino::setPinDigitalValue(pin, LOW);
     testarduino::setPinDigitalValue(pin, HIGH);
@@ -502,24 +502,77 @@ namespace arduino { namespace test
     ASSERT_EQ(1, gTestInterrupts_RISING);
   }
   //--------------------------------------------------------------------------------------------------
-  static int gTestFunctionCallbacks_MILLIS = 0;
-  void testFunctionCallbacks_MILLIS()
+  static int gTestDetachFunctionCallback_MILLIS = 0;
+  void testDetachFunctionCallback_MILLIS()
   {
-    gTestFunctionCallbacks_MILLIS++;
+    gTestDetachFunctionCallback_MILLIS++; //should increase by 1 unit for every call to millis()
   }
-  TEST_F(TestWin32Arduino, testFunctionCallbacks)
+  TEST_F(TestWin32Arduino, testDetachFunctionCallback)
   {
-    gTestFunctionCallbacks_MILLIS = 0;
+    //arrange
+    testarduino::reset();
+    gTestDetachFunctionCallback_MILLIS = 0;
  
-    testarduino::attachPreFunctionCallback("millis", testFunctionCallbacks_MILLIS);
-    ASSERT_EQ(0, gTestFunctionCallbacks_MILLIS);
+    //act.
+    testarduino::attachFunctionCallback("millis", testDetachFunctionCallback_MILLIS);
+    ASSERT_EQ(0, gTestDetachFunctionCallback_MILLIS);
     uint32_t time1 = millis();
-    ASSERT_EQ(1, gTestFunctionCallbacks_MILLIS);
+    ASSERT_EQ(1, gTestDetachFunctionCallback_MILLIS);
     uint32_t time2 = millis();
-    ASSERT_EQ(2, gTestFunctionCallbacks_MILLIS);
+    ASSERT_EQ(2, gTestDetachFunctionCallback_MILLIS);
+ 
+    //calling the function again should not increase the counter
     testarduino::detachFunctionCallback("millis");
     uint32_t time3 = millis();
-    ASSERT_EQ(2, gTestFunctionCallbacks_MILLIS);
+    ASSERT_EQ(2, gTestDetachFunctionCallback_MILLIS);
+  }
+  //--------------------------------------------------------------------------------------------------
+  struct TESTATTACHFUNCTIONCALLBACK_STRUCT
+  {
+    int enterCount;
+    int leaveCount;
+    uint16_t enterValue;
+    uint16_t leaveValue;
+    uint8_t pin;
+  } gTestAttachFunctionCallback;
+  void testAttachFunctionCallback_ENTER()
+  {
+    gTestAttachFunctionCallback.enterCount++;
+    gTestAttachFunctionCallback.enterValue = testarduino::getPinAnalogValue(gTestAttachFunctionCallback.pin);
+ 
+    //force the pin to change value when entering the function
+    //this should change the return value of analogRead() to 50
+    testarduino::setPinAnalogValue(gTestAttachFunctionCallback.pin, 50);
+  }
+  void testAttachFunctionCallback_LEAVE()
+  {
+    gTestAttachFunctionCallback.leaveCount++;
+    gTestAttachFunctionCallback.leaveValue = testarduino::getPinAnalogValue(gTestAttachFunctionCallback.pin);
+ 
+    //force the pin to change value when leaving the function
+    testarduino::setPinAnalogValue(gTestAttachFunctionCallback.pin, 100);
+  }
+  TEST_F(TestWin32Arduino, testAttachFunctionCallback)
+  {
+    //arrange
+    gTestAttachFunctionCallback.pin = 2;
+    gTestAttachFunctionCallback.enterCount = 0;
+    gTestAttachFunctionCallback.leaveCount = 0;
+    gTestAttachFunctionCallback.enterValue = 0;
+    gTestAttachFunctionCallback.leaveValue = 0;
+    testarduino::reset();
+   
+    //act
+    testarduino::attachFunctionCallback("analogRead", testAttachFunctionCallback_ENTER, testAttachFunctionCallback_LEAVE);
+    uint16_t returnedValue = analogRead(gTestAttachFunctionCallback.pin);
+ 
+    //assert
+    ASSERT_EQ(  1, gTestAttachFunctionCallback.enterCount);
+    ASSERT_EQ(  1, gTestAttachFunctionCallback.leaveCount);
+    ASSERT_EQ(  0, gTestAttachFunctionCallback.enterValue);
+    ASSERT_EQ( 50, returnedValue);
+    ASSERT_EQ( 50, gTestAttachFunctionCallback.leaveValue);
+    ASSERT_EQ(100, testarduino::getPinAnalogValue(gTestAttachFunctionCallback.pin));
   }
   //--------------------------------------------------------------------------------------------------
 } // End namespace test

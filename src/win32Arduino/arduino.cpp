@@ -160,23 +160,17 @@ namespace testarduino
 
   //---------------------------------------------------------------------------
 
-  enum FunctionAttachMode
-  {
-    PRECALL,
-    POSTCALL,
-  };
- 
   struct FunctionCallback
   {
     std::string functionName;
-    Callback func;
-    FunctionAttachMode mode;
+    Callback enter;
+    Callback leave;
   };
   typedef std::vector<FunctionCallback> FunctionCallbackList;
-
+ 
   FunctionCallbackList gFunctionCallbacks;
   static const size_t INVALID_FUNCTIONCALLBACK_INDEX = (size_t)-1;
- 
+
   size_t findFunctionCallback(const std::string & iFunctionName)
   {
     for(size_t i=0; i<gFunctionCallbacks.size(); i++)
@@ -187,62 +181,25 @@ namespace testarduino
     }
     return INVALID_FUNCTIONCALLBACK_INDEX;
   }
- 
-  size_t findFunctionCallback(const std::string & iFunctionName, FunctionAttachMode mode)
-  {
-    size_t index = findFunctionCallback(iFunctionName);
-    if (index != INVALID_FUNCTIONCALLBACK_INDEX)
-    {
-      FunctionCallback & fCallback = gFunctionCallbacks[index];
-      if (fCallback.mode == mode)
-        return index;
-    }
-    return INVALID_FUNCTIONCALLBACK_INDEX;
-  }
- 
-  void invokeFunctionCallback(const std::string & iFunctionName, FunctionAttachMode mode)
-  {
-    size_t existingCallback = findFunctionCallback(iFunctionName, mode);
-    if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
-    {
-      FunctionCallback & fCallback = gFunctionCallbacks[existingCallback];
-      fCallback.func();
-    }
-  }
- 
-  void attachFunctionCallback(const char * name, Callback func, FunctionAttachMode mode)
+
+  void attachFunctionCallback(const char * name, Callback enter, Callback leave)
   {
     //allow only 1 callback per function name
-   size_t existingCallback = findFunctionCallback(name);
-    if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
-    {
-      FunctionCallback & fCallback = gFunctionCallbacks[existingCallback];
-     
-      //replace old function by new one
-      fCallback.func = func;
-      fCallback.mode = mode;
-    }
-    else
-    {
-      //add a new callback to the list
-      FunctionCallback fCallback;
-      fCallback.functionName = name;
-      fCallback.func = func;
-      fCallback.mode = mode;
-      gFunctionCallbacks.push_back(fCallback);
-    }
-  }
+    detachFunctionCallback(name);
  
-  void attachPreFunctionCallback(const char * name, Callback func)
+    //add a new callback to the list
+    FunctionCallback fCallback;
+    fCallback.functionName = name;
+    fCallback.enter = enter;
+    fCallback.leave = leave;
+    gFunctionCallbacks.push_back(fCallback);
+  }
+
+  void attachFunctionCallback(const char * name, Callback func)
   {
-    attachFunctionCallback(name, func, PRECALL);
+    attachFunctionCallback(name, func, NULL);
   }
- 
-  void attachPostFunctionCallback(const char * name, Callback func)
-  {
-    attachFunctionCallback(name, func, POSTCALL);
-  }
- 
+
   void detachFunctionCallback(const char * name)
   {
     size_t existingCallback = findFunctionCallback(name);
@@ -251,26 +208,41 @@ namespace testarduino
       gFunctionCallbacks.erase(gFunctionCallbacks.begin() + existingCallback);
     }
   }
- 
-  class FunctionCallbackHandler
+
+  class CallbackHandler
   {
   public:
-    FunctionCallbackHandler(const char * iFunctionName)
+    CallbackHandler(const char * iFunctionName)
     {
       functionName = iFunctionName;
- 
-      //invoke PRECALL mode
-      invokeFunctionCallback(functionName, PRECALL);
+      //invoke enter callback
+      size_t existingCallback = findFunctionCallback(functionName);
+      if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
+      {
+        FunctionCallback & callback = gFunctionCallbacks[existingCallback];
+        if (callback.enter)
+        {
+          callback.enter();
+        }
+      }
     }
-    ~FunctionCallbackHandler()
+    ~CallbackHandler()
     {
-      //destructor. must invoke POSTCALL mode
-      invokeFunctionCallback(functionName, POSTCALL);
+      //invoke leave callback
+      size_t existingCallback = findFunctionCallback(functionName);
+      if (existingCallback != INVALID_FUNCTIONCALLBACK_INDEX)
+      {
+        FunctionCallback & callback = gFunctionCallbacks[existingCallback];
+        if (callback.leave)
+        {
+          callback.leave();
+        }
+      }
     }
   private:
     std::string functionName;
   };
- 
+
   //---------------------------------------------------------------------------
 
   void reset()
@@ -303,7 +275,7 @@ void tone(byte iPin, uint16_t freq, uint32_t duration)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 }
 
 void noTone(byte iPin)
@@ -313,7 +285,7 @@ void noTone(byte iPin)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 }
 
 //declare global Serial object
@@ -362,7 +334,7 @@ void pinMode(uint8_t pin, uint8_t mode)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 }
 
 void digitalWrite(uint8_t pin, uint8_t value)
@@ -372,7 +344,7 @@ void digitalWrite(uint8_t pin, uint8_t value)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   if (value == LOW)
@@ -388,7 +360,7 @@ uint8_t digitalRead(uint8_t pin)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   static const uint8_t DIGITAL_LOW = (uint8_t)LOW;
@@ -406,7 +378,7 @@ void analogWrite(uint8_t pin, uint16_t value)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   testarduino::setPinAnalogValue(pin, value);
@@ -419,7 +391,7 @@ uint16_t analogRead(uint8_t pin)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
   return testarduino::getPinAnalogValue(pin);
@@ -432,7 +404,7 @@ void analogReadResolution(uint8_t bits)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 }
 
 void analogWriteResolution(uint8_t bits)
@@ -442,7 +414,7 @@ void analogWriteResolution(uint8_t bits)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 }
 
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data)
@@ -452,7 +424,7 @@ void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 }
 
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
@@ -462,7 +434,7 @@ uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   return 0;
 }
@@ -474,7 +446,7 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState, uint32_t timeout)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   return 200; //200 usec
 }
@@ -486,7 +458,7 @@ uint32_t pulseIn(uint8_t pin, uint8_t digitalState)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   return 200; //200 usec
 }
@@ -498,7 +470,7 @@ uint32_t micros()
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   return testarduino::gClockStrategy->micros();
 }
@@ -510,7 +482,7 @@ uint32_t millis()
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   return testarduino::gClockStrategy->millis();
 }
@@ -522,7 +494,7 @@ void delay(uint32_t value)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   //based on millis() timing
   uint32_t startTime = testarduino::gClockStrategy->millis();
@@ -539,7 +511,7 @@ void delayMicroseconds(uint16_t value)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   //based on micros() timing
   uint32_t startTime = testarduino::gClockStrategy->micros();
@@ -571,7 +543,7 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   testarduino::pins[pin].interrupt.func = func;
   testarduino::pins[pin].interrupt.mode = mode;
@@ -584,7 +556,7 @@ void detachInterrupt(uint8_t pin)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   testarduino::pins[pin].interrupt.func = NULL;
   testarduino::pins[pin].interrupt.mode = 0;
@@ -597,7 +569,7 @@ void cli()
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   noInterrupts();
 }
@@ -609,7 +581,7 @@ void noInterrupts()
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   SREG = DEFAULT_NO_INTERRUPTS_STATUS_REGISTER;
 }
@@ -621,7 +593,7 @@ void interrupts()
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   SREG = DEFAULT_STATUS_REGISTER;
 }
@@ -788,7 +760,7 @@ void randomSeed(int16_t value)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   ::srand(value);
 }
@@ -799,7 +771,7 @@ void randomSeed(int32_t value)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   ::srand(value);
 }
@@ -811,7 +783,7 @@ int32_t random(int32_t min, int32_t max)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   int systemMax = RAND_MAX;
   int value = rand(); //between 0 (inclusive) and RAND_MAX (exclusive).
@@ -827,7 +799,7 @@ int32_t random(int32_t max)
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
-  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+  testarduino::CallbackHandler fHandler(__FUNCTION__);
 
   return random(0, max);
 }

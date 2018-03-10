@@ -84,19 +84,20 @@ namespace testarduino
   typedef void (*Callback)();
 
   ///<summary>
-  ///Attach a function callback that is run at the beginning of the specified function.
+  ///Attach a function callback that is run when the specified function is executed.
   ///</summary>
   ///<param name="name">The name of the function to monitor.</param>
-  ///<param name="func">Pointer to a callback function.</param>
-  void attachPreFunctionCallback(const char * name, Callback func);
-
+  ///<param name="enter">Pointer to a callback function that is run when entering the specified function.</param>
+  ///<param name="leave">Pointer to a callback function that is run when leaving  the specified function.</param>
+  void attachFunctionCallback(const char * name, Callback enter, Callback leave);
+ 
   ///<summary>
-  ///Attach a function callback that is run at the end of the specified function.
+  ///Attach a function callback that is run when the specified function is executed.
   ///</summary>
   ///<param name="name">The name of the function to monitor.</param>
-  ///<param name="func">Pointer to a callback function.</param>
-  void attachPostFunctionCallback(const char * name, Callback func);
-
+  ///<param name="func">Pointer to a callback function that is run when entering the specified function.</param>
+  void attachFunctionCallback(const char * name, Callback func);
+ 
   ///<summary>
   ///Detach any function callback of the specified function.
   ///</summary>
