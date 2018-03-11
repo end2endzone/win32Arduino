@@ -4,7 +4,7 @@ include_directories($ENV{GTEST_INCLUDE})
 link_directories(${LIBRARY_OUTPUT_PATH})
 link_directories($ENV{GTEST_LIBRARY_DIR})
 
-add_executable(win32Arduino_unittest demo.cpp demo.h gtesthelper.cpp gtesthelper.h main.cpp TestGetLastCommand.h TestGetLastCommand.cpp TestWin32Arduino.h TestWin32Arduino.cpp )
+add_executable(win32Arduino_unittest demo.cpp demo.h gtesthelper.cpp gtesthelper.h main.cpp TestGetLastCommand.h TestGetLastCommand.cpp TestWin32Arduino.h TestWin32Arduino.cpp TestDemo.h TestDemo.cpp )
 
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
