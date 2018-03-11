@@ -16,6 +16,10 @@ uint8_t SREG = DEFAULT_STATUS_REGISTER;
 
 namespace testarduino
 {
+  //---------------------------------------------------------------------------
+  //                              PINS DATA
+  //---------------------------------------------------------------------------
+
   static const uint16_t MAX_PIN_VALUE = 1023;
 
   //pins data
@@ -35,7 +39,10 @@ namespace testarduino
   static const size_t NUM_PINS = 256;
   static PIN_REGISTRY pins[NUM_PINS] = {0};
 
-  //last command support
+  //---------------------------------------------------------------------------
+  //                              LOGGING SUPPORT
+  //---------------------------------------------------------------------------
+
   static std::string gLastCommand;
   const char * getLastCommand()
   {
@@ -98,8 +105,9 @@ namespace testarduino
   }
 
   //---------------------------------------------------------------------------
+  //                              CLOCK SUPPORT
+  //---------------------------------------------------------------------------
 
-  //clock handling
   static IClockStrategy * gClockStrategy = &IncrementalClockStrategy::getInstance();
   void setClockStrategy(IClockStrategy * iClockStrategy)
   {
@@ -111,6 +119,55 @@ namespace testarduino
     return gClockStrategy;
   }
 
+  //---------------------------------------------------------------------------
+  //                              ENUM TO STRING
+  //---------------------------------------------------------------------------
+
+  const char * toDigitalPinString(uint8_t value)
+  {
+    if (value == HIGH)
+      return "HIGH";
+    else if (value == LOW)
+      return "LOW";
+    return "EXPECTING_HIGH_OR_LOW";
+  }
+
+  //pin modes
+  const char * toPinModeString(uint8_t value)
+  {
+    if (value == OUTPUT)
+      return "OUTPUT";
+    else if (value == INPUT)
+      return "INPUT";
+    else if (value == INPUT_PULLUP)
+      return "INPUT_PULLUP";
+    return "EXPECTING_OUTPUT_INPUT_OR_INPUT_PULLUP";
+  }
+
+  //shiftOut definition
+  const char * toBitOrderString(uint8_t value)
+  {
+    if (value == MSBFIRST)
+      return "MSBFIRST";
+    else if (value == LSBFIRST)
+      return "LSBFIRST";
+    return "EXPECTING_MSBFIRST_OR_LSBFIRST";
+  }
+
+  //interrupt modes
+  const char * toInterruptModeString(uint8_t value)
+  {
+    if (value == CHANGE)
+      return "CHANGE";
+    else if (value == RISING)
+      return "RISING";
+    else if (value == FALLING)
+      return "FALLING";
+    return "EXPECTING_CHANGE_RISING_OR_FALLING";
+  }
+
+  //---------------------------------------------------------------------------
+  //                              PINS VALUE CHANGE
   //---------------------------------------------------------------------------
 
   void setPinAnalogValue(const uint8_t & pin, const uint16_t & value)
@@ -158,6 +215,8 @@ namespace testarduino
       return HIGH;
   }
 
+  //---------------------------------------------------------------------------
+  //                        FUNCTION CALLBACK SUPPORT
   //---------------------------------------------------------------------------
 
   struct FunctionCallback
@@ -243,7 +302,9 @@ namespace testarduino
     std::string functionName;
   };
 
-  //------------------------------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
+  //                           TIME CALLBACK SUPPORT
+  //---------------------------------------------------------------------------
  
   struct TimeCallback
   {
@@ -426,38 +487,6 @@ SerialPrinter Serial;
 //----------------------------------------------------------------------
 
 //https://www.arduino.cc/en/Reference/HomePage
-
-//digital read/write
-const char * testarduino::toDigitalPinString(uint8_t value)
-{
-  if (value == HIGH)
-    return "HIGH";
-  else if (value == LOW)
-    return "LOW";
-  return "EXPECTING_HIGH_OR_LOW";
-}
-
-//pin modes
-const char * testarduino::toPinModeString(uint8_t value)
-{
-  if (value == OUTPUT)
-    return "OUTPUT";
-  else if (value == INPUT)
-    return "INPUT";
-  else if (value == INPUT_PULLUP)
-    return "INPUT_PULLUP";
-  return "EXPECTING_OUTPUT_INPUT_OR_INPUT_PULLUP";
-}
-
-//shiftOut definition
-const char * testarduino::toBitOrderString(uint8_t value)
-{
-  if (value == MSBFIRST)
-    return "MSBFIRST";
-  else if (value == LSBFIRST)
-    return "LSBFIRST";
-  return "EXPECTING_MSBFIRST_OR_LSBFIRST";
-}
 
 void pinMode(uint8_t pin, uint8_t mode)
 {
@@ -669,18 +698,6 @@ void delayMicroseconds(uint16_t value)
 
 //pow(base, exponent)
 //sqrt(x)
-
-//typedef void (*ISR)();
-const char * testarduino::toInterruptModeString(uint8_t value)
-{
-  if (value == CHANGE)
-    return "CHANGE";
-  else if (value == RISING)
-    return "RISING";
-  else if (value == FALLING)
-    return "FALLING";
-  return "EXPECTING_CHANGE_RISING_OR_FALLING";
-}
 
 void attachInterrupt(uint8_t pin, ISR func, uint8_t mode)
 {
