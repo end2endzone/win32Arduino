@@ -645,7 +645,7 @@ void delay(uint32_t value)
   //based on millis() timing
   uint32_t startTime = millis();
   uint32_t endTime = startTime + value;
-  while( millis() != endTime )
+  while( millis() < endTime )
   {
   }
 }
@@ -662,7 +662,7 @@ void delayMicroseconds(uint16_t value)
   //based on micros() timing
   uint32_t startTime = micros();
   uint32_t endTime = startTime + value;
-  while( micros() != endTime )
+  while( micros() < endTime )
   {
   }
 }

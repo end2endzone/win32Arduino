@@ -59,28 +59,33 @@ namespace arduino { namespace test
   {
     testarduino::setClockStrategy(&testarduino::RealtimeClockStrategy::getInstance());
 
+    static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000;
+    static const uint32_t EXPECTED_ELAPSED_MICROS = EXPECTED_ELAPSED_MILLIS*1000;
+
     uint32_t value1 = micros();
-    delay(1000);
+    delay(EXPECTED_ELAPSED_MILLIS);
     uint32_t value2 = micros();
 
     ASSERT_GT(value2, value1);
 
-    uint32_t elapsedMicros = value2-value1;
-    ASSERT_NEAR(1000000, elapsedMicros, 10000); //no usec precision, only milliseconds. Allows 10ms epsilon
+    uint32_t actualElapsedMicros = value2-value1;
+    ASSERT_NEAR(EXPECTED_ELAPSED_MICROS, actualElapsedMicros, 15*1000); //no usec precision, only milliseconds. Allows 15ms epsilon which is Windows's Sleep() function resolution
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisRealtime)
   {
     testarduino::setClockStrategy(&testarduino::RealtimeClockStrategy::getInstance());
 
+    static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000;
+
     uint32_t value1 = millis();
-    delay(1000);
+    delay(EXPECTED_ELAPSED_MILLIS);
     uint32_t value2 = millis();
 
     ASSERT_GT(value2, value1);
 
-    uint32_t elapsedMillis = value2-value1;
-    ASSERT_NEAR(1000, elapsedMillis, 10); //10ms epsilon
+    uint32_t actualElapsedMillis = value2-value1;
+    ASSERT_NEAR(EXPECTED_ELAPSED_MILLIS, actualElapsedMillis, 15); //Allows 15ms epsilon which is Windows's Sleep() function resolution
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosSimulation)
@@ -89,6 +94,7 @@ namespace arduino { namespace test
     testarduino::setClockStrategy(&clock);
     clock.setMicrosecondsResolution(1);
     clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
+    testarduino::setLogFile(""); //disable logging for faster execution
 
     uint32_t value1 = micros();
     delay(10); //~10*1000 usec
@@ -106,6 +112,7 @@ namespace arduino { namespace test
     testarduino::setClockStrategy(&clock);
     clock.setMicrosecondsResolution(100); //0.1ms increments
     clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
+    testarduino::setLogFile(""); //disable logging for faster execution
 
     uint32_t value1 = millis();
     delay(30); // 30ms
@@ -591,7 +598,7 @@ namespace arduino { namespace test
     gTestAttachMillisecondsCallback.count = 0;
     gTestAttachMillisecondsCallback.callbackTime = 0;
     testarduino::reset();
-    testarduino::setLogFile(""); //disable logging
+    testarduino::setLogFile(""); //disable logging for faster execution
    
     testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
@@ -629,7 +636,7 @@ namespace arduino { namespace test
     gTestAttachMicrosecondsCallback.count = 0;
     gTestAttachMicrosecondsCallback.callbackTime = 0;
     testarduino::reset();    
-    testarduino::setLogFile(""); //disable logging
+    testarduino::setLogFile(""); //disable logging for faster execution
    
     testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
