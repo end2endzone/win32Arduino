@@ -12,10 +12,12 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   void TestGetLastCommand::SetUp()
   {
+    testarduino::setLogFile("arduino.log");
   }
   //--------------------------------------------------------------------------------------------------
   void TestGetLastCommand::TearDown()
   {
+    testarduino::setLogFile("");
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestGetLastCommand, testPinMode)

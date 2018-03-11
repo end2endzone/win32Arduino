@@ -429,7 +429,7 @@ namespace testarduino
 
   void reset()
   {
-    gLogFile = "arduino.log";
+    gLogFile = ""; //logging is disable by default for performance reasons
 
     //reset clock
     IncrementalClockStrategy & clock = IncrementalClockStrategy::getInstance();

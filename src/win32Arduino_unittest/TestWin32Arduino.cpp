@@ -94,7 +94,6 @@ namespace arduino { namespace test
     testarduino::setClockStrategy(&clock);
     clock.setMicrosecondsResolution(1);
     clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
-    testarduino::setLogFile(""); //disable logging for faster execution
 
     uint32_t value1 = micros();
     delay(10); //~10*1000 usec
@@ -112,7 +111,6 @@ namespace arduino { namespace test
     testarduino::setClockStrategy(&clock);
     clock.setMicrosecondsResolution(100); //0.1ms increments
     clock.setMicrosecondsCounter(9999); //next delay() call rounds to 1ms
-    testarduino::setLogFile(""); //disable logging for faster execution
 
     uint32_t value1 = millis();
     delay(30); // 30ms
@@ -598,7 +596,6 @@ namespace arduino { namespace test
     gTestAttachMillisecondsCallback.count = 0;
     gTestAttachMillisecondsCallback.callbackTime = 0;
     testarduino::reset();
-    testarduino::setLogFile(""); //disable logging for faster execution
    
     testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
@@ -636,7 +633,6 @@ namespace arduino { namespace test
     gTestAttachMicrosecondsCallback.count = 0;
     gTestAttachMicrosecondsCallback.callbackTime = 0;
     testarduino::reset();    
-    testarduino::setLogFile(""); //disable logging for faster execution
    
     testarduino::IncrementalClockStrategy & clock = testarduino::IncrementalClockStrategy::getInstance();
     testarduino::setClockStrategy(&clock);
