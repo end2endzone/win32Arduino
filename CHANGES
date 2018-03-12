@@ -1,9 +1,12 @@
 Changes for 2.0.0:
 
-* Fixed issue #1 - Rename library namespace to a better name.
-* Fixed issue #3 - Refactor the time strategies.
-* Fixed issue #6 - Remove template functions and replace by macro definitions.
-* Fixed issue #7 - Add cmake support to be able to generate project files for each version of Visual Studio.
+* Fixed issue  #1 - Rename library namespace to testarduino.
+* Fixed issue  #3 - Refactor the time strategies.
+* Fixed issue  #6 - Remove template functions and replace by macro definitions.
+* Fixed issue  #7 - Add cmake support to be able to generate project files for each version of Visual Studio.
+* Fixed issue #10 - Assign callback functions for time based event programming.
+* Fixed issue #11 - Create new API functions for attachFunctionCallback().
+* Fixed issue #12 - Move time handling code from arduino.cpp to new independent classes.
 
 Changes for 1.4.0:
 

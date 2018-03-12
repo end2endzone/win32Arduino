@@ -19,11 +19,13 @@ win32Arduino is a Windows (win32) implementation of arduino functions. It allows
 The library allows to easily unit test an arduino library using your testing framework of choice. For instance, the unit tests of win32Arduino library are executed using the [Google Test framework](http://github.com/google/googletest).
 
 It's main features are:
-
 *  Implements most arduino functions.
 *  Allows a developer to test a library outside of the arduino platform.
 *  Quicker unit test execution.
 *  Supports realtime millis() function or simulated millis() and micros() functions.
+
+Limitations:
+* PWM pins and functions are not supported.
 
 # Usage
 
@@ -57,13 +59,6 @@ The following section shows an example of using win32Arduino to test an arduino 
 
 Assume a developer needs to test a library which contains the following functions:
 ```cpp
-void wait5Seconds() {
-  unsigned long start = millis();
-  while( millis() - start < 5000 )
-  {
-  }
-}
-
 bool waitForButtonPress(uint8_t buttonPin, unsigned long timeout) {
   unsigned long start = millis();
   while( millis() - start < timeout )
@@ -80,26 +75,39 @@ bool waitForButtonPress(uint8_t buttonPin, unsigned long timeout) {
 
 Using Google Test framework, one can write the following unit test to validate the expectations of each functions:
 
-```cpp
-TEST(TestMyLibrary, testWait5Seconds) {
-  testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-  testarduino::setMicrosecondsCounter(0);
-  testarduino::setMicrosecondsResolution(1000); //increase simulated clock by 1ms for every calls to micros()
-  uint32_t before = millis();
-  wait5Seconds();
-  uint32_t after = millis();
-  ASSERT_GE(after - before, 5000);
+```cppTest
+void simulatePinHighISR() {
+  setPinDigitalValue(2, HIGH);
 }
+TEST(MyLibrary, testWaitForButtonPressTimeout) {
+  reset();
+  IncrementalClockStrategy & clock = IncrementalClockStrategy::getInstance();
+  clock.setMicrosecondsCounter(0);
+  clock.setMicrosecondsResolution(100); //increase simulated clock by 0.1ms for every calls to micros()
+  static const uint8_t buttonPin = 2;
+  static const uint32_t MAX_WAIT_TIME = 5000; //ms
+  
+  //assert that false is returned if button is not pressed
+  uint32_t time1 = millis();
+  bool result = waitForButtonPress(buttonPin, MAX_WAIT_TIME);
+  uint32_t time2 = millis();
+  uint32_t elapsed = time2 - time1;
+  ASSERT_FALSE(result);
+  ASSERT_EQ(MAX_WAIT_TIME, elapsed);
 
-TEST(TestMyLibrary, testWaitForButtonPressTimeout) {
-  testarduino::setClockStrategy(testarduino::CLOCK_SIMULATION);
-  testarduino::setMicrosecondsCounter(0);
-  testarduino::setMicrosecondsResolution(1000); //increase simulated clock by 1ms for every calls to micros()
-  uint32_t before = millis();
-  uint8_t buttonPin = 2;
-  waitForButtonPress(buttonPin, 5000);
-  uint32_t after = millis();
-  ASSERT_GE(after - before, 5000);
+  //configure win32Arduino library properly.
+  static const uint32_t BUTTON_DELAY_TIME = 2000; //ms
+  uint32_t buttonPressTime = millis() + BUTTON_DELAY_TIME; //in 2000 ms, the button pin will go HIGH
+  attachMillisecondsCallback(buttonPressTime, simulatePinHighISR);
+
+  //run the function again...
+  //assert that function is interrupted when a button is pressed
+  time1 = millis();
+  result = waitForButtonPress(buttonPin, MAX_WAIT_TIME);
+  time2 = millis();
+  elapsed = time2 - time1;
+  ASSERT_TRUE(result);
+  ASSERT_EQ(BUTTON_DELAY_TIME, elapsed);
 }
 ```
 
