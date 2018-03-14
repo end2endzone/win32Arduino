@@ -14,37 +14,39 @@ AppVeyor build statistics:
 
 # win32Arduino
 
-win32Arduino is a Windows (win32) implementation of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
+win32Arduino is a Windows implementation (win32) of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
 
 The library allows to easily unit test an arduino library using your testing framework of choice. For instance, the unit tests of win32Arduino library are executed using the [Google Test framework](http://github.com/google/googletest).
 
 It's main features are:
-*  Implements most arduino functions.
-*  Allows a developer to test a library outside of the arduino platform.
-*  Quicker unit test execution.
-*  Supports realtime millis() function or simulated millis() and micros() functions.
+*  Implements many arduino functions.
+*  Advanced time handling mechanism.
+*  Pin value support. All functions that reads/writes values to pin is supported.
+*  Logging support. See the history of all function call for your library. Calls to the `Serial` class are also forwarded to the output log file.
+*  Supports realtime, incremental or custom millis() and micros() functions to simulate time.
+*  Supports multiple type of callback function:
+   *  Attach function callbacks to any native arduino function.
+   *  Attach function callbacks when millis() function reach a specific value.
+   *  Attach function callbacks when macros() function reach a specific value.
+*  Supports interrupts functions: `attachInterrupt()`, `cli()`, `noInterrupts()`, `interrupts()` and `SREG` registry.
 
 Limitations:
-* PWM pins and functions are not supported.
+* Pins specific functionality is disabled. In other words, all pins are identical and shall considered supporting analog and digital values.
+* AVR, POWER, SERIAL, SPI, I2C is not supported.
+* PWM is not supported. Simulating PWM changes over time on each PWM pins is hard.
+* Pins pullup and pulldown resistors are not supported.
+* Pin resolution functions (`analogReadResolution()` and `analogWriteResolution()`) is not implemented. Pins values is always stored using a resolution of 10 bits.
+* Shift functions (`shiftIn()` and `shiftOut()`) are not implemented.
+* The following functions are also empty shells: `tone()`, `noTone()`, `pinMode()` and `pulseIn()`.
+
 
 # Usage
 
-The following instructions show how to test an arduino library. 
-
-## Disabling win32Arduino's unit tests
-
-This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
-
-1) Edit the file /src/CMakeLists.txt
-2) Comment each lines that contains a reference to '*win32Arduino_unittest*' by adding a # character at the beginning of the line.
-1) Compile source code according to instructions specified in [INSTALL.md](INSTALL.md) file.
-3) Binaries are available in /cmake/build/bin/$(Configuration)
+The following instructions show how to use the library.
 
 ## Create a test project
 
-The following instructions show how to easily test an arduino library. For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
-   
-An arduino library source code must be added to a win32 project to be compiled and tested. The following instructions show how to compile an arduino library on the Windows platform. In the example below, the win32Arduino library is used to resolve all arduino functions called by the library.
+An arduino library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test an arduino library. For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
 
 1) Create a new win32 console application.
 
@@ -55,12 +57,12 @@ An arduino library source code must be added to a win32 project to be compiled a
 3) Modify the static library’s '*Additionnal Include Directories*' to point to win32Arduino project source code. This allows the wrapping library to resolve all arduino.h includes and all arduino symbols using the win32Arduino library.
 
 ## Example
-The following section shows an example of using win32Arduino to test an arduino function.
+The following section shows an example of using win32Arduino.
 
-Assume a developer needs to test a library which contains the following functions:
+Assume a developer needs to test the following library function:
 ```cpp
-bool waitForButtonPress(uint8_t buttonPin, unsigned long timeout) {
-  unsigned long start = millis();
+bool waitForButtonPress(uint8_t buttonPin, uint32_t timeout) {
+  uint32_t start = millis();
   while( millis() - start < timeout )
   {
     //look for button state
@@ -73,14 +75,14 @@ bool waitForButtonPress(uint8_t buttonPin, unsigned long timeout) {
 }
 ```
 
-Using Google Test framework, one can write the following unit test to validate the expectations of each functions:
+Using Google Test framework, one can write the following unit test to validate the expectations of the `waitForButtonPress()` function:
 
-```cppTest
+```cpp
 void simulatePinHighISR() {
-  setPinDigitalValue(2, HIGH);
+  testarduino::setPinDigitalValue(2, HIGH);
 }
-TEST(MyLibrary, testWaitForButtonPressTimeout) {
-  reset();
+TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
+  testarduino::reset();
   IncrementalClockStrategy & clock = IncrementalClockStrategy::getInstance();
   clock.setMicrosecondsCounter(0);
   clock.setMicrosecondsResolution(100); //increase simulated clock by 0.1ms for every calls to micros()
@@ -95,10 +97,10 @@ TEST(MyLibrary, testWaitForButtonPressTimeout) {
   ASSERT_FALSE(result);
   ASSERT_EQ(MAX_WAIT_TIME, elapsed);
 
-  //configure win32Arduino library properly.
+  //configure win32Arduino library to push a button in 2000 ms.
   static const uint32_t BUTTON_DELAY_TIME = 2000; //ms
-  uint32_t buttonPressTime = millis() + BUTTON_DELAY_TIME; //in 2000 ms, the button pin will go HIGH
-  attachMillisecondsCallback(buttonPressTime, simulatePinHighISR);
+  uint32_t buttonPressTime = millis() + BUTTON_DELAY_TIME;
+  attachMillisecondsCallback(buttonPressTime, simulatePinHighISR); //in 2000 ms, the button pin will go HIGH
 
   //run the function again...
   //assert that function is interrupted when a button is pressed
@@ -110,6 +112,15 @@ TEST(MyLibrary, testWaitForButtonPressTimeout) {
   ASSERT_EQ(BUTTON_DELAY_TIME, elapsed);
 }
 ```
+
+## Disabling win32Arduino's unit tests
+
+This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
+
+1) Edit the file /src/CMakeLists.txt
+2) Comment each lines that contains a reference to '*win32Arduino_unittest*' by adding a # character at the beginning of the line.
+1) Compile source code according to instructions specified in [INSTALL.md](INSTALL.md) file.
+3) Binaries are available in /cmake/build/bin/$(Configuration)
 
 # Installing
 
@@ -128,7 +139,7 @@ Test can be executed from the following two locations:
    1) Select the project '*win32Arduino_unittest*' as StartUp project.
    2) Hit CTRL+F5 (Start Without Debugging)
 2) From the output binaries folder:
-   1) Open a file navigator and browse to the output folder(for example c:\projects\win32Arduino\msvc\Win32\Release)
+   1) Open a file navigator and browse to the output folder(for example c:\projects\win32Arduino\cmake\build\bin\Release)
    2) Run the '*win32Arduino_unittest.exe*' executable.
 
 See also the latest test results at the beginning of the document.
