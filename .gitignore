@@ -14,3 +14,5 @@
 /src/*.opensdf
 /third_party
 /cmake/build
+/samples/TestProject1/build
+/samples/TestProject2/build
