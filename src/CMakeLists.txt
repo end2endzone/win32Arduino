@@ -25,9 +25,7 @@ MESSAGE( STATUS "CMAKE_SYSTEM_NAME:        " ${CMAKE_SYSTEM_NAME} )
 MESSAGE( STATUS "CMAKE_SYSTEM_VERSION:     " ${CMAKE_SYSTEM_VERSION} )
 MESSAGE( STATUS "CMAKE_SYSTEM_PROCESSOR:   " ${CMAKE_SYSTEM_PROCESSOR} )
 
-add_subdirectory(common)
 add_subdirectory(win32Arduino)
 add_subdirectory(win32Arduino_unittest)
 
-add_dependencies(win32Arduino common)
-add_dependencies(win32Arduino_unittest win32Arduino common)
+add_dependencies(win32Arduino_unittest win32Arduino)
