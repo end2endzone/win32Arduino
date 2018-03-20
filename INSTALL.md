@@ -22,7 +22,6 @@ The following software must be installed on the system for compiling source code
 The following software must be installed on the system for building the deploy packages:
 
 * [7-Zip](http://www.7-zip.org/) for building the win32 portable package. Tested with version 9.20.
-* [NSIS (Nullsoft Scriptable Install System)](http://nsis.sourceforge.net/) for building Windows Self-Extracting Setup Installer (setup.exe). Tested with version 3.0a1.
 
 ## Build steps
 
@@ -37,12 +36,12 @@ The following software must be installed on the system for building the deploy p
 
 2) Generate googletest Visual Studio 2010 solution using cmake. Enter the following commands:
    * cd c:\projects\third_party\googletest
-   * mkdir msvc2010
-   * cd msvc2010
+   * mkdir build
+   * cd build
    * cmake -G "Visual Studio 10 2010" -Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD "c:\projects\third_party\googletest"
 
 3) Open the generated Visual Studio 2010 solution file located in 
-   ***c:\projects\third_party\googletest\msvc2010\gtest.sln***
+   ***c:\projects\third_party\googletest\build\gtest.sln***
 
 4) Build the solution.
 
@@ -57,36 +56,13 @@ Define the following environement variables:
 |  GTEST_DEBUG_LIBRARIES   | gtest.lib                                    |
 |  GTEST_RELEASE_LIBRARIES | gtest.lib                                    |
 |  GTEST_INCLUDE           | c:\projects\third_party\googletest\include   |
-|  GTEST_LIBRARY_DIR       | c:\projects\third_party\googletest\msvc2010  |
+|  GTEST_LIBRARY_DIR       | c:\projects\third_party\googletest\build     |
  
 ### win32Arduino
 
 1) Download the [win32Arduino source code](https://github.com/end2endzone/win32Arduino/tags) and extract the content to a temporary directory (for example c:\projects\win32Arduino).
 
 2) Open the Visual Studio 2010 solution file located in 
-   ***c:\projects\win32Arduino\msvc\win32Arduino.sln***
+   ***c:\projects\win32Arduino\cmake\build\win32Arduino.sln***
 
 3) Build the solution.
-
-### Deploy packages
-
-The application support two types of deploy package:
-
-* Portable (*.zip)
-* Self-Extracting Setup Installer (setup.exe).
-
-The installer packages are automatically build from the Visual Studio 2010 solution. See the '*install*' project.
-
-To manually build the installer packages execute the following steps:
-
-1) Open the Visual Studio 2010 solution file located in 
-   ***c:\projects\win32Arduino\msvc\win32Arduino.sln***
-
-2) Build the solution in '*Release*' configuration.
-
-3) Nagivate to the '*nsis*' folder.
-
-4) Run '*build_portable.bat*' to build the portable installer or
-   run '*build_setup.bat*' to build the setup installer.
-
-5) The packages will be generated in the '*nsis/bin*' folder.
