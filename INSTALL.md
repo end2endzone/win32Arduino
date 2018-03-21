@@ -1,14 +1,24 @@
 # Installing
 
-This section explains how to compile and build the software and how to get a development environment running.
+The library does not need to be installed on the system (it does not provide an installation package). It is deployed using a zip archive which only contains the source code which must be compiled to be used by other applications/libraries.
 
-## Compatible with
+The following steps shows how to install the library:
 
-win32Arduino is only available for the Windows platform and has been tested with the following version of Windows:
+1) Download the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\third_party\win32Arduino`).
 
-*   Windows XP
-*   Windows Vista
-*   Windows 7
+2) Compile source code as defined in the [Building](#building) section.
+
+3) For the library to be found by other applications/libraries, the following environment variables should be defined on the system:
+
+| Name                     | Value                                        |
+|--------------------------|----------------------------------------------|
+|  WIN32ARDUINO_HOME       | c:\projects\third_party\win32Arduino         |
+
+Note that the `WIN32ARDUINO_HOME` variable should match the actual directory where the source code was extracted.
+
+# Building
+
+This section explains how to compile and build the software and how to get a development environment ready.
 
 ## Prerequisites
 
@@ -16,53 +26,55 @@ The following software must be installed on the system for compiling source code
 
 * Visual Studio 2010 (or newer)
 * [Google C++ Testing Framework v1.6.0](https://github.com/google/googletest/tree/release-1.6.0) (untested with other versions)
-* [CMake](http://www.cmake.org/) for compilation of Google C++ Testing Framework. (Tested with CMake 3.9.6)
-* [win32Arduino source code](https://github.com/end2endzone/win32Arduino/tags)
+* [CMake](http://www.cmake.org/) v3.4.3 (or newer)
+* [win32Arduino source code](http://github.com/end2endzone/win32Arduino/tags)
 
 The following software must be installed on the system for building the deploy packages:
 
-* [7-Zip](http://www.7-zip.org/) for building the win32 portable package. Tested with version 9.20.
+* ~~[7-Zip](http://www.7-zip.org/) v9.20.~~
+
 
 ## Build steps
 
 ### Google C++ testing framework
 
-1) Download googletest source code to your computer using one of the following:
-   1) Download googletest as a [zip file](https://github.com/google/googletest/archive/release-1.6.0.zip) and extract to a temporary directory (for example c:\projects\third_party\googletest).
-   2) Clone the git repository using the following commands:
-      * git clone https://github.com/google/googletest.git c:\projects\third_party\googletest
-      * cd /d c:\projects\third_party\googletest
-      * git checkout release-1.6.0
+1) Download googletest source code as a [zip file](https://github.com/google/googletest/archive/release-1.6.0.zip) to your computer and extract to a temporary directory (for example `c:\projects\third_party\googletest`).
 
-2) Generate googletest Visual Studio 2010 solution using cmake. Enter the following commands:
+2) Generate the Visual Studio 2010 solution using the following commands:
    * cd c:\projects\third_party\googletest
    * mkdir build
    * cd build
-   * cmake -G "Visual Studio 10 2010" -Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD "c:\projects\third_party\googletest"
+   * cmake -G "Visual Studio 10 2010" -Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD ..
 
-3) Open the generated Visual Studio 2010 solution file located in 
-   ***c:\projects\third_party\googletest\build\gtest.sln***
+3) Open the generated Visual Studio 2010 solution file located in `c:\projects\third_party\googletest\build\gtest.sln`.
 
 4) Build the solution.
 
-### Define environment variables
-Note: this step need to be executed once.
-
-win32Arduino needs to know where the libraries of googletest are located (debug & release).
-Define the following environement variables:
+For building unit tests, the application needs to know where the googletest libraries (debug & release) are located. The following environment variables should be defined:
 
 | Name                     | Value                                        |
 |--------------------------|----------------------------------------------|
-|  GTEST_DEBUG_LIBRARIES   | gtest.lib                                    |
-|  GTEST_RELEASE_LIBRARIES | gtest.lib                                    |
-|  GTEST_INCLUDE           | c:\projects\third_party\googletest\include   |
-|  GTEST_LIBRARY_DIR       | c:\projects\third_party\googletest\build     |
+|  GOOGLETEST_HOME         | c:\projects\third_party\googletest           |
+
+Note that the `GOOGLETEST_HOME` variable should match the actual directory where the source code was extracted.
  
 ### win32Arduino
 
-1) Download the [win32Arduino source code](https://github.com/end2endzone/win32Arduino/tags) and extract the content to a temporary directory (for example c:\projects\win32Arduino).
+1) Download the [win32Arduino source code](https://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\win32Arduino`).
 
-2) Open the Visual Studio 2010 solution file located in 
-   ***c:\projects\win32Arduino\cmake\build\win32Arduino.sln***
+2) Generate the Visual Studio 2010 solution using the following commands:
+   * cd c:\projects\win32Arduino
+   * cd cmake
+   * mkdir build
+   * cd build
+   * cmake -G "Visual Studio 10 2010" c:\projects\win32Arduino\src
 
-3) Build the solution.
+3) Open the generated Visual Studio 2010 solution file located in `c:\projects\win32Arduino\cmake\build\win32Arduino.sln`.
+
+4) Build the solution.
+
+### win32Arduino deploy package
+
+The library does not provide an installation package. It is deployed using a zip archive which only contains the source code.
+
+GitHub automatically provides zip archives of all the source code hosted on its platform. No deploy package is required for the library.

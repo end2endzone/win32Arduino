@@ -44,19 +44,80 @@ Limitations:
 
 The following instructions show how to use the library.
 
-## Create a test project
+## Testing your own library
 
-An arduino library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test an arduino library. For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
+An arduino library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
+
+For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
+
+Note that method #1 and #2 requires the cmake application.
+
+### 1) All source files in same soup
+
+The easiest way to create a working test project is to copy everything in the same directory and run your test from there. This technique requires cmake installed on the computer.
+Here are the steps required for doing this:
+
+1) Create a new directory where all the source files will be copied. For clarity, assume the directory `C:\projects\mylibrary` is used.
+
+2) Copy all source and unit test files of your library to the new directory. For demonstration purpose, you can use the files from the `ButtonBibrary` available in `/samples/ButtonLibrary` folder.
+
+3) Copy all source code files of the win32Arduino library from folder `/src/win32Arduino` to the new directory. Note that win32Arduino unit test source code is not required.
+
+4) Copy cmake's configuration files from `/samples/TestProject1` to the new directory.
+
+5) Launch cmake in the new directory with the following commands:
+   * mkdir build
+   * cd build
+   * cmake -G "Visual Studio 10 2010" ..
+
+### 2) Configure your project to be win32Arduino-aware
+This is the recommended way to use win32Arduino.
+
+This method assume that you aleary defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+
+### 3) Create your test project manually with Visual Studio
 
 1) Create a new win32 console application.
 
-2) Configure source code according to the googletest practices. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md). Configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro.
+2) Configure source code according to the googletest best practices. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md). Configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro.
 
-2) Create a static library project which will "wrap" all the arduino files of the library you need to test.
+2) Create a static library project which contains all the arduino files of the library you need to test.
 
 3) Modify the static library’s '*Additionnal Include Directories*' to point to win32Arduino project source code. This allows the wrapping library to resolve all arduino.h includes and all arduino symbols using the win32Arduino library.
 
-## Example
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+
+
+
+## Source code example
 The following section shows an example of using win32Arduino.
 
 Assume a developer needs to test the following library function:
