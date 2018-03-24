@@ -1,0 +1,8 @@
+@echo off
+
+cd /d %~dp0
+cd ..\..
+
+set  WIN32ARDUINO_HOME=%cd%
+setx WIN32ARDUINO_HOME %WIN32ARDUINO_HOME%
+echo WIN32ARDUINO_HOME set to %WIN32ARDUINO_HOME%
