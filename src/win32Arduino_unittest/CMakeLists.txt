@@ -1,8 +1,8 @@
 include_directories(${CMAKE_SOURCE_DIR}/win32Arduino)
-include_directories($ENV{GTEST_INCLUDE})
-
 link_directories(${LIBRARY_OUTPUT_PATH})
-link_directories($ENV{GTEST_LIBRARY_DIR})
+
+include_directories($ENV{GOOGLETEST_HOME}/include)
+link_directories($ENV{GOOGLETEST_HOME}/build)
 
 add_executable(win32Arduino_unittest
   demo.cpp

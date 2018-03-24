@@ -11,7 +11,6 @@ add_library(win32Arduino STATIC
   stringfunc.cpp
   stringfunc.h )
 
-include_directories(${CMAKE_SOURCE_DIR}/common)
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 if (WIN32)
