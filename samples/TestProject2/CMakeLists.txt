@@ -25,25 +25,20 @@ MESSAGE( STATUS "CMAKE_SYSTEM_NAME:        " ${CMAKE_SYSTEM_NAME} )
 MESSAGE( STATUS "CMAKE_SYSTEM_VERSION:     " ${CMAKE_SYSTEM_VERSION} )
 MESSAGE( STATUS "CMAKE_SYSTEM_PROCESSOR:   " ${CMAKE_SYSTEM_PROCESSOR} )
 
-set(BUTTON_LIBRARY_DIR ${PROJECT_SOURCE_DIR}/../ButtonLibrary)
-set(WIN32ARDUINO_DIR ${PROJECT_SOURCE_DIR}/../../src/win32Arduino)
+include_directories($ENV{GOOGLETEST_HOME}/include)
+link_directories($ENV{GOOGLETEST_HOME}/build)
 
-include_directories($ENV{GTEST_INCLUDE})
-include_directories(${BUTTON_LIBRARY_DIR})
-include_directories(${WIN32ARDUINO_DIR})
+include_directories($ENV{WIN32ARDUINO_HOME}/src/win32Arduino)
+link_directories($ENV{WIN32ARDUINO_HOME}/cmake/build/bin)
 
 link_directories(${LIBRARY_OUTPUT_PATH})
-link_directories($ENV{GTEST_LIBRARY_DIR})
 
 file( GLOB SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp ${PROJECT_SOURCE_DIR}/*.h )
-file( GLOB BUTTON_LIBRARY_SOURCE_FILES ${BUTTON_LIBRARY_DIR}/*.cpp ${BUTTON_LIBRARY_DIR}/*.h )
-file( GLOB WIN32ARDUINO_DIR_SOURCE_FILES ${WIN32ARDUINO_DIR}/*.cpp ${WIN32ARDUINO_DIR}/*.h )
-
-add_executable(TestProject ${SOURCE_FILES} ${BUTTON_LIBRARY_SOURCE_FILES} ${WIN32ARDUINO_DIR_SOURCE_FILES} )
+add_executable(TestProject ${SOURCE_FILES} )
 
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-target_link_libraries(TestProject debug     gtest.lib)
-target_link_libraries(TestProject optimized gtest.lib)
+target_link_libraries(TestProject debug     win32Arduino.lib gtest.lib)
+target_link_libraries(TestProject optimized win32Arduino.lib gtest.lib)
