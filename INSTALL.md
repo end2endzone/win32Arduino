@@ -6,9 +6,9 @@ The following steps shows how to install the library:
 
 1) Download the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\third_party\win32Arduino`).
 
-2) Compile source code as defined in the [Building](#building) section.
+2) Compile source code as specified in the [Building](#building) section.
 
-3) For the library to be found by other applications/libraries, the following environment variables should be defined on the system:
+3) Define the following environment variables on the system so that other projects may find the library:
 
 | Name                     | Value                                        |
 |--------------------------|----------------------------------------------|
@@ -50,7 +50,9 @@ The following software must be installed on the system for building the deploy p
 
 4) Build the solution.
 
-For building unit tests, the application needs to know where the googletest libraries (debug & release) are located. The following environment variables should be defined:
+For building unit tests, the application needs to know where the googletest libraries (debug & release) are located.
+
+The following environment variables should be defined:
 
 | Name                     | Value                                        |
 |--------------------------|----------------------------------------------|
