@@ -46,15 +46,41 @@ The following instructions show how to use the library.
 
 ## Testing your own library
 
-An arduino library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
+A library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
 
 For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
 
 Note that method #1 and #2 requires the cmake application.
 
-### 1) All source files in same soup
+### 1) Configure your project to be win32Arduino-aware
+This is the recommended way to use win32Arduino.
 
-The easiest way to create a working test project is to copy everything in the same directory and run your test from there. This technique requires cmake installed on the computer.
+This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+**TODO**
+
+
+### 2) All source files in same soup
+
+Another easy way to create a working test project is to copy everything in the same directory and run your test from there. This technique requires cmake installed on the computer.
 Here are the steps required for doing this:
 
 1) Create a new directory where all the source files will be copied. For clarity, assume the directory `C:\projects\mylibrary` is used.
@@ -70,52 +96,27 @@ Here are the steps required for doing this:
    * cd build
    * cmake -G "Visual Studio 10 2010" ..
 
-### 2) Configure your project to be win32Arduino-aware
-This is the recommended way to use win32Arduino.
-
-This method assume that you aleary defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-**TODO**
-
-
 ### 3) Create your test project manually with Visual Studio
 
-1) Create a new win32 console application.
+This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
 
-2) Configure source code according to the googletest best practices. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md). Configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro.
+1) Compile googletest and win32Arduino libraries as specified in [INSTALL.md](INSTALL.md).
 
-2) Create a static library project which contains all the arduino files of the library you need to test.
+2) Open Visual Studio and create a new win32 console application.
 
-3) Modify the static library’s '*Additionnal Include Directories*' to point to win32Arduino project source code. This allows the wrapping library to resolve all arduino.h includes and all arduino symbols using the win32Arduino library.
+3) Modify the project to find Google Test and win32Arduino include and library. Add the following values to the project properties:
 
-**TODO**
+| Name                             | Value                                                                                             |
+|----------------------------------|---------------------------------------------------------------------------------------------------|
+|  Additional Include Directories  | $(GOOGLETEST_HOME)/include; $(WIN32ARDUINO_HOME)/src/win32Arduino;                                |
+|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration); $(WIN32ARDUINO_HOME)/cmake/build/bin/$(Configuration); |
+|  Additional Dependencies         | gtest.lib;win32Arduino.lib;                                                                       |
 
-**TODO**
+4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
 
-**TODO**
+5) Configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro. The file from `/samples/TestProject1` is a good start point.
 
-**TODO**
-
-
-
+6) Compile the project.
 
 ## Source code example
 The following section shows an example of using win32Arduino.
@@ -183,25 +184,20 @@ This section explains how to disable compilation of win32Arduino's own unit test
 1) Compile source code according to instructions specified in [INSTALL.md](INSTALL.md) file.
 3) Binaries are available in /cmake/build/bin/$(Configuration)
 
-# Installing
+# Build / Install
 
 Please refer to file [INSTALL.md](INSTALL.md) for details on how installing/building the application.
 
-## Testing
-win32Arduino comes with unit tests which tests for multiple combinations to make sure that all function behaves as expected.
+# Testing
+win32Arduino comes with unit tests which help maintaining the product stability and level of quality.
 
 Test are build using the Google Test v1.6.0 framework. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md).  
 
-Test are automatically build when building the solution. Please see the '*build step*' section for details on how to build the software.
+Test are automatically build when building the solution. See [INSTALL.md](INSTALL.md) for details on how to build the software.
 
-Test can be executed from the following two locations:
+To run tests, open a file navigator and browse to the output folder (for example `c:\projects\win32Arduino\cmake\build\bin\Release`) and run `win32Arduino_unittest.exe` executable.
 
-1) From the Visual Studio IDE:
-   1) Select the project '*win32Arduino_unittest*' as StartUp project.
-   2) Hit CTRL+F5 (Start Without Debugging)
-2) From the output binaries folder:
-   1) Open a file navigator and browse to the output folder(for example c:\projects\win32Arduino\cmake\build\bin\Release)
-   2) Run the '*win32Arduino_unittest.exe*' executable.
+Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
 
 See also the latest test results at the beginning of the document.
 
