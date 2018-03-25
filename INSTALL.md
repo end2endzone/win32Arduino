@@ -80,3 +80,12 @@ Note that the `GOOGLETEST_HOME` variable should match the actual directory where
 The library does not provide an installation package. It is deployed using a zip archive which only contains the source code.
 
 GitHub automatically provides zip archives of all the source code hosted on its platform. No deploy package is required for the library.
+
+## Disabling win32Arduino's unit tests
+
+This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
+
+1) Edit the file /src/CMakeLists.txt
+2) Comment each lines that contains a reference to '*win32Arduino_unittest*' by adding a # character at the beginning of the line.
+1) Compile source code according to instructions specified in [INSTALL.md](INSTALL.md) file.
+3) Binaries are available in /cmake/build/bin/$(Configuration)

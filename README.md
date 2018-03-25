@@ -20,15 +20,12 @@ The library allows to easily unit test an arduino library using your testing fra
 
 It's main features are:
 *  Implements many arduino functions.
-*  Advanced time handling mechanism.
-*  Pin value support. All functions that reads/writes values to pin is supported.
-*  Logging support. See the history of all function call for your library. Calls to the `Serial` class are also forwarded to the output log file.
-*  Supports realtime, incremental or custom millis() and micros() functions to simulate time.
-*  Supports multiple type of callback function:
-   *  Attach function callbacks to any native arduino function.
-   *  Attach function callbacks when millis() function reach a specific value.
-   *  Attach function callbacks when macros() function reach a specific value.
-*  Supports interrupts functions: `attachInterrupt()`, `cli()`, `noInterrupts()`, `interrupts()` and `SREG` registry.
+*  Support all functions that reads or writes values to pins.
+*  Advanced time handling mechanism. Supports realtime, incremental or custom `millis()` and `micros()` functions to simulate time.
+*  Call history and logging support. Calls to the `Serial` class are also forwarded to the output log file.
+* Attach function callbacks to any native arduino function.
+* Attach function callbacks to `millis()` or `macros()` functions for time based event programming.
+* Supports interrupts functions: `attachInterrupt()`, `cli()`, `noInterrupts()`, `interrupts()` and `SREG` registry.
 
 Limitations:
 * Pins specific functionality is disabled. In other words, all pins are identical and shall considered supporting analog and digital values.
@@ -56,7 +53,7 @@ This is the recommended way to use win32Arduino. This method assumes that you al
 
 Edit your project's `CMakeLists.txt` and add the following lines:
 
-```
+```CMake
 include_directories($ENV{GOOGLETEST_HOME}/include)
 link_directories($ENV{GOOGLETEST_HOME}/build)
 
@@ -90,31 +87,14 @@ This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_
 | Name                             | Value                                                                                             |
 |----------------------------------|---------------------------------------------------------------------------------------------------|
 |  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/src/win32Arduino;                                |
-|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration); ;$(WIN32ARDUINO_HOME)/cmake/build/bin/$(Configuration); |
+|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration);$(WIN32ARDUINO_HOME)/cmake/build/bin/$(Configuration); |
 |  Additional Dependencies         | gtest.lib;win32Arduino.lib;                                                                       |
 
 4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
 
-5) Configure the main() function to launch Google Test's RUN_ALL_TESTS() macro. The file `/samples/Manual/main.cpp` is a good start point.
+5) Configure the main() function to launch Google Test's RUN_ALL_TESTS() macro. The file `/samples/manual/main.cpp` is a good start point.
 
 6) Compile the project.
-
-### 4) ~~All source files in same soup~~
-If you are new to Visual Studio, another way to create a working test project is to copy everything in the same directory and run your test from there. 
-Here are the steps required for doing this:
-
-1) Create a new directory where all the source files will be copied. For clarity, assume the directory `C:\projects\mylibrary` is used.
-
-2) Copy all source and unit test files of your library to the new directory. For demonstration purpose, you can use the files from the `ButtonBibrary` available in `/samples/ButtonLibrary` folder.
-
-3) Copy all source code files of the win32Arduino library from folder `/src/win32Arduino` to the new directory. Note that win32Arduino unit test source code is not required.
-
-4) Copy cmake's configuration files from `/samples/TestProject1` to the new directory.
-
-5) Launch cmake in the new directory with the following commands:
-   * mkdir build
-   * cd build
-   * cmake -G "Visual Studio 10 2010" ..
 
 ## Source code example
 The following section shows an example of using win32Arduino.
@@ -127,7 +107,7 @@ bool waitForButtonPress(uint8_t buttonPin, uint32_t timeout) {
   {
     //look for button state
     int buttonValue = digitalRead(buttonPin);
-    if (buttonValue == HIGH)
+    if (buttonValue == LOW)
       return true;
   }
   //timeout
@@ -135,7 +115,7 @@ bool waitForButtonPress(uint8_t buttonPin, uint32_t timeout) {
 }
 ```
 
-Using Google Test framework, one can write the following unit test to validate the expectations of the `waitForButtonPress()` function:
+Using Google Test framework, one can write the following unit test to validate the behavior of the `waitForButtonPress()` function:
 
 ```cpp
 void simulatePinLowISR() {
@@ -173,15 +153,6 @@ TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
   ASSERT_EQ(BUTTON_DELAY_TIME, elapsed);
 }
 ```
-
-## Disabling win32Arduino's unit tests
-
-This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
-
-1) Edit the file /src/CMakeLists.txt
-2) Comment each lines that contains a reference to '*win32Arduino_unittest*' by adding a # character at the beginning of the line.
-1) Compile source code according to instructions specified in [INSTALL.md](INSTALL.md) file.
-3) Binaries are available in /cmake/build/bin/$(Configuration)
 
 # Build / Install
 
