@@ -50,37 +50,57 @@ A library source code must be added to a win32 project to be compiled and tested
 
 For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
 
-Note that method #1 and #2 requires the cmake application.
+### 1) Update an existing cmake project
 
-### 1) Configure your project to be win32Arduino-aware
-This is the recommended way to use win32Arduino.
+This is the recommended way to use win32Arduino. This method assumes that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
+
+Edit your project's `CMakeLists.txt` and add the following lines:
+
+```
+include_directories($ENV{GOOGLETEST_HOME}/include)
+link_directories($ENV{GOOGLETEST_HOME}/build)
+
+include_directories($ENV{WIN32ARDUINO_HOME}/src/win32Arduino)
+link_directories($ENV{WIN32ARDUINO_HOME}/cmake/build/bin)
+```
+
+Locate the `target_link_libraries()` entries and add `win32Arduino.lib gtest.lib` before the closing parenthesis (at the end).
+
+### 2) Convert your existing project to cmake
+Another option is to convert your existing project to use cmake. This method assumes that your library source code and your unit tests are located in the same directory.
+
+1) Copy the files from directory `/samples/convert` to your existing project.
+
+2) Open a file explorer and navigate to your existing project.
+
+3) Execute the file `vs2010.bat` which will generate a valid Visual Studio 2010 solution under the `build` directory.
+
+4) Navigate to the `build` directory and open `TestProject.sln` file.
+
+### 3) Create your test project manually with Visual Studio
 
 This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
 
-**TODO**
+1) Compile googletest and win32Arduino libraries as specified in [INSTALL.md](INSTALL.md).
 
-**TODO**
+2) Open Visual Studio and create a new win32 console application.
 
-**TODO**
+3) Modify the project properties to find Google Test and win32Arduino include and library. Add the following values to the project properties:
 
-**TODO**
+| Name                             | Value                                                                                             |
+|----------------------------------|---------------------------------------------------------------------------------------------------|
+|  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/src/win32Arduino;                                |
+|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration); ;$(WIN32ARDUINO_HOME)/cmake/build/bin/$(Configuration); |
+|  Additional Dependencies         | gtest.lib;win32Arduino.lib;                                                                       |
 
-**TODO**
+4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
 
-**TODO**
+5) Configure the main() function to launch Google Test's RUN_ALL_TESTS() macro. The file `/samples/Manual/main.cpp` is a good start point.
 
-**TODO**
+6) Compile the project.
 
-**TODO**
-
-**TODO**
-
-**TODO**
-
-
-### 2) All source files in same soup
-
-Another easy way to create a working test project is to copy everything in the same directory and run your test from there. This technique requires cmake installed on the computer.
+### 4) ~~All source files in same soup~~
+If you are new to Visual Studio, another way to create a working test project is to copy everything in the same directory and run your test from there. 
 Here are the steps required for doing this:
 
 1) Create a new directory where all the source files will be copied. For clarity, assume the directory `C:\projects\mylibrary` is used.
@@ -95,28 +115,6 @@ Here are the steps required for doing this:
    * mkdir build
    * cd build
    * cmake -G "Visual Studio 10 2010" ..
-
-### 3) Create your test project manually with Visual Studio
-
-This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
-
-1) Compile googletest and win32Arduino libraries as specified in [INSTALL.md](INSTALL.md).
-
-2) Open Visual Studio and create a new win32 console application.
-
-3) Modify the project to find Google Test and win32Arduino include and library. Add the following values to the project properties:
-
-| Name                             | Value                                                                                             |
-|----------------------------------|---------------------------------------------------------------------------------------------------|
-|  Additional Include Directories  | $(GOOGLETEST_HOME)/include; $(WIN32ARDUINO_HOME)/src/win32Arduino;                                |
-|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration); $(WIN32ARDUINO_HOME)/cmake/build/bin/$(Configuration); |
-|  Additional Dependencies         | gtest.lib;win32Arduino.lib;                                                                       |
-
-4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
-
-5) Configure the main() function to launch Google Test’s RUN_ALL_TESTS() macro. The file from `/samples/TestProject1` is a good start point.
-
-6) Compile the project.
 
 ## Source code example
 The following section shows an example of using win32Arduino.
@@ -140,8 +138,8 @@ bool waitForButtonPress(uint8_t buttonPin, uint32_t timeout) {
 Using Google Test framework, one can write the following unit test to validate the expectations of the `waitForButtonPress()` function:
 
 ```cpp
-void simulatePinHighISR() {
-  testarduino::setPinDigitalValue(2, HIGH);
+void simulatePinLowISR() {
+  testarduino::setPinDigitalValue(2, LOW);
 }
 TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
   testarduino::reset();
@@ -150,7 +148,8 @@ TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
   clock.setMicrosecondsResolution(100); //increase simulated clock by 0.1ms for every calls to micros()
   static const uint8_t buttonPin = 2;
   static const uint32_t MAX_WAIT_TIME = 5000; //ms
-  
+  testarduino::setPinDigitalValue(buttonPin, HIGH); //simulate pin pull-up resistor
+
   //assert that false is returned if button is not pressed
   uint32_t time1 = millis();
   bool result = waitForButtonPress(buttonPin, MAX_WAIT_TIME);
@@ -162,7 +161,7 @@ TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
   //configure win32Arduino library to push a button in 2000 ms.
   static const uint32_t BUTTON_DELAY_TIME = 2000; //ms
   uint32_t buttonPressTime = millis() + BUTTON_DELAY_TIME;
-  attachMillisecondsCallback(buttonPressTime, simulatePinHighISR); //in 2000 ms, the button pin will go HIGH
+  attachMillisecondsCallback(buttonPressTime, simulatePinLowISR); //in 2000 ms, the button pin will go HIGH
 
   //run the function again...
   //assert that function is interrupted when a button is pressed
