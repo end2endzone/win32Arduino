@@ -29,10 +29,6 @@ The following software must be installed on the system for compiling source code
 * [CMake](http://www.cmake.org/) v3.4.3 (or newer)
 * [win32Arduino source code](http://github.com/end2endzone/win32Arduino/tags)
 
-The following software must be installed on the system for building the deploy packages:
-
-* ~~[7-Zip](http://www.7-zip.org/) v9.20.~~
-
 
 ## Build steps
 
