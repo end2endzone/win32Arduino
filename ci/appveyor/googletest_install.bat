@@ -1,40 +1,14 @@
 @echo off
-
-echo =======================================================================
-echo Setting environnment variables for googletest
-echo =======================================================================
 cd /d %~dp0
 cd ..\..
-set  GOOGLETEST_HOME=%REPOSITORY_ROOT%\third_party\googletest
-setx GOOGLETEST_HOME %GOOGLETEST_HOME%
-echo Found GOOGLETEST_HOME=%GOOGLETEST_HOME%
-echo.
 
-echo Downloading googletest to folder %GOOGLETEST_HOME%
-echo.
-
-echo ======================================================================
-echo Deleting googletest repository folder (if any)
-echo =======================================================================
-if EXIST %GOOGLETEST_HOME% (
-  rmdir /q/s %GOOGLETEST_HOME%
-)
-echo done.
-echo.
-
-echo ======================================================================
-echo Cloning googletest repository
-echo =======================================================================
-git clone https://github.com/google/googletest.git %GOOGLETEST_HOME%
-cd /d %GOOGLETEST_HOME%
-git checkout release-1.6.0
-echo done.
+powershell -nologo -executionpolicy bypass -File "%~dp0install_github_package.ps1" -name "googletest" -installpath "%cd%\third_party" -url "http://codeload.github.com/google/googletest/zip/release-1.6.0"
 echo.
 
 echo =======================================================================
 echo Generating googletest Visual Studio 2010 solution
 echo =======================================================================
-cd /d %GOOGLETEST_HOME%
+set GOOGLETEST_HOME=%cd%\third_party\googletest
 
 echo Deleting previous build folder (if any)
 rmdir /s/q build >NUL 2>NUL
