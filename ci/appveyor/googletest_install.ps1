@@ -30,11 +30,11 @@ Invoke-Expression "& `"$parentdir\install_github_package.ps1`" $argumentList"
 
 # Copy installation environment variable 
 $env:GOOGLETEST_HOME = $env:INSTALL_HOME
-$build = "$env:GOOGLETEST_HOME\build"
 
 # Run run_cmake.ps1 script.
-$argumentList = "-build `"$build`" -src `"$env:GOOGLETEST_HOME`""
-Invoke-Expression "& `"$parentdir\run_cmake.ps1`" $argumentList"
+$build = "$env:GOOGLETEST_HOME\build"
+$sources = "$env:GOOGLETEST_HOME"
+Invoke-Expression "& `"$parentdir\run_cmake.ps1`" -build `"$build`" -src `"$sources`""
 
 Write-Output "done."
 Write-Output ""
