@@ -3,16 +3,17 @@
 ############################################
 function Get-AbsolutePath ($Path)
 {
-    # System.IO.Path.Combine has two properties making it necesarry here:
-    #   1) correctly deals with situations where $Path (the second term) is an absolute path
-    #   2) correctly deals with situations where $Path (the second term) is relative
-    # (join-path) commandlet does not have this first property
-    $Path = [System.IO.Path]::Combine( ((pwd).Path), ($Path) );
+  # From https://stackoverflow.com/a/16964490
+  # System.IO.Path.Combine has two properties making it necesarry here:
+  #   1) correctly deals with situations where $Path (the second term) is an absolute path
+  #   2) correctly deals with situations where $Path (the second term) is relative
+  # (join-path) commandlet does not have this first property
+  $Path = [System.IO.Path]::Combine( ((pwd).Path), ($Path) );
 
-    # this piece strips out any relative path modifiers like '..' and '.'
-    $Path = [System.IO.Path]::GetFullPath($Path);
+  # this piece strips out any relative path modifiers like '..' and '.'
+  $Path = [System.IO.Path]::GetFullPath($Path);
 
-    return $Path;
+  return $Path;
 }
 $scriptFolder = Split-Path -Path $MyInvocation.MyCommand.Path
 $third_party = Get-AbsolutePath -Path "$scriptFolder\..\..\third_party"
