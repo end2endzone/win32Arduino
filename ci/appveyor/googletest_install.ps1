@@ -15,8 +15,8 @@ function Get-AbsolutePath ($Path)
 
   return $Path;
 }
-$scriptFolder = Split-Path -Path $MyInvocation.MyCommand.Path
-$thirdPartyFolder = Get-AbsolutePath -Path "$scriptFolder\..\..\third_party"
+$parentdir = Split-Path -Path $MyInvocation.MyCommand.Path
+$third_party = Get-AbsolutePath -Path "$parentdir\..\..\third_party"
 
 ############################################
 # Install github package.
@@ -25,8 +25,8 @@ $name = "googletest"
 Write-Output "Installing $name package..."
 
 # Run install_github_package.ps1 script.
-$argumentList = "-name $name -installpath $thirdPartyFolder -url `"http://codeload.github.com/google/googletest/zip/release-1.6.0`""
-Invoke-Expression "& `"$scriptFolder\install_github_package.ps1`" $argumentList"
+$argumentList = "-name $name -installpath $third_party -url `"http://codeload.github.com/google/googletest/zip/release-1.6.0`""
+Invoke-Expression "& `"$parentdir\install_github_package.ps1`" $argumentList"
 
 # Copy installation environment variable 
 $env:GOOGLETEST_HOME = $env:INSTALL_HOME
@@ -34,7 +34,7 @@ $build = "$env:GOOGLETEST_HOME\build"
 
 # Run run_cmake.ps1 script.
 $argumentList = "-build `"$build`" -src `"$env:GOOGLETEST_HOME`""
-Invoke-Expression "& `"$scriptFolder\run_cmake.ps1`" $argumentList"
+Invoke-Expression "& `"$parentdir\run_cmake.ps1`" $argumentList"
 
 Write-Output "done."
 Write-Output ""

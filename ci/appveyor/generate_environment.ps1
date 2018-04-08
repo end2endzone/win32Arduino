@@ -15,8 +15,8 @@ function Get-AbsolutePath ($Path)
 
   return $Path;
 }
-$scriptFolder = Split-Path -Path $MyInvocation.MyCommand.Path
-$third_party = Get-AbsolutePath -Path "$scriptFolder\..\..\third_party"
+$parentdir = Split-Path -Path $MyInvocation.MyCommand.Path
+$third_party = Get-AbsolutePath -Path "$parentdir\..\..\third_party"
 
 ############################################
 # Generate envinronment.bat file
@@ -27,7 +27,7 @@ function AddEnvironment ($file, $name, $value)
   "setx $name `"$value`" >NUL" | Add-Content $file
   "set  $name=$value" | Add-Content $file
 }
-$file = "$scriptFolder\environment.bat"
+$file = "$parentdir\environment.bat"
 "@echo off" | Set-Content $file
 
 AddEnvironment -File $file -Name THIRD_PARTY -Value $third_party
