@@ -84,5 +84,8 @@ $envvalue = "$installpath\$name"
 Write-Host "Setting environment variable '$envname' to value '$envvalue'."
 [Environment]::SetEnvironmentVariable($envname, $envvalue, "User")
 
+# Define an environment variable that can be retrieved from another script.
+$env:INSTALL_HOME = $envvalue
+
 Write-Host "GitHub release '$name' installed without error."
 exit 0
