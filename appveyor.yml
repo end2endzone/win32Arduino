@@ -42,6 +42,7 @@ install:
 - ps: .\ci\appveyor\generate_environment.ps1
 - cmd: call .\ci\appveyor\environment.bat
 - ps: .\ci\appveyor\prepare_github_deploy.ps1
+- cmd: call .\ci\appveyor\ant_install.bat
 - cmd: call c:\projects\win32Arduino\ci\appveyor\version_info_update.bat
 - cmd: call c:\projects\win32Arduino\ci\appveyor\googletest_install.bat
 - cmd: call c:\projects\win32Arduino\ci\appveyor\googletest_build.bat
