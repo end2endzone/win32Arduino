@@ -20,3 +20,7 @@
 /src/build
 /publish
 /deploy
+/build
+/version_info.bat
+/version_info.sh
+/ci/ant/version_info.properties

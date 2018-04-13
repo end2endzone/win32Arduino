@@ -1,4 +1,5 @@
 add_library(win32Arduino STATIC 
+  ${PROJECT_BINARY_DIR}/src/win32Arduino/version.h
   arduino.cpp
   arduino.h
   IncrementalClockStrategy.cpp

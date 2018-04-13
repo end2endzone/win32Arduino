@@ -1,4 +1,4 @@
-include_directories(${CMAKE_SOURCE_DIR}/win32Arduino)
+include_directories(${CMAKE_SOURCE_DIR}/src/win32Arduino)
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 include_directories($ENV{GOOGLETEST_HOME}/include)
