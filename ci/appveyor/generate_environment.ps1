@@ -31,4 +31,4 @@ $file = "$parentdir\environment.bat"
 "@echo off" | Set-Content $file
 
 AddEnvironment -File $file -Name THIRD_PARTY -Value $third_party
-AddEnvironment -File $file -Name GOOGLETEST_HOME -Value $third_party\googletest
+AddEnvironment -File $file -Name GOOGLETEST_HOME -Value $third_party\googletest-release-1.6.0

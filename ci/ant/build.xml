@@ -7,6 +7,7 @@
   <property name="deploy.dir" location="${home.dir}/deploy" />
   <property name="publish.dir" location="${home.dir}/publish" />
   <property name="build.dir" location="${src.dir}/build" />
+  <property name="thirdparty.dir" location="${home.dir}/third_party" />
 
   <include file="macros.xml"/>
 
@@ -20,18 +21,20 @@
     <!--for ComSpec-->
     <property environment="env"/>
 
-    <echo>  Java Home :     ${java.home}</echo>
-    <echo>  Build File :    ${ant.file}</echo>
-    <echo>  Run Date :      ${build.time}</echo>
-    <echo>  Run by :        ${user.name}</echo>
-    <echo>  Base Dir :      ${basedir}</echo>
-    <echo>  Deploy Dir :    ${deploy.dir}</echo>
-    <echo>  Build Dir :     ${build.dir}</echo>
-    <echo>  Publish Dir :   ${publish.dir}</echo>
+    <echo>  Java Home :       ${java.home}</echo>
+    <echo>  Build File :      ${ant.file}</echo>
+    <echo>  Run Date :        ${build.time}</echo>
+    <echo>  Run by :          ${user.name}</echo>
+    <echo>  Base Dir :        ${basedir}</echo>
+    <echo>  Deploy Dir :      ${deploy.dir}</echo>
+    <echo>  Build Dir :       ${build.dir}</echo>
+    <echo>  Publish Dir :     ${publish.dir}</echo>
+    <echo>  Third Party Dir : ${thirdparty.dir}</echo>
 
     <mkdir dir="${deploy.dir}" />
     <mkdir dir="${build.dir}" />
     <mkdir dir="${publish.dir}" />
+    <mkdir dir="${thirdparty.dir}" />
   </target>
 
   <target name="disable_unittest" description="Delete all build artifacts." depends="-init" >
@@ -128,4 +131,11 @@
   <target name="test" description="Runs unit &amp; system tests." depends="-init, -test.unit, -test.system" />
   <!-- Test TARGETS (end) -->
 
+  <target name="-googletest.install" depends="-init">
+    <install-third-party name="googletest" dir="${thirdparty.dir}" url="https://codeload.github.com/google/googletest/zip/release-1.6.0" />
+    <cmake-compile name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />
+  </target>
+
+  <target name="install" depends="-init, -googletest.install" description="Installs required libraries in third_party directory">
+  </target>
 </project>

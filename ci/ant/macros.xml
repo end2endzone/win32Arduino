@@ -7,7 +7,7 @@
   -->
 
   <!--From https://stackoverflow.com/a/19533292 -->
-  <macrodef name="required-property">
+  <macrodef name="required-property" description="Fails the build if the given property is not defined.">
     <attribute name="name"/>
     <attribute name="prop" default="@{name}"/>
     <attribute name="if" default="___"/>
@@ -35,7 +35,7 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="findfile">
+  <macrodef name="findfile" description="Finds the first file in @{dir} that matches @{name}">
     <attribute name="property"/>
     <attribute name="dir"/>
     <attribute name="name"/>
@@ -48,6 +48,104 @@
           <equals arg1="${toString:@{property}.found}" arg2="" />
         </not>
       </condition>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="findfolder" description="Finds the first folder in @{dir} that matches @{name}">
+    <attribute name="property"/>
+    <attribute name="dir"/>
+    <attribute name="name"/>
+    <sequential>
+      <first id="@{property}.found">
+        <dirset dir="@{dir}" includes="@{name}" />
+      </first>
+      <condition property="@{property}" value="${toString:@{property}.found}">
+        <not>
+          <equals arg1="${toString:@{property}.found}" arg2="" />
+        </not>
+      </condition>
+    </sequential>
+  </macrodef>
+  
+  <macrodef name="install-third-party" description="Download and install a third party zip file">
+    <attribute name="name"/>
+    <attribute name="dir"/>
+    <attribute name="url"/>
+    <sequential>
+      <echo>Installing @{name} package...</echo>
+      <echo />
+      
+      <echo>Deleting previous @{name} installations...</echo>
+      <delete dir="@{dir}" />
+
+      <local name="tempfile" />
+      <property name="tempfile" location="${env.TEMP}/@{name}.zip" />
+      
+      <echo>Downloading @{name} zip archive from '@{url}' to file '${tempfile}'...</echo>
+      <get src="@{url}" dest="${tempfile}" />
+
+      <!--
+      <local name="tempdir" />
+      <property name="tempdir" location="${env.TEMP}/@{name}.temp" />
+      <echo>Extracting zip file to temporary directory...</echo>
+      <unzip src="${tempfile}" dest="${tempdir}"/>
+
+      <local name="firstfolder" />
+      <findfolder property="firstfolder" dir="${tempdir}" name="*" />
+      <required-property name="firstfolder" />
+      <local name="firstfolder.name" />
+      <basename property="firstfolder.name" file="${firstfolder}"/>      
+      <echo>Found folder '${firstfolder.name}' in zip file...</echo>
+
+      <echo>Renaming folder '${firstfolder}' to '@{name}'...</echo>
+      <move file="${firstfolder}" tofile="${tempdir}/@{name}"/>
+      <move file="${tempdir}/@{name}" todir="@{dir}"/>
+      -->
+
+      <echo>Extracting zip file to install directory...</echo>
+      <unzip src="${tempfile}" dest="@{dir}"/>
+
+      <local name="firstfolder" />
+      <findfolder property="firstfolder" dir="@{dir}" name="**/@{name}*" />
+      <required-property name="firstfolder" />
+
+      <property name="@{name}.dir" location="${firstfolder}" />
+      
+      <echo>Package '@{name}' installed to folder '${firstfolder}'.</echo>
+      <echo/>
+      
+    </sequential>
+  </macrodef>
+
+
+  <macrodef name="cmake-compile" description="Generate and compile a cmake project">
+    <attribute name="name"/>
+    <attribute name="build"/>
+    <attribute name="source"/>
+    <attribute name="args"/>
+    <sequential>
+      <property name="@{name}.build.dir" location="@{build}" />
+      <property name="@{name}.source.dir" location="@{source}" />
+
+      <local name="cmake.build" />
+      <property name="cmake.build" location="@{build}" />
+      
+      <mkdir dir="${cmake.build}" />
+
+      <echo>Generating '@{name}' build project...</echo>
+      <exec executable="cmake" dir="${cmake.build}" failonerror="true">
+        <arg value="@{args}"/>
+        <arg value="@{source}"/>
+      </exec>
+      <echo/>
+
+      <echo>Building '@{name}'...</echo>
+      <exec executable="cmake" dir="${cmake.build}" failonerror="true">
+        <arg value="--build"/>
+        <arg value="${cmake.build}"/>
+      </exec>
+      <echo/>
+      
     </sequential>
   </macrodef>
   
