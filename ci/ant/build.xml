@@ -37,6 +37,40 @@
     <mkdir dir="${thirdparty.dir}" />
   </target>
 
+  <target name="-findConfiguration" depends="-init" description="Defines variable 'build.configuration' based on the current system">
+    <!--Appveyor defines the build configuration in 'Configuration' variable-->
+    <!--https://www.appveyor.com/docs/environment-variables/-->
+    <condition property="build.configuration" value="${env.Configuration}">
+      <isset property="env.Configuration"/>
+    </condition>
+
+    <!--Travis CI does not specify a designated environment variable-->
+    <!--See https://docs.travis-ci.com/user/environment-variables/-->
+    <!--Some projects defines the CONFIG environment variable: https://github.com/forexample/hunter-simple/blob/e2eae72525a947058ac24c1b4f2d0655761b5e89/.travis.yml-->
+    <condition property="build.configuration" value="${env.CONFIG}">
+      <isset property="env.CONFIG"/>
+    </condition>
+
+    <!--CMAKE requires the command line argument -DCMAKE_BUILD_TYPE=Debug-->
+    <!--It is not an environment variable but some system may define the value-->
+    <condition property="build.configuration" value="${env.CMAKE_BUILD_TYPE}">
+      <isset property="env.CMAKE_BUILD_TYPE"/>
+    </condition>
+
+    <!--Look for other known variables:-->
+    <condition property="build.configuration" value="${env.BUILD_CONFIGURATION}">
+      <isset property="env.BUILD_CONFIGURATION"/>
+    </condition>
+    <condition property="build.configuration" value="${env.BUILD_TYPE}">
+      <isset property="env.BUILD_TYPE"/>
+    </condition>
+
+    <!--If all else fails, default to Release configuration-->
+    <property name="build.configuration" value="Release" />
+
+    <echo>Found build configuration: ${build.configuration}</echo>
+  </target>
+
   <target name="disable_unittest" description="Delete all build artifacts." depends="-init" >
     <local name="targetfile" />
     <property name="targetfile" value="${src.dir}\CMakeLists.txt" />
@@ -72,18 +106,12 @@
     <delete dir="${publish.dir}" />
   </target>
 
-  <target name="-cmake.generate" description="Generate build file from sources" depends="-init" >
-    <mkdir dir="${build.dir}" />
-    <exec executable="cmake" dir="${build.dir}" failonerror="true">
-      <arg value=".."/>
-    </exec>
+  <target name="-cmake.generate" description="Generate build file from sources" depends="-init, -findConfiguration" >
+    <cmake name="win32Arduino" build="${build.dir}" source="${home.dir}" config="${build.configuration}" />
   </target>
 
-  <target name="compile" description="Build all source files." depends="-init, -cmake.generate" >
-    <exec executable="cmake" dir="${build.dir}" failonerror="true">
-      <arg value="--build"/>
-      <arg value="${build.dir}"/>
-    </exec>
+  <target name="compile" description="Build all source files." depends="-init, -findConfiguration, -cmake.generate" >
+    <cmake-build name="win32Arduino" build="${build.dir}" source="${home.dir}" config="${build.configuration}" />
   </target>
 
   <!-- Test TARGETS (start) -->
@@ -128,14 +156,18 @@
   </target>
   <target name="-test.system" description="Runs system tests for the project.">
   </target>
-  <target name="test" description="Runs unit &amp; system tests." depends="-init, -test.unit, -test.system" />
+  <target name="test" description="Runs unit &amp; system tests." depends="-init, -findConfiguration, -test.unit, -test.system" />
   <!-- Test TARGETS (end) -->
 
-  <target name="-googletest.install" depends="-init">
+  <target name="-googletest.install" depends="-init, -findConfiguration">
     <install-third-party name="googletest" dir="${thirdparty.dir}" url="https://codeload.github.com/google/googletest/zip/release-1.6.0" />
-    <cmake-compile name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />
+    <!--<cmake-compile name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />-->
+    <cmake       name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />
+    <cmake-build name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" />
   </target>
 
   <target name="install" depends="-init, -googletest.install" description="Installs required libraries in third_party directory">
   </target>
+
+  <target name="debug" depends="-init, -findConfiguration" />
 </project>

@@ -84,24 +84,6 @@
       <echo>Downloading @{name} zip archive from '@{url}' to file '${tempfile}'...</echo>
       <get src="@{url}" dest="${tempfile}" />
 
-      <!--
-      <local name="tempdir" />
-      <property name="tempdir" location="${env.TEMP}/@{name}.temp" />
-      <echo>Extracting zip file to temporary directory...</echo>
-      <unzip src="${tempfile}" dest="${tempdir}"/>
-
-      <local name="firstfolder" />
-      <findfolder property="firstfolder" dir="${tempdir}" name="*" />
-      <required-property name="firstfolder" />
-      <local name="firstfolder.name" />
-      <basename property="firstfolder.name" file="${firstfolder}"/>      
-      <echo>Found folder '${firstfolder.name}' in zip file...</echo>
-
-      <echo>Renaming folder '${firstfolder}' to '@{name}'...</echo>
-      <move file="${firstfolder}" tofile="${tempdir}/@{name}"/>
-      <move file="${tempdir}/@{name}" todir="@{dir}"/>
-      -->
-
       <echo>Extracting zip file to install directory...</echo>
       <unzip src="${tempfile}" dest="@{dir}"/>
 
@@ -117,36 +99,45 @@
     </sequential>
   </macrodef>
 
-
-  <macrodef name="cmake-compile" description="Generate and compile a cmake project">
+  <macrodef name="cmake" description="Generate a cmake project">
     <attribute name="name"/>
+    <attribute name="config"/>
     <attribute name="build"/>
     <attribute name="source"/>
-    <attribute name="args"/>
+    <attribute name="args" default=""/>
     <sequential>
       <property name="@{name}.build.dir" location="@{build}" />
       <property name="@{name}.source.dir" location="@{source}" />
-
-      <local name="cmake.build" />
-      <property name="cmake.build" location="@{build}" />
       
-      <mkdir dir="${cmake.build}" />
+      <mkdir dir="@{build}" />
 
-      <echo>Generating '@{name}' build project...</echo>
-      <exec executable="cmake" dir="${cmake.build}" failonerror="true">
+      <echo>Generating '@{name}' build project in '@{config}' mode...</echo>
+      <exec executable="cmake" dir="@{build}" failonerror="true">
         <arg value="@{args}"/>
+        <arg value="-DCMAKE_BUILD_TYPE=@{config}"/>
         <arg value="@{source}"/>
       </exec>
       <echo/>
-
-      <echo>Building '@{name}'...</echo>
-      <exec executable="cmake" dir="${cmake.build}" failonerror="true">
-        <arg value="--build"/>
-        <arg value="${cmake.build}"/>
-      </exec>
-      <echo/>
-      
     </sequential>
   </macrodef>
-  
+
+  <macrodef name="cmake-build" description="Build a cmake project">
+    <attribute name="name"/>
+    <attribute name="build"/>
+    <attribute name="source"/>
+    <attribute name="config"/>
+    <attribute name="args" default=""/>
+    <sequential>
+      <echo>Building '@{name}' in '@{config}' mode...</echo>
+      <exec executable="cmake" dir="@{build}" failonerror="true">
+        <arg value="@{args}"/>
+        <arg value="--build"/>
+        <arg value="@{build}"/>
+        <arg value="--config"/>
+        <arg value="@{config}"/>
+      </exec>
+      <echo/>
+    </sequential>
+  </macrodef>
+
 </project>
