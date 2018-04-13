@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="macros" default="" basedir=".">
+  <!--
+  ************************************************************************************************************************
+  *                                                  Macro definitions                                                   *
+  ************************************************************************************************************************
+  -->
+
+  <!--From https://stackoverflow.com/a/19533292 -->
+  <macrodef name="required-property">
+    <attribute name="name"/>
+    <attribute name="prop" default="@{name}"/>
+    <attribute name="if" default="___"/>
+    <attribute name="unless" default="___"/>
+    <sequential>
+      <fail message="You must set property '@{name}'">
+        <condition>
+          <and>
+            <not>
+              <isset property="@{prop}"/>
+            </not>
+            <or>
+              <equals arg1="@{if}" arg2="___"/>
+              <isset property="@{if}"/>
+            </or>
+            <or>
+              <equals arg1="@{unless}" arg2="___"/>
+              <not>
+                <isset property="@{unless}"/>
+              </not>
+            </or>
+          </and>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="findfile">
+    <attribute name="property"/>
+    <attribute name="dir"/>
+    <attribute name="name"/>
+    <sequential>
+      <first id="@{property}.found">
+        <fileset dir="@{dir}" includes="@{name}" />
+      </first>
+      <condition property="@{property}" value="${toString:@{property}.found}">
+        <not>
+          <equals arg1="${toString:@{property}.found}" arg2="" />
+        </not>
+      </condition>
+    </sequential>
+  </macrodef>
+  
+</project>

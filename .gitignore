@@ -17,3 +17,6 @@
 /samples/TestProject1/build
 /samples/TestProject2/build
 /ci/appveyor/environment.bat
+/src/build
+/publish
+/deploy
