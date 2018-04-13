@@ -62,12 +62,8 @@ configuration: Release
 #  - Debug
 #  - Release
 
-before_build:
-- cmd: call c:\projects\win32Arduino\cmake\vs2010.bat
-
-build:
-  project: cmake\build\win32Arduino.sln
-  verbosity: minimal
+build_script:
+- cmd: call ant -f .\ci\ant\build.xml compile
   
 #---------------------------------#
 #       tests configuration       #
@@ -75,14 +71,15 @@ build:
 
 # to run your custom scripts instead of automatic tests
 test_script:
-- cmd: call c:\projects\win32Arduino\ci\appveyor\test_script.bat
+- cmd: call ant -f .\ci\ant\build.xml test
+- cmd: call c:\projects\win32Arduino\ci\appveyor\upload_test_results.bat
 
 #---------------------------------#
 #      artifacts configuration    #
 #---------------------------------#
 
 artifacts:
-- path: cmake\build\bin\Release\win32Arduino_unittest.x86.release.xml
+- path: .\publish\win32Arduino_unittest.x86.release.xml
   name: win32ArduinoTest.x86.release.xml
   
 #---------------------------------#

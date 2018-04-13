@@ -1,16 +1,5 @@
 @echo off
 
-echo Change directory to output directory
-cd /d %~dp0
-cd ..\ant
-
-echo =======================================================================
-echo Running unit tests...
-echo =======================================================================
-call ant -f build.xml test
-echo done
-echo.
-
 echo =======================================================================
 echo Uploading test results to AppVeyor
 echo =======================================================================
