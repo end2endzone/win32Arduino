@@ -112,7 +112,11 @@
       <mkdir dir="@{build}" />
 
       <echo>Generating '@{name}' build project in '@{config}' mode...</echo>
-      <exec executable="cmake" dir="@{build}" failonerror="true">
+      <exec osfamily="windows" executable="cmake" dir="@{build}" failonerror="true">
+        <arg value="@{args}"/>
+        <arg value="@{source}"/>
+      </exec>
+      <exec osfamily="unix" executable="cmake" dir="@{build}" failonerror="true">
         <arg value="@{args}"/>
         <arg value="-DCMAKE_BUILD_TYPE=@{config}"/>
         <arg value="@{source}"/>
@@ -128,13 +132,20 @@
     <attribute name="config"/>
     <attribute name="args" default=""/>
     <sequential>
+
       <echo>Building '@{name}' in '@{config}' mode...</echo>
-      <exec executable="cmake" dir="@{build}" failonerror="true">
-        <arg value="@{args}"/>
+      <echo>args=@{args}</echo>
+      <echo>build=@{build}</echo>
+      <echo>config=@{config}</echo>
+      <exec osfamily="windows" executable="cmake" dir="@{build}" failonerror="true">
         <arg value="--build"/>
-        <arg value="@{build}"/>
+        <arg value="."/>
         <arg value="--config"/>
         <arg value="@{config}"/>
+      </exec>
+      <exec osfamily="unix" executable="cmake" dir="@{build}" failonerror="true">
+        <arg value="--build"/>
+        <arg value="."/>
       </exec>
       <echo/>
     </sequential>
@@ -183,5 +194,52 @@
 
     </sequential>
   </macrodef>
+
+  <macrodef name="script-new" description="Create an empty script file.">
+    <attribute name="name"/>
+    <sequential>
+      
+      <!--Define script filename-->
+      <condition property="@{name}" value="setupenv.bat">
+        <os family="windows" />
+      </condition>
+      <condition property="@{name}" value="setupenv.sh">
+        <os family="unix" />
+      </condition>
+      
+      <!--Define script file header-->
+      <local name="script.header" />
+      <condition property="script.header" value="@@echo off">
+        <os family="windows" />
+      </condition>
+      <condition property="script.header" value="#!/bin/sh">
+        <os family="unix" />
+      </condition>
+
+      <!--Create file-->
+      <echo file="${@{name}}" append="false">${script.header}${line.separator}</echo>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="script-env-add" description="Set an environment variable in the given file.">
+    <attribute name="file"/>
+    <attribute name="name"/>
+    <attribute name="value"/>
+    <sequential>
+      
+      <!--Define script content-->
+      <local name="script.command" />
+      <condition property="script.command" value="set @{name}=@{value}">
+        <os family="windows" />
+      </condition>
+      <condition property="script.command" value="export @{name}=&quot;@{value}&quot;">
+        <os family="unix" />
+      </condition>
+
+      <!--print to file-->
+      <echo file="@{file}" append="true">${script.command}${line.separator}</echo>
+    </sequential>
+  </macrodef>
+
 
 </project>
