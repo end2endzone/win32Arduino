@@ -79,8 +79,13 @@
       <delete dir="@{dir}" />
 
       <local name="tempfile" />
-      <property name="tempfile" location="${env.TEMP}/@{name}.zip" />
-      
+      <condition property="tempfile" value="${env.TEMP}/@{name}.zip">
+        <os family="windows" />
+      </condition>
+      <condition property="tempfile" value="/tmp/@{name}.zip">
+        <os family="unix" />
+      </condition>
+
       <echo>Downloading @{name} zip archive from '@{url}' to file '${tempfile}'...</echo>
       <get src="@{url}" dest="${tempfile}" />
 
@@ -134,9 +139,6 @@
     <sequential>
 
       <echo>Building '@{name}' in '@{config}' mode...</echo>
-      <echo>args=@{args}</echo>
-      <echo>build=@{build}</echo>
-      <echo>config=@{config}</echo>
       <exec osfamily="windows" executable="cmake" dir="@{build}" failonerror="true">
         <arg value="--build"/>
         <arg value="."/>
