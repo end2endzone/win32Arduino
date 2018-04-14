@@ -1,3 +1,8 @@
+Changes for 2.1.0:
+
+* New feature: Removed as much as possible the use of powershell scripts. Now using cross-platform tools like cmake, Apache Ant, curl.
+* New feature: Now using Apache Ant for most build automation tasks.
+
 Changes for 2.0.0:
 
 * Fixed issue  #1 - Rename library namespace to testarduino.
