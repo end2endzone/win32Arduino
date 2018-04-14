@@ -11,6 +11,8 @@
 
   <include file="macros.xml"/>
 
+  <target name="debug" depends="-init, -findConfiguration" />
+
   <target name="-init" depends="" description="">
 
     <!--Define current time for logs-->
@@ -38,36 +40,9 @@
   </target>
 
   <target name="-findConfiguration" depends="-init" description="Defines variable 'build.configuration' based on the current system">
-    <!--Appveyor defines the build configuration in 'Configuration' variable-->
-    <!--https://www.appveyor.com/docs/environment-variables/-->
-    <condition property="build.configuration" value="${env.Configuration}">
-      <isset property="env.Configuration"/>
-    </condition>
-
-    <!--Travis CI does not specify a designated environment variable-->
-    <!--See https://docs.travis-ci.com/user/environment-variables/-->
-    <!--Some projects defines the CONFIG environment variable: https://github.com/forexample/hunter-simple/blob/e2eae72525a947058ac24c1b4f2d0655761b5e89/.travis.yml-->
-    <condition property="build.configuration" value="${env.CONFIG}">
-      <isset property="env.CONFIG"/>
-    </condition>
-
-    <!--CMAKE requires the command line argument -DCMAKE_BUILD_TYPE=Debug-->
-    <!--It is not an environment variable but some system may define the value-->
-    <condition property="build.configuration" value="${env.CMAKE_BUILD_TYPE}">
-      <isset property="env.CMAKE_BUILD_TYPE"/>
-    </condition>
-
-    <!--Look for other known variables:-->
-    <condition property="build.configuration" value="${env.BUILD_CONFIGURATION}">
-      <isset property="env.BUILD_CONFIGURATION"/>
-    </condition>
-    <condition property="build.configuration" value="${env.BUILD_TYPE}">
-      <isset property="env.BUILD_TYPE"/>
-    </condition>
-
-    <!--If all else fails, default to Release configuration-->
-    <property name="build.configuration" value="Release" />
-
+    <find-build-config property="build.configuration" default="Release" />
+    <required-property name="build.configuration" />
+    
     <echo>Found build configuration: ${build.configuration}</echo>
   </target>
 
@@ -161,13 +136,10 @@
 
   <target name="-googletest.install" depends="-init, -findConfiguration">
     <install-third-party name="googletest" dir="${thirdparty.dir}" url="https://codeload.github.com/google/googletest/zip/release-1.6.0" />
-    <!--<cmake-compile name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />-->
     <cmake       name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />
     <cmake-build name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" />
   </target>
 
   <target name="install" depends="-init, -googletest.install" description="Installs required libraries in third_party directory">
   </target>
-
-  <target name="debug" depends="-init, -findConfiguration" />
 </project>

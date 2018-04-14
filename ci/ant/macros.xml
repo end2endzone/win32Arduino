@@ -140,4 +140,48 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="find-build-config" description="Finds the build configuration based on system's environement variables.">
+    <attribute name="property"/>
+    <attribute name="default" default=""/>
+    <sequential>
+      <!--Appveyor defines the build configuration in 'Configuration' variable-->
+      <!--https://www.appveyor.com/docs/environment-variables/-->
+      <condition property="@{property}" value="${env.Configuration}">
+        <isset property="env.Configuration"/>
+      </condition>
+
+      <!--Travis CI does not specify a designated environment variable-->
+      <!--See https://docs.travis-ci.com/user/environment-variables/-->
+      <!--Some projects defines the CONFIG environment variable: https://github.com/forexample/hunter-simple/blob/e2eae72525a947058ac24c1b4f2d0655761b5e89/.travis.yml-->
+      <condition property="@{property}" value="${env.CONFIG}">
+        <isset property="env.CONFIG"/>
+      </condition>
+
+      <!--CMAKE requires the command line argument -DCMAKE_BUILD_TYPE=Debug-->
+      <!--It is not an environment variable but some system may define the value-->
+      <condition property="@{property}" value="${env.CMAKE_BUILD_TYPE}">
+        <isset property="env.CMAKE_BUILD_TYPE"/>
+      </condition>
+
+      <!--Look for other known variables:-->
+      <condition property="@{property}" value="${env.BUILD_CONFIGURATION}">
+        <isset property="env.BUILD_CONFIGURATION"/>
+      </condition>
+      <condition property="@{property}" value="${env.BUILD_TYPE}">
+        <isset property="env.BUILD_TYPE"/>
+      </condition>
+
+      <!--If all else fails, default to Release configuration-->
+      <!--but only if specified in @{default}-->
+      <condition property="@{property}" value="@{default}">
+        <and>
+          <not>
+            <equals arg1="@{default}" arg2=""/>
+          </not>
+        </and>
+      </condition>
+
+    </sequential>
+  </macrodef>
+
 </project>
