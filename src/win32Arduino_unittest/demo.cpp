@@ -1,13 +1,8 @@
 // demo.cpp : Defines the entry point for the console application.
 //
 
-#include "targetver.h"
-
-#include "windows.h"
-#undef min
-#undef max
-
 #include "arduino.h"
+#include "nativefunc.h"
 
 void demoSerial()
 {
@@ -24,7 +19,7 @@ void demoMillis()
   for(int i=0; i<4; i++)
   {
     uint32_t start = millis();
-    Sleep(40);
+    nativefunc::millisleep(40);
     uint32_t end = millis();
     uint32_t elapsed = end-start;
     Serial.print("loop #");

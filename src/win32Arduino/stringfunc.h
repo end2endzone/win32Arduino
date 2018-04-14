@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STRINGFUNC_H
+#define STRINGFUNC_H
 
 #include <stdint.h>
 #include <string>
@@ -133,3 +134,5 @@ std::string& operator<<(std::string& str, const int64_t & value);
 ///<param name="value">The value to append to the given string.</param>
 ///<return>Returns the given string.<return>
 std::string& operator<<(std::string& str, const uint64_t & value);
+
+#endif //STRINGFUNC_H

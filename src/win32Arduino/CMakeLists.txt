@@ -5,6 +5,8 @@ add_library(win32Arduino STATIC
   IncrementalClockStrategy.cpp
   IncrementalClockStrategy.h
   IClockStrategy.h
+  nativefunc.cpp
+  nativefunc.h
   RealtimeClockStrategy.cpp
   RealtimeClockStrategy.h
   SerialPrinter.cpp

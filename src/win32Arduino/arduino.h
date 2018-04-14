@@ -1,5 +1,5 @@
-#ifndef WIN32_ARDUINO_H
-#define WIN32_ARDUINO_H
+#ifndef WIN32ARDUINO_H
+#define WIN32ARDUINO_H
 
 #include <stdint.h>   //for uintxx_t, intxx_t
 
@@ -165,7 +165,7 @@ typedef unsigned char byte;
 void tone(byte iPin, uint16_t freq, uint32_t duration);
 void noTone(byte iPin);
 
-extern SerialPrinter Serial;
+extern testarduino::SerialPrinter Serial;
 
 void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t value);
@@ -331,4 +331,4 @@ int32_t random(int32_t max);
 //  return ((T)1<<n);
 //}
 
-#endif //WIN32_ARDUINO_H
+#endif //WIN32ARDUINO_H

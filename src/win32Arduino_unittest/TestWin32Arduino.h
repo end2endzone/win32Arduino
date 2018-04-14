@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TESTWIN32ARDUINO_H
+#define TESTWIN32ARDUINO_H
 
 #include <gtest/gtest.h>
 
@@ -13,3 +14,5 @@ namespace arduino { namespace test
 
 } // End namespace test
 } // End namespace arduino
+
+#endif //TESTWIN32ARDUINO_H

@@ -1,6 +1,3 @@
-#undef max
-#undef min
-
 #include "TestWin32Arduino.h"
 #include <string>
 #include "arduino.h"

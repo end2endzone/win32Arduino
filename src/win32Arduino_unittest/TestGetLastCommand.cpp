@@ -1,6 +1,3 @@
-#undef max
-#undef min
-
 #include "TestGetLastCommand.h"
 #include <string>
 #include "arduino.h"

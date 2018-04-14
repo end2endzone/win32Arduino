@@ -1,14 +1,12 @@
 #include <vector>
 
-#include <stdarg.h> //for ..., Sleep()
-#include <shlobj.h> //for ..., Sleep()
-#undef max
-#undef min
+#include <stdarg.h> //for functions with "..." arguments
 
 #include "arduino.h"
 #include "IncrementalClockStrategy.h"
 #include "RealtimeClockStrategy.h"
 #include "stringfunc.h"
+#include "nativefunc.h"
 
 static const uint8_t DEFAULT_STATUS_REGISTER = 130;
 static const uint8_t DEFAULT_NO_INTERRUPTS_STATUS_REGISTER = 2;
@@ -482,7 +480,7 @@ void noTone(byte iPin)
 }
 
 //declare global Serial object
-SerialPrinter Serial;
+testarduino::SerialPrinter Serial;
 
 //----------------------------------------------------------------------
 
