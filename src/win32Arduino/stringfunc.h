@@ -10,6 +10,8 @@ namespace stringfunc
 
   ///<summary>
   ///Defines if a string value is a numeric value.
+  ///A numeric value can be positive or negative.
+  ///A numeric value can be an integer or a floating point value.
   ///</summary>
   ///<return>True when iValue is numeric. False otherwise.<return>
   bool isNumeric(const char * iValue);
