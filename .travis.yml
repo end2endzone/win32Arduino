@@ -1,0 +1,30 @@
+dist: trusty
+sudo: false
+language: cpp
+os:
+- linux
+branches:
+  only:
+  - master
+env:
+  global:
+  - PROJECT_NAME=test
+
+before_install:
+- cd ci/ant
+- ant configure
+- source setupenv.sh
+install:
+- echo THIRDPARTY_HOME=$THIRDPARTY_HOME
+- echo GOOGLETEST_HOME=$GOOGLETEST_HOME
+- cd ci/ant
+- ant install
+script:
+- cd ci/ant
+- ant compile
+- ant test
+after_success:
+- echo THIS IS AFTER SUCCESS!
+
+notifications:
+  email: true
