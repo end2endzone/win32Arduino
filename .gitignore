@@ -17,6 +17,8 @@
 /samples/TestProject1/build
 /samples/TestProject2/build
 /ci/appveyor/environment.bat
+/ci/ant/setupenv.bat
+/ci/ant/setupenv.sh
 /src/build
 /publish
 /deploy

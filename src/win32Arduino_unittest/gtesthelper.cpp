@@ -516,7 +516,7 @@ bool gTestHelper::getFileDifferences(const char* iFile1, const char* iFile2, std
 
 bool initRandomProvider()
 {
-  srand(time(NULL));
+  srand((unsigned int)time(NULL));
   return true;
 }
 

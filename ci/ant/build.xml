@@ -62,20 +62,11 @@
     <echo>Writing file ${targetfile} completed.</echo>
   </target>
 
-  <target name="cleanup" description="Delete all build artifacts." depends="-init" >
-    <delete includeEmptyDirs="true">
-      <fileset dir="${build.dir}">
-        <include name="**/bin/"/>
-        <include name="**/Debug/"/>
-        <include name="**/Release/"/>
-        <include name="**/debug/"/>
-        <include name="**/release/"/>
-        <include name="**/Win32/"/>
-      </fileset>
-    </delete>
+  <target name="reset" description="Delete all build artifacts and third_parties." depends="-init, clean" >
+    <delete dir="${thirdparty.dir}" />
   </target>
 
-  <target name="clean" description="Delete build directory." depends="-init" >
+  <target name="clean" description="Delete build, deploy and publish directories." depends="-init" >
     <delete dir="${build.dir}" />
     <delete dir="${deploy.dir}" />
     <delete dir="${publish.dir}" />
@@ -136,7 +127,16 @@
 
   <target name="-googletest.install" depends="-init, -findConfiguration">
     <install-third-party name="googletest" dir="${thirdparty.dir}" url="https://codeload.github.com/google/googletest/zip/release-1.6.0" />
-    <cmake       name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" args="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD" />
+
+    <!--Define cmake flags based on OS-->
+    <condition property="googletest.cmake.args" value="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD">
+      <os family="windows" />
+    </condition>
+    <condition property="googletest.cmake.args" value="-DBUILD_SHARED_LIBS=ON">
+      <os family="unix" />
+    </condition>
+
+    <cmake       name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" args="${googletest.cmake.args}" />
     <cmake-build name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" />
   </target>
 
