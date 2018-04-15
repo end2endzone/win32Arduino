@@ -117,12 +117,13 @@
       <mkdir dir="@{build}" />
 
       <echo>Generating '@{name}' build project in '@{config}' mode...</echo>
+      <echo>Using cmake arguments flags: @{args}</echo>
       <exec osfamily="windows" executable="cmake" dir="@{build}" failonerror="true">
-        <arg value="@{args}"/>
+        <arg line="@{args}"/>
         <arg value="@{source}"/>
       </exec>
       <exec osfamily="unix" executable="cmake" dir="@{build}" failonerror="true">
-        <arg value="@{args}"/>
+        <arg line="@{args}"/>
         <arg value="-DCMAKE_BUILD_TYPE=@{config}"/>
         <arg value="@{source}"/>
       </exec>

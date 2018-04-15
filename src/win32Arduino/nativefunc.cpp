@@ -27,8 +27,8 @@ namespace nativefunc
   #elif _POSIX_C_SOURCE >= 199309L
     /* prefer to use nanosleep() */
     const struct timespec ts = {
-      milliseconds / 1000, /* seconds */
-      (milliseconds % 1000) * 1000 * 1000 /* nano seconds */
+      (__time_t)milliseconds / 1000, /* seconds */
+      ((__syscall_slong_t)milliseconds % 1000) * 1000 * 1000 /* nano seconds */
     };
     return nanosleep(&ts, NULL);
   #elif _BSD_SOURCE || \
