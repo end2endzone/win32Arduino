@@ -47,38 +47,37 @@ namespace testarduino
       printlnString(out.str().c_str());
     }
 
-    //specializations
-    template<>
-    inline void print<uint8_t>(const uint8_t & t, int /*iRadix*/)
-    {
-      std::stringstream out;
-      out << (int)t;
-      printString(out.str().c_str());
-    }
-    template<>
-    inline void println<uint8_t>(const uint8_t & t, int /*iRadix*/)
-    {
-      std::stringstream out;
-      out << (int)t;
-      printlnString(out.str().c_str());
-    }
-    template<>
-    inline void print<uint8_t>(const uint8_t & t)
-    {
-      std::stringstream out;
-      out << (int)t;
-      printString(out.str().c_str());
-    }
-    template<>
-    inline void println<uint8_t>(const uint8_t & t)
-    {
-      std::stringstream out;
-      out << (int)t;
-      printlnString(out.str().c_str());
-    }
 
     static void println();
   };
+
+  //specializations
+  template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t, int /*iRadix*/)
+  {
+    std::stringstream out;
+    out << (int)t;
+    printString(out.str().c_str());
+  }
+  template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t, int /*iRadix*/)
+  {
+    std::stringstream out;
+    out << (int)t;
+    printlnString(out.str().c_str());
+  }
+  template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t)
+  {
+    std::stringstream out;
+    out << (int)t;
+    printString(out.str().c_str());
+  }
+  template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t)
+  {
+    std::stringstream out;
+    out << (int)t;
+    printlnString(out.str().c_str());
+  }
+
 } //testarduino
+
 
 #endif //SERIALPRINTER_H
