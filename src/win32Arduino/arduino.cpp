@@ -1,7 +1,7 @@
 #include <vector>
 
 #include <stdarg.h> //for functions with "..." arguments
-#include <stdlib.h>
+ #include <cstdlib>
 #include "arduino.h"
 #include "IncrementalClockStrategy.h"
 #include "RealtimeClockStrategy.h"
