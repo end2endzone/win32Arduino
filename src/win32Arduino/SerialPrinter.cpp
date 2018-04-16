@@ -1,4 +1,5 @@
 #include "arduino.h"
+#include <clibstd>
 
 namespace testarduino
 {
@@ -9,13 +10,13 @@ namespace testarduino
 
   void SerialPrinter::printString(const char * iValue)
   {
-    printf("%s",  iValue);
+    std::printf("%s",  iValue);
     testarduino::log(iValue);
   }
 
   void SerialPrinter::printlnString(const char * iValue)
   {
-    printf("%s\n",iValue);
+    std::printf("%s\n",iValue);
     std::string tmp = iValue;
     tmp.append("\n");
     testarduino::log(tmp.c_str());
@@ -23,7 +24,7 @@ namespace testarduino
 
   void SerialPrinter::println()
   {
-    printf("\n");
+    std::printf("\n");
   }
 
 } //testarduino
