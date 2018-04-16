@@ -1,7 +1,7 @@
 #include <vector>
 
 #include <stdarg.h> //for functions with "..." arguments
-
+#include <stdlib.h>
 #include "arduino.h"
 #include "IncrementalClockStrategy.h"
 #include "RealtimeClockStrategy.h"
@@ -923,7 +923,7 @@ void randomSeed(int16_t value)
   //add function callback handler
   testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
-  srand(value);
+  std::srand(value);
 }
 void randomSeed(int32_t value)
 {
@@ -934,7 +934,7 @@ void randomSeed(int32_t value)
   //add function callback handler
   testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
-  srand(value);
+  std::srand(value);
 }
 
 int32_t random(int32_t min, int32_t max)
