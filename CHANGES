@@ -1,5 +1,6 @@
 Changes for 2.1.0:
 
+* Fixed issue #15 - win32Arduino on Linux
 * New feature: Removed as much as possible the use of powershell scripts. Now using cross-platform tools like cmake, Apache Ant, curl.
 * New feature: Now using Apache Ant for most build automation tasks.
 
