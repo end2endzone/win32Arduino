@@ -12,6 +12,8 @@ add_executable(win32Arduino_unittest
   main.cpp
   TestGetLastCommand.h
   TestGetLastCommand.cpp
+  TestStringFunc.h
+  TestStringFunc.cpp
   TestWin32Arduino.h
   TestWin32Arduino.cpp
   TestDemo.h
