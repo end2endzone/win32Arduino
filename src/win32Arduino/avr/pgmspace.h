@@ -1,6 +1,10 @@
 #ifndef ARDUINO_PGMSPACE_H
 #define ARDUINO_PGMSPACE_H
 
+#include <string>
+#include <cstring> //for strlen()
+#include <string.h> //for memcmp()
+
 //
 // Handle functions and macros that allows storing data in flash (program) memory instead of SRAM.
 // See http://www.arduino.cc/reference/en/language/variables/utilities/progmem/ for details
