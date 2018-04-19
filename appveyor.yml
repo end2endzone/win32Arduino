@@ -72,6 +72,7 @@ build_script:
 test_script:
 - cmd: call ant -f .\ci\ant\build.xml test
 - cmd: call c:\projects\win32Arduino\ci\appveyor\upload_test_results.bat
+- cmd: cd /d %APPVEYOR_BUILD_FOLDER%
 - cmd: call ant -f .\ci\ant\build.xml demos
 
 #---------------------------------#
