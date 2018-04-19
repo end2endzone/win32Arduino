@@ -19,12 +19,7 @@ add_executable(win32Arduino_unittest
 
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-
-  target_link_libraries(win32Arduino_unittest debug     win32Arduino.lib gtest.lib)
-  target_link_libraries(win32Arduino_unittest optimized win32Arduino.lib gtest.lib)
 endif()
 
-if (UNIX)
-  target_link_libraries(win32Arduino_unittest debug     libwin32Arduino.a libgtest.so)
-  target_link_libraries(win32Arduino_unittest optimized libwin32Arduino.a libgtest.so)
-endif (UNIX)
+target_link_libraries(win32Arduino_unittest debug     win32Arduino gtest)
+target_link_libraries(win32Arduino_unittest optimized win32Arduino gtest)
