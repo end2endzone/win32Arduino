@@ -240,6 +240,7 @@
       </condition>
 
       <!--print to file-->
+      <echo file="@{file}" append="true">echo Setting environment variable '@{name}' to value '@{value}'.${line.separator}</echo>
       <echo file="@{file}" append="true">${script.command}${line.separator}</echo>
     </sequential>
   </macrodef>
