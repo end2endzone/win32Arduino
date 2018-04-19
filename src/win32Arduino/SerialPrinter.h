@@ -14,6 +14,10 @@ namespace testarduino
     static void printString(const char * iValue);
     static void printlnString(const char * iValue);
 
+    //enable implicit conversion
+    //allow code like `while (!Serial);`
+    operator bool() const { return true; }
+
     //Note: http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.2
     template <class T>
     inline void print(const T & t, int /*iRadix*/)

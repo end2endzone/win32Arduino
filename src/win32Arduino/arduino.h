@@ -5,6 +5,7 @@
 
 #include "SerialPrinter.h"
 #include "IClockStrategy.h"
+#include "avr\pgmspace.h"
 
 namespace testarduino
 {
