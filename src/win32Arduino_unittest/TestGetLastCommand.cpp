@@ -1,7 +1,6 @@
 #include "TestGetLastCommand.h"
 #include <string>
 #include "arduino.h"
-#include "demo.h"
 
 namespace arduino { namespace test
 {

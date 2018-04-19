@@ -5,8 +5,6 @@ include_directories($ENV{GOOGLETEST_HOME}/include)
 link_directories($ENV{GOOGLETEST_HOME}/build)
 
 add_executable(win32Arduino_unittest
-  demo.cpp
-  demo.h
   gtesthelper.cpp
   gtesthelper.h
   main.cpp

@@ -3,7 +3,6 @@
 #include "arduino.h"
 #include "RealtimeClockStrategy.h"
 #include "IncrementalClockStrategy.h"
-#include "demo.h"
 
 namespace arduino { namespace test
 {
@@ -338,13 +337,6 @@ namespace arduino { namespace test
     Serial.print("Hello World from ");
     Serial.print(__FUNCTION__);
     Serial.println("() function!");
-  }
-  //--------------------------------------------------------------------------------------------------
-  TEST_F(TestWin32Arduino, testDemos)
-  {
-    demoSerial();
-    demoMillis();
-    demoLog();
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testClockDiff)
