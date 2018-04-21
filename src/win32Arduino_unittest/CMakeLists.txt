@@ -10,12 +10,15 @@ add_executable(win32Arduino_unittest
   main.cpp
   TestGetLastCommand.h
   TestGetLastCommand.cpp
-  TestStringFunc.h
-  TestStringFunc.cpp
   TestWin32Arduino.h
   TestWin32Arduino.cpp
   TestDemo.h
-  TestDemo.cpp )
+  TestDemo.cpp
+  TestNativeFunc.h
+  TestNativeFunc.cpp
+  TestStringFunc.h
+  TestStringFunc.cpp
+)
 
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
