@@ -1,6 +1,7 @@
 #include "TestNativeFunc.h"
 #include "nativefunc.h"
-#include <time.h>
+#include <time.h> //for time() and localtime()
+#include <ctime> //for struct tm
 
 using namespace nativefunc;
 
