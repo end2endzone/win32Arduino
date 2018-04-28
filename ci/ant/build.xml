@@ -47,7 +47,7 @@
     <echo>Found build configuration: ${build.configuration}</echo>
   </target>
 
-  <target name="disable_unittest" description="Delete all build artifacts." depends="-init" >
+  <target name="disable_unittest" description="Disable the compilation of project `win32Arduino_unittest`." depends="-init" >
     <local name="targetfile" />
     <property name="targetfile" value="${home.dir}\CMakeLists.txt" />
     <echo>Disabling unit tests from ${targetfile}...</echo>
@@ -149,11 +149,11 @@
     <cmake-build name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" />
   </target>
 
-  <target name="install" depends="-init, -googletest.install" description="Installs required software dependencies in third_party directory">
+  <target name="install" depends="-init, -googletest.install" description="Installs required software dependencies in third_party directory.">
   </target>
 
   <!-- Test TARGETS (start) -->
-  <target name="configure" depends="-init" description="Generate a script file named 'configuration' which setup the environment variables for building.">
+  <target name="configure" depends="-init" description="Generate a script file named `configuration` which setup the environment variables for building.">
     <script-new property="configure.file" name="configuration" />
     <script-env-add file="${configure.file}" name="WIN32ARDUINO_HOME" value="${home.dir}" />
     <script-env-add file="${configure.file}" name="THIRDPARTY_HOME"   value="${thirdparty.dir}" />

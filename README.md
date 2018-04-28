@@ -14,7 +14,7 @@ Statistics:
 
 
 
-# win32Arduino
+# win32Arduino #
 
 win32Arduino is a Windows implementation (win32) of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
 
@@ -39,17 +39,24 @@ Limitations:
 * The following functions are also empty shells: `tone()`, `noTone()`, `pinMode()` and `pulseIn()`.
 
 
-# Usage
+
+
+# Usage #
 
 The following instructions show how to use the library.
 
-## Testing your own library
+
+
+
+## Testing your own library ##
 
 A library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
 
 For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
 
-### 1) Update an existing cmake project
+
+
+### 1) Update an existing cmake project ###
 
 This is the recommended way to use win32Arduino. This method assumes that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
 
@@ -65,7 +72,10 @@ link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
 
 Locate the `target_link_libraries()` entries and add `win32Arduino gtest` before the closing parenthesis (at the end).
 
-### 2) Convert your existing project to cmake
+
+
+### 2) Convert your existing project to cmake ###
+
 Another option is to convert your existing project to use cmake. This method assumes that your library source code and your unit tests are located in the same directory.
 
 1) Copy the files from directory `/samples/convert` to your existing project.
@@ -76,7 +86,9 @@ Another option is to convert your existing project to use cmake. This method ass
 
 4) Navigate to the `build` directory and open `TestProject.sln` file.
 
-### 3) Create your test project manually with Visual Studio
+
+
+### 3) Create your test project manually with Visual Studio ###
 
 This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
 
@@ -98,7 +110,11 @@ This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_
 
 6) Compile the project.
 
-## Source code example
+
+
+
+## Source code example ##
+
 The following section shows an example of using win32Arduino.
 
 Assume a developer needs to test the following library function:
@@ -156,41 +172,42 @@ TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
 }
 ```
 
-# Build / Install
+
+
+# Build / Install / Testing #
 
 Please refer to file [INSTALL.md](INSTALL.md) for details on how installing/building the application.
 
-# Testing
-win32Arduino comes with unit tests which help maintaining the product stability and level of quality.
 
-Test are build using the Google Test v1.6.0 framework. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md).  
 
-Test are automatically build when building the solution. See [INSTALL.md](INSTALL.md) for details on how to build the software.
 
-To run tests, open a file navigator and browse to the output folder (for example `c:\projects\win32Arduino\build\bin\Release`) and run `win32Arduino_unittest.exe` executable.
+## Platforms ##
 
-Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
+win32Arduino has been tested with the following platform:
 
-See also the latest test results at the beginning of the document.
+  * Linux x86/x64
+  * Mac OS X (soon)
+  * Windows x86/x64
 
-# Compatible with
 
-win32Arduino is available and has been tested with the following platform:
-
-*   Linux x86/x64
-*   Rasberry Pi
-*   Windows x86/x64
-
-# Versioning
+  
+  
+# Versioning #
 
 We use [Semantic Versioning 2.0.0](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/end2endzone/win32Arduino/tags).
 
-# Authors
+
+
+
+# Authors #
 
 * **Antoine Beauchamp** - *Initial work* - [end2endzone](https://github.com/end2endzone)
 
 See also the list of [contributors](https://github.com/end2endzone/win32Arduino/blob/master/AUTHORS) who participated in this project.
 
-# License
+
+
+
+# License #
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

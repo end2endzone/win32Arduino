@@ -1,6 +1,6 @@
-# Installing
+# Installing #
 
-The library does not need to be installed on the system (it does not provide an installation package). It is deployed using a zip archive which only contains the source code which must be compiled to be used by other applications/libraries.
+The library does not need to be installed on the system (it does not provide an installation package). It is deployed using a zip archive which only contains the source code which must be compiled to be used by other applications and libraries.
 
 The following steps shows how to install the library:
 
@@ -16,29 +16,55 @@ The following steps shows how to install the library:
 
 Note that the `WIN32ARDUINO_HOME` variable should match the actual directory where the source code was extracted.
 
-Note: this task can be automated using the `ant configure` command.
+Note: this task can be automated using the `ant configure` command. See [Continuous Integration](#continuous-integration) for details.
 
-# Building
+
+
+
+# Building #
 
 This section explains how to compile and build the software and how to get a development environment ready.
 
-## Prerequisites
 
+
+
+## Prerequisites ##
+
+
+### Software Requirements ###
 The following software must be installed on the system for compiling source code:
 
-* Visual Studio 2010 (or newer)
 * [Google C++ Testing Framework v1.6.0](https://github.com/google/googletest/tree/release-1.6.0) (untested with other versions)
 * [CMake](http://www.cmake.org/) v3.4.3 (or newer)
-* [win32Arduino source code](http://github.com/end2endzone/win32Arduino/tags)
+
 
 For using [Continuous Integration](#continuous-integration) scripts, the following software must be installed on the system:
 
 * [Java SE Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/index.html) version 8 (or newer).
 * [Apache Ant(TM)](https://ant.apache.org/bindownload.cgi) version 1.8.4 (or newer)
 
-## Build steps
 
-### Google C++ testing framework
+
+### Linux Requirements ###
+
+These are the base requirements to build and use win32Arduino from source code:
+
+  * GNU-compatible Make or gmake
+  * POSIX-standard shell
+  * A C++98-standard-compliant compiler
+
+
+
+### Windows Requirements ###
+
+* Microsoft Visual C++ 2010 or newer
+
+
+
+
+## Build steps ##
+
+### Google C++ testing framework ###
 
 1) Download googletest source code as a [zip file](https://github.com/google/googletest/archive/release-1.6.0.zip) to your computer and extract to a temporary directory (for example `c:\projects\third_party\googletest`).
 
@@ -62,9 +88,12 @@ The following environment variables should be defined:
 
 Note that the `GOOGLETEST_HOME` variable should match the actual directory where the source code was extracted.
 
-Note: this task can be automated using the `ant install` command.
+Note: this task can be automated using the `ant install` command. See [Continuous Integration](#continuous-integration) for details.
 
-### win32Arduino
+
+
+
+### win32Arduino ###
 
 1) Download the [win32Arduino source code](https://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\win32Arduino`).
 
@@ -78,15 +107,21 @@ Note: this task can be automated using the `ant install` command.
 
 4) Build the solution.
 
-Note: this task can be automated using the `ant compile` command.
+Note: this task can be automated using the `ant compile` command. See [Continuous Integration](#continuous-integration) for details.
 
-### win32Arduino deploy package
+
+
+
+### win32Arduino deploy package ###
 
 The library does not provide an installation package. It is deployed using a zip archive which only contains the source code.
 
 GitHub automatically provides zip archives of all the source code hosted on its platform. No deploy package is required for the library.
 
-## Disabling win32Arduino's unit tests
+
+
+
+## Disabling win32Arduino's unit tests ##
 
 This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
 
@@ -99,33 +134,62 @@ set_target_properties(win32Arduino_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUD
 
 3) Compile source code according to instructions specified in [Building](#building) section.
 
-Note: this task can be automated using the `ant disable_unittest` command.
+Note: this task can be automated using the `ant disable_unittest` command. See [Continuous Integration](#continuous-integration) for details.
 
-# Continuous Integration
+
+
+
+# Testing #
+win32Arduino comes with unit tests which help maintaining the product stability and level of quality.
+
+Test are build using the Google Test v1.6.0 framework. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md).  
+
+Test are automatically build when building the solution.
+
+To run tests, open a file navigator (or shell) and browse to the output folder (for example `c:\projects\win32Arduino\build\bin\Release`) and run `win32Arduino_unittest` executable.
+
+Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
+
+The latest test results are available at the beginning of the [README.md](README.md) file.
+
+Note: this task can be automated using the `ant test` command. See [Continuous Integration](#continuous-integration) for details.
+
+
+
+
+# Continuous Integration #
 
 win32Arduino is using [Apache Ant](https://ant.apache.org/index.html) command-line tool to help building software. It provides compatibility for all scripts across all supported platforms.
 
-## Build servers
+
+
+
+## Build servers ##
 
 win32Arduino supports multiple continuous integration services (build server). To uniformalize the build process across all services, it is recommended to use the following ant scripts.
 
-## Ant targets
+
+
+
+## Ant targets ##
 
 The project support the following `ant target`:
 
-| Target           | Description                                                                                 |
-|------------------|---------------------------------------------------------------------------------------------|
-| clean            | Delete build, deploy and publish directories.                                               |
-| compile          | Build all source files.                                                                     |
-| configure        | Generate a script file named 'setupenv' which setup the environment variables for building. |
-| disable_unittest | Delete all build artifacts.                                                                 |
-| install          | Installs required libraries in third_party directory                                        |
-| reset            | Delete all build artifacts and third_parties.                                               |
-| test             | Runs unit & system tests.                                                                   |
+| Target           | Description                                                                                      |
+|------------------|--------------------------------------------------------------------------------------------------|
+| clean            | Delete build, deploy and publish directories.                                                    |
+| compile          | Build all source files.                                                                          |
+| configure        | Generate a script file named `configuration` which setup the environment variables for building. |
+| demos            | Build all arduino demo files using win32Arduino.                                                 |
+| disable_unittest | Disable the compilation of project `win32Arduino_unittest`.                                      |
+| install          | Installs required software dependencies in third_party directory.                                |
+| reset            | Delete all build artifacts and third_parties.                                                    |
+| test             | Executes unit tests.                                                                             |
 
-Note: the following project help information can be generated using the `ant -p` command.
 
 To execute a target, navigate to the `/ci/ant` directory and enter the following command:
 ```
 ant [targetname]
 ```
+
+Note: the following project help information can be generated using the `ant -p` command.
