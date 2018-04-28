@@ -28,7 +28,7 @@ namespace testarduino
 
   double RealtimeClockStrategy::clockDiff(clock_t clockEnd, clock_t clockStart)
   {
-    static double CLOCKS_PER_MS = CLOCKS_PER_SEC/1000;
+    static double CLOCKS_PER_MS = CLOCKS_PER_SEC/1000.0;
     clock_t diffticks=clockEnd-clockStart;
     double diffms=(diffticks)/CLOCKS_PER_MS;
     return diffms;

@@ -341,8 +341,15 @@ namespace arduino { namespace test
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testClockDiff)
   {
+#ifdef _WIN32
+    //Win32 clock_t are milliseconds
     clock_t timeStart = 200;
     clock_t timeEnd   = 201;
+#else
+    //linux clock_t is microseconds
+    clock_t timeStart = 200*1000;
+    clock_t timeEnd   = 201*1000;
+#endif
     double diff = testarduino::RealtimeClockStrategy::clockDiff(timeEnd, timeStart);
     EXPECT_NEAR(diff, 1.0, 0.000001);
   }

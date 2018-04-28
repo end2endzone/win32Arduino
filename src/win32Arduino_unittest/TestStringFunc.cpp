@@ -287,7 +287,13 @@ namespace stringfunc { namespace test
     {
       //const void * value
       const std::string HEADER = "fooBAR";
+#if defined(_WIN64) || defined(_LP64) || (__WORDSIZE == 64)
+      //64 bit environment
+      const std::string EXPECTED = "fooBAR0x0000000012345678";
+#else
+      //32 bit environment
       const std::string EXPECTED = "fooBAR0x12345678";
+#endif
       const void * value = (const void *)0x12345678;
       std::string actual = HEADER;
       actual << value;
