@@ -200,13 +200,14 @@
 
   <macrodef name="script-new" description="Create an empty script file.">
     <attribute name="name"/>
+    <attribute name="property"/>
     <sequential>
       
       <!--Define script filename-->
-      <condition property="@{name}" value="setupenv.bat">
+      <condition property="@{property}" value="@{name}.bat">
         <os family="windows" />
       </condition>
-      <condition property="@{name}" value="setupenv.sh">
+      <condition property="@{property}" value="@{name}.sh">
         <os family="unix" />
       </condition>
       
@@ -220,7 +221,7 @@
       </condition>
 
       <!--Create file-->
-      <echo file="${@{name}}" append="false">${script.header}${line.separator}</echo>
+      <echo file="${@{property}}" append="false">${script.header}${line.separator}</echo>
     </sequential>
   </macrodef>
 

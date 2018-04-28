@@ -164,8 +164,8 @@
   </target>
 
   <!-- Test TARGETS (start) -->
-  <target name="configure" depends="-init" description="Generate a script file named 'setupenv' which setup the environment variables for building.">
-    <script-new name="configure.file" />
+  <target name="configure" depends="-init" description="Generate a script file named 'configuration' which setup the environment variables for building.">
+    <script-new property="configure.file" name="configuration" />
     <script-env-add file="${configure.file}" name="WIN32ARDUINO_HOME" value="${home.dir}" />
     <script-env-add file="${configure.file}" name="THIRDPARTY_HOME"   value="${thirdparty.dir}" />
     <script-env-add file="${configure.file}" name="GOOGLETEST_HOME"   value="${thirdparty.dir}/googletest-release-1.6.0" />

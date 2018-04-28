@@ -13,7 +13,7 @@ env:
 before_install:
 - cd $TRAVIS_BUILD_DIR/ci/ant;
   ant configure;
-  source setupenv.sh;
+  source configuration.sh;
 install:
 - echo THIRDPARTY_HOME=$THIRDPARTY_HOME;
   echo GOOGLETEST_HOME=$GOOGLETEST_HOME;
