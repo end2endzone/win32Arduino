@@ -29,7 +29,7 @@ include_directories($ENV{GOOGLETEST_HOME}/include)
 link_directories($ENV{GOOGLETEST_HOME}/build)
 
 include_directories($ENV{WIN32ARDUINO_HOME}/src/win32Arduino)
-link_directories($ENV{WIN32ARDUINO_HOME}/cmake/build/bin)
+link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
 
 link_directories(${LIBRARY_OUTPUT_PATH})
 

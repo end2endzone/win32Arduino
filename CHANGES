@@ -4,6 +4,8 @@ Changes for 2.1.0:
 * Fixed issue #16 - Add support for F macro
 * New feature: Removed as much as possible the use of powershell scripts. Now using cross-platform tools like cmake, Apache Ant, curl.
 * New feature: Now using Apache Ant for most build automation tasks.
+* New feature: Implemented support for Travis CI build server.
+* New feature: Building actual Arduino tutorials is now part of the test procedure. See `/src/demos` or `ant demos` for details.
 
 Changes for 2.0.0:
 

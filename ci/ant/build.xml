@@ -49,16 +49,10 @@
 
   <target name="disable_unittest" description="Delete all build artifacts." depends="-init" >
     <local name="targetfile" />
-    <property name="targetfile" value="${src.dir}\CMakeLists.txt" />
+    <property name="targetfile" value="${home.dir}\CMakeLists.txt" />
     <echo>Disabling unit tests from ${targetfile}...</echo>
 
-    <local name="token1" />
-    <property name="token1" value="add_subdirectory(win32Arduino_unittest)" />
-    <replace file="${targetfile}" token="${token1}" value="#${token1}" />
-
-    <local name="token2" />
-    <property name="token2" value="add_dependencies(win32Arduino_unittest win32Arduino)" />
-    <replace file="${targetfile}" token="${token2}" value="#${token2}" />
+    <echo file="${targetfile}" append="true">set_target_properties(win32Arduino_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)${line.separator}</echo>
 
     <echo>Writing file ${targetfile} completed.</echo>
   </target>
@@ -100,14 +94,13 @@
     <build-demo name="Progmem3" />
   </target>
 
-  <!-- Test TARGETS (start) -->
   <target name="-test.unit.find" description="Finds the unit test executable">
     <findfile property="test.unit.exec" dir="${build.dir}/bin" name="**/win32Arduino_unittest*" />
     <required-property name="test.unit.exec" />
     <echo>Found unit test exec: ${test.unit.exec}</echo>
   </target>
-  
-  <target name="-test.unit" description="Runs unit tests for the project." depends="-test.unit.find">
+
+  <target name="test" description="Executes unit tests." depends="-init, -findConfiguration, -test.unit.find">
     <echo>Unit Tests - START</echo>
 
     <!--Find unit test directory-->
@@ -140,10 +133,6 @@
 
     <echo>Unit Tests - END</echo>
   </target>
-  <target name="-test.system" description="Runs system tests for the project.">
-  </target>
-  <target name="test" description="Runs unit &amp; system tests." depends="-init, -findConfiguration, -test.unit, -test.system" />
-  <!-- Test TARGETS (end) -->
 
   <target name="-googletest.install" depends="-init, -findConfiguration">
     <install-third-party name="googletest" dir="${thirdparty.dir}" url="https://codeload.github.com/google/googletest/zip/release-1.6.0" />
@@ -160,7 +149,7 @@
     <cmake-build name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" />
   </target>
 
-  <target name="install" depends="-init, -googletest.install" description="Installs required libraries in third_party directory">
+  <target name="install" depends="-init, -googletest.install" description="Installs required software dependencies in third_party directory">
   </target>
 
   <!-- Test TARGETS (start) -->
