@@ -60,10 +60,10 @@ include_directories($ENV{GOOGLETEST_HOME}/include)
 link_directories($ENV{GOOGLETEST_HOME}/build)
 
 include_directories($ENV{WIN32ARDUINO_HOME}/src/win32Arduino)
-link_directories($ENV{WIN32ARDUINO_HOME}/cmake/build/bin)
+link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
 ```
 
-Locate the `target_link_libraries()` entries and add `win32Arduino.lib gtest.lib` before the closing parenthesis (at the end).
+Locate the `target_link_libraries()` entries and add `win32Arduino gtest` before the closing parenthesis (at the end).
 
 ### 2) Convert your existing project to cmake
 Another option is to convert your existing project to use cmake. This method assumes that your library source code and your unit tests are located in the same directory.
@@ -72,7 +72,7 @@ Another option is to convert your existing project to use cmake. This method ass
 
 2) Open a file explorer and navigate to your existing project.
 
-3) Execute the file `vs2010.bat` which will generate a valid Visual Studio 2010 solution under the `build` directory.
+3) Execute the file `visualstudio.bat` which will generate a valid Visual Studio solution under the `build` directory.
 
 4) Navigate to the `build` directory and open `TestProject.sln` file.
 
@@ -88,8 +88,8 @@ This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_
 
 | Name                             | Value                                                                                             |
 |----------------------------------|---------------------------------------------------------------------------------------------------|
-|  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/src/win32Arduino;                                |
-|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration);$(WIN32ARDUINO_HOME)/cmake/build/bin/$(Configuration); |
+|  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/src/win32Arduino;                                 |
+|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration);$(WIN32ARDUINO_HOME)/build/bin/$(Configuration);        |
 |  Additional Dependencies         | gtest.lib;win32Arduino.lib;                                                                       |
 
 4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
@@ -143,7 +143,7 @@ TEST(TestButtonLibrary, testWaitForButtonPressTimeout) {
   //configure win32Arduino library to push a button in 2000 ms.
   static const uint32_t BUTTON_DELAY_TIME = 2000; //ms
   uint32_t buttonPressTime = millis() + BUTTON_DELAY_TIME;
-  attachMillisecondsCallback(buttonPressTime, simulatePinLowISR); //in 2000 ms, the button pin will go HIGH
+  attachMillisecondsCallback(buttonPressTime, simulatePinLowISR); //in 2000 ms, the button pin will go LOW
 
   //run the function again...
   //assert that function is interrupted when a button is pressed
@@ -167,7 +167,7 @@ Test are build using the Google Test v1.6.0 framework. For more information on h
 
 Test are automatically build when building the solution. See [INSTALL.md](INSTALL.md) for details on how to build the software.
 
-To run tests, open a file navigator and browse to the output folder (for example `c:\projects\win32Arduino\cmake\build\bin\Release`) and run `win32Arduino_unittest.exe` executable.
+To run tests, open a file navigator and browse to the output folder (for example `c:\projects\win32Arduino\build\bin\Release`) and run `win32Arduino_unittest.exe` executable.
 
 Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
 
@@ -175,11 +175,11 @@ See also the latest test results at the beginning of the document.
 
 # Compatible with
 
-win32Arduino is only available for the Windows platform and has been tested with the following version of Windows:
+win32Arduino is available and has been tested with the following platform:
 
-*   Windows XP
-*   Windows Vista
-*   Windows 7
+*   Linux x86/x64
+*   Rasberry Pi
+*   Windows x86/x64
 
 # Versioning
 
