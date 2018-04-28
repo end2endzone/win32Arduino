@@ -1,14 +1,16 @@
 ![win32Arduino logo](https://github.com/end2endzone/win32Arduino/raw/master/docs/win32Arduino-splashscreen.png)
 
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github Releases](https://img.shields.io/github/release/end2endzone/win32Arduino.svg)](https://github.com/end2endzone/win32Arduino/releases)
-[![Build status](https://ci.appveyor.com/api/projects/status/4jhi6oqgaji5e7pl/branch/master?svg=true)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master)
-[![Tests status](https://img.shields.io/appveyor/tests/end2endzone/win32Arduino/master.svg)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master/tests)
+[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/end2endzone/win32Arduino/master.svg?logo=appveyor)](https://ci.appveyor.com/project/end2endzone/win32Arduino)
+[![AppVeyor Tests Status](https://img.shields.io/appveyor/tests/end2endzone/win32Arduino/master.svg?logo=appveyor)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master/tests)
+[![Travis Build Status](https://img.shields.io/travis/end2endzone/win32Arduino/master.svg?logo=travis&style=flat)](https://travis-ci.org/end2endzone/win32Arduino)
 
-AppVeyor build statistics:
+Statistics:
 
-[![Build statistics](https://buildstats.info/appveyor/chart/end2endzone/win32Arduino)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master)
+| AppVeyor | Travic CI |
+|----------|-----------|
+| [![Statistics](https://buildstats.info/appveyor/chart/end2endzone/win32Arduino)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master) | [![Statistics](https://buildstats.info/travisci/chart/end2endzone/win32Arduino)](https://travis-ci.org/end2endzone/win32Arduino) |
 
 
 
