@@ -47,7 +47,7 @@ For using [Continuous Integration](#continuous-integration) scripts, the followi
 
 ### Linux Requirements ###
 
-These are the base requirements to build and use win32Arduino from source code:
+These are the base requirements to build and use win32Arduino:
 
   * GNU-compatible Make or gmake
   * POSIX-standard shell
@@ -66,46 +66,48 @@ These are the base requirements to build and use win32Arduino from source code:
 
 ### Google C++ testing framework ###
 
-1) Download googletest source code as a [zip file](https://github.com/google/googletest/archive/release-1.6.0.zip) to your computer and extract to a temporary directory (for example `c:\projects\third_party\googletest`).
+1) Download googletest source code as a [zip file](https://github.com/google/googletest/archive/release-1.6.0.zip) to your computer and extract to a temporary directory (for example `c:\projects\third_party\googletest` or `~/dev/third_party/googletest`).
 
-2) Generate the Visual Studio solution using the following commands:
-   * cd c:\projects\third_party\googletest
-   * mkdir build
-   * cd build
-   * cmake -Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD ..
+2) Define the following environment variable so that other projects knows where to find googletest package:
 
-3) Open the generated Visual Studio solution file located in `c:\projects\third_party\googletest\build\gtest.sln`.
-
-4) Build the solution.
-
-For building unit tests, the application needs to know where the googletest libraries (debug & release) are located.
-
-The following environment variables should be defined:
-
-| Name                     | Value                                        |
-|--------------------------|----------------------------------------------|
-|  GOOGLETEST_HOME         | c:\projects\third_party\googletest           |
+| Name                     | Value                                                                  |
+|--------------------------|------------------------------------------------------------------------|
+|  GOOGLETEST_HOME         | `c:\projects\third_party\googletest` or `~/dev/third_party/googletest` |
 
 Note that the `GOOGLETEST_HOME` variable should match the actual directory where the source code was extracted.
+ 
+3) Generate the Visual Studio solution or the Makefile using the following commands:
 
-Note: this task can be automated using the `ant install` command. See [Continuous Integration](#continuous-integration) for details.
-
-
-
-
-### win32Arduino ###
-
-1) Download the [win32Arduino source code](https://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\win32Arduino`).
-
-2) Generate the Visual Studio solution using the following commands:
-   * cd c:\projects\win32Arduino
+   * cd $GOOGLETEST_HOME
    * mkdir build
    * cd build
    * cmake ..
 
-3) Open the generated Visual Studio solution file located in `c:\projects\win32Arduino\build\win32Arduino.sln`.
+Note: Windows users should use the following cmake options for compilation: `-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD`
 
-4) Build the solution.
+4) Build the source code
+   1) On Windows, open the generated Visual Studio solution file located in `$GOOGLETEST_HOME\build\gtest.sln`.
+   2) On Linux, build the project using `make` command.
+
+Note: this task can be automated using the `ant install` command. See [Continuous Integration](#continuous-integration) for details.
+ 
+ 
+ 
+
+### win32Arduino ###
+
+1) Follow [install](#Installing) instructions specified at the beginning of this document.
+ 
+2) Generate the _Visual Studio solution_ or the _Makefile_ using the following commands:
+
+   * cd $WIN32ARDUINO_HOME
+   * mkdir build
+   * cd build
+   * cmake ..
+
+3) Build the source code
+   1) On Windows, open the generated Visual Studio solution file located in `$WIN32ARDUINO_HOME\build\win32Arduino.sln`.
+   2) On Linux, build the project using `make` command.
 
 Note: this task can be automated using the `ant compile` command. See [Continuous Integration](#continuous-integration) for details.
 
@@ -125,8 +127,8 @@ GitHub automatically provides zip archives of all the source code hosted on its 
 
 This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
 
-1) Edit the file /CMakeLists.txt
-2) Add the following like at the end of the document: 
+1) Edit the file `/CMakeLists.txt`.
+2) Add the following at the end of the document: 
 
 ```CMake
 set_target_properties(win32Arduino_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
@@ -146,7 +148,7 @@ Test are build using the Google Test v1.6.0 framework. For more information on h
 
 Test are automatically build when building the solution.
 
-To run tests, open a file navigator (or shell) and browse to the output folder (for example `c:\projects\win32Arduino\build\bin\Release`) and run `win32Arduino_unittest` executable.
+To run tests, open a shell prompt and browse to the `build/bin` folder and run `win32Arduino_unittest` executable. Windows users must also specify the configuration name (for example `build\bin\Release`).
 
 Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
 
@@ -166,7 +168,7 @@ win32Arduino is using [Apache Ant](https://ant.apache.org/index.html) command-li
 
 ## Build servers ##
 
-win32Arduino supports multiple continuous integration services (build server). To uniformalize the build process across all services, it is recommended to use the following ant scripts.
+win32Arduino supports multiple continuous integration services (build server). To make the build process across all services the same, it is recommended to use the following ant scripts.
 
 
 

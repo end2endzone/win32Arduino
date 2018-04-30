@@ -186,7 +186,6 @@ Please refer to file [INSTALL.md](INSTALL.md) for details on how installing/buil
 win32Arduino has been tested with the following platform:
 
   * Linux x86/x64
-  * Mac OS X (soon)
   * Windows x86/x64
 
 
