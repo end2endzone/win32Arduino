@@ -16,8 +16,6 @@ The following steps shows how to install the library:
 
 Note that the `WIN32ARDUINO_HOME` variable should match the actual directory where the source code was extracted.
 
-Note: this task can be automated using the `ant configure` command. See [Continuous Integration](#continuous-integration) for details.
-
 
 
 
@@ -89,8 +87,8 @@ Note: Windows users should use the following cmake options for compilation: `-Dg
    1) On Windows, open the generated Visual Studio solution file located in `$GOOGLETEST_HOME\build\gtest.sln`.
    2) On Linux, build the project using `make` command.
 
-Note: this task can be automated using the `ant install` command. See [Continuous Integration](#continuous-integration) for details.
- 
+Note: The compilation of _Google C++ testing framework_ can be automated using the `ant install` command. See [Continuous Integration](#continuous-integration) for details.
+
  
  
 
@@ -109,7 +107,7 @@ Note: this task can be automated using the `ant install` command. See [Continuou
    1) On Windows, open the generated Visual Studio solution file located in `$WIN32ARDUINO_HOME\build\win32Arduino.sln`.
    2) On Linux, build the project using `make` command.
 
-Note: this task can be automated using the `ant compile` command. See [Continuous Integration](#continuous-integration) for details.
+Note: The compilation of _win32Arduino_ can be automated using the `ant compile` command. See [Continuous Integration](#continuous-integration) for details.
 
 
 
@@ -136,7 +134,7 @@ set_target_properties(win32Arduino_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUD
 
 3) Compile source code according to instructions specified in [Building](#building) section.
 
-Note: this task can be automated using the `ant disable_unittest` command. See [Continuous Integration](#continuous-integration) for details.
+Note: Disabling win32Arduino's unit tests can be automated using the `ant disable_unittest` command. See [Continuous Integration](#continuous-integration) for details.
 
 
 
@@ -154,7 +152,7 @@ Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.
 
 The latest test results are available at the beginning of the [README.md](README.md) file.
 
-Note: this task can be automated using the `ant test` command. See [Continuous Integration](#continuous-integration) for details.
+Note: Test case execution can be automated using the `ant test` command. See [Continuous Integration](#continuous-integration) for details.
 
 
 
@@ -181,7 +179,6 @@ The project support the following `ant target`:
 |------------------|--------------------------------------------------------------------------------------------------|
 | clean            | Delete build, deploy and publish directories.                                                    |
 | compile          | Build all source files.                                                                          |
-| configure        | Generate a script file named `configuration` which setup the environment variables for building. |
 | demos            | Build all arduino demo files using win32Arduino.                                                 |
 | disable_unittest | Disable the compilation of project `win32Arduino_unittest`.                                      |
 | install          | Installs required software dependencies in third_party directory.                                |
