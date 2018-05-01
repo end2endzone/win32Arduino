@@ -17,6 +17,7 @@ install:
 - ant install
 
 script:
+- cd $TRAVIS_BUILD_DIR/ci/ant
 - ant compile
 - ant test
 - ant demos

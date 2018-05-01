@@ -25,6 +25,10 @@ skip_tags: true
 #    environment configuration    #
 #---------------------------------#
 
+environment:
+  WIN32ARDUINO_HOME: %APPVEYOR_BUILD_FOLDER%
+  GOOGLETEST_HOME: %APPVEYOR_BUILD_FOLDER%\third_party\googletest-release-1.6.0
+  
 # Build worker image (VM template)
 image: Visual Studio 2015
 
@@ -38,8 +42,8 @@ clone_folder: c:\projects\win32Arduino
 
 # scripts that run after cloning repository
 install:
-- cmd: set WIN32ARDUINO_HOME=%APPVEYOR_BUILD_FOLDER%
-- cmd: set GOOGLETEST_HOME=%APPVEYOR_BUILD_FOLDER%\third_party\googletest-release-1.6.0
+- cmd: echo WIN32ARDUINO_HOME=%WIN32ARDUINO_HOME%
+- cmd: echo GOOGLETEST_HOME=%GOOGLETEST_HOME%
 - ps: .\ci\appveyor\prepare_github_deploy.ps1
 - cmd: call .\ci\appveyor\ant_install.bat
 - cmd: call ant -f .\ci\ant\build.xml install
