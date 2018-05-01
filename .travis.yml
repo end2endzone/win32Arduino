@@ -14,10 +14,10 @@ env:
 install:
 - echo WIN32ARDUINO_HOME=$WIN32ARDUINO_HOME;
   echo GOOGLETEST_HOME=$GOOGLETEST_HOME;
-- ant install
+- cd $TRAVIS_BUILD_DIR/ci/ant;
+  ant install
 
 script:
-- cd $TRAVIS_BUILD_DIR/ci/ant
 - ant compile
 - ant test
 - ant demos

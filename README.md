@@ -181,7 +181,7 @@ Please refer to file [INSTALL.md](INSTALL.md) for details on how installing/buil
 
 
 
-## Platforms ##
+# Platforms #
 
 win32Arduino has been tested with the following platform:
 

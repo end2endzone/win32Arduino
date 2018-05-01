@@ -26,8 +26,8 @@ skip_tags: true
 #---------------------------------#
 
 environment:
-  WIN32ARDUINO_HOME: %APPVEYOR_BUILD_FOLDER%
-  GOOGLETEST_HOME: %APPVEYOR_BUILD_FOLDER%\third_party\googletest-release-1.6.0
+  WIN32ARDUINO_HOME: $(APPVEYOR_BUILD_FOLDER)
+  GOOGLETEST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\googletest-release-1.6.0
   
 # Build worker image (VM template)
 image: Visual Studio 2015
