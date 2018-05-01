@@ -152,22 +152,4 @@
   <target name="install" depends="-init, -googletest.install" description="Installs required software dependencies in third_party directory.">
   </target>
 
-  <!-- Test TARGETS (start) -->
-  <target name="configure" depends="-init" description="Generate a script file named `configuration` which setup the environment variables for building.">
-    <script-new property="configure.file" name="configuration" />
-    <script-env-add file="${configure.file}" name="WIN32ARDUINO_HOME" value="${home.dir}" />
-    <script-env-add file="${configure.file}" name="GOOGLETEST_HOME"   value="${thirdparty.dir}${file.separator}googletest-release-1.6.0" />
-    <echo>Generated environment script: '${configure.file}'.</echo>
-    
-    <!--Show a message to show how to setup environment-->
-    <condition property="configure.command" value="call ${configure.file}">
-      <os family="windows" />
-    </condition>
-    <condition property="configure.command" value="source ${configure.file}">
-      <os family="unix" />
-    </condition>
-    <echo>To setup the environment, run the command '${configure.command}'.</echo>
-  </target>
-  <!-- Test TARGETS (end) -->
-
 </project>

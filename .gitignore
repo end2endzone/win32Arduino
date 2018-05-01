@@ -16,9 +16,6 @@
 /cmake/build
 /samples/TestProject1/build
 /samples/TestProject2/build
-/ci/appveyor/environment.bat
-/ci/ant/configuration.bat
-/ci/ant/configuration.sh
 /src/build
 /publish
 /deploy

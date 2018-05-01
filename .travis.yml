@@ -8,21 +8,19 @@ branches:
   - master
 env:
   global:
-  - PROJECT_NAME=test
+  - WIN32ARDUINO_HOME=$TRAVIS_BUILD_DIR
+  - GOOGLETEST_HOME=$TRAVIS_BUILD_DIR/third_party/googletest-release-1.6.0
 
-before_install:
-- cd $TRAVIS_BUILD_DIR/ci/ant;
-  ant configure;
-  source configuration.sh;
 install:
-- echo THIRDPARTY_HOME=$THIRDPARTY_HOME;
+- echo WIN32ARDUINO_HOME=$WIN32ARDUINO_HOME;
   echo GOOGLETEST_HOME=$GOOGLETEST_HOME;
 - ant install
+
 script:
-- cd $TRAVIS_BUILD_DIR/ci/ant;
-  ant compile;
-  ant test;
-  ant demos;
+- ant compile
+- ant test
+- ant demos
+
 after_success:
 - echo THIS IS AFTER SUCCESS!
 
