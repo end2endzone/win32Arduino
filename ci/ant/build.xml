@@ -134,22 +134,4 @@
     <echo>Unit Tests - END</echo>
   </target>
 
-  <target name="-googletest.install" depends="-init, -findConfiguration">
-    <install-third-party name="googletest" dir="${thirdparty.dir}" url="https://codeload.github.com/google/googletest/zip/release-1.6.0" />
-
-    <!--Define cmake flags based on OS-->
-    <condition property="googletest.cmake.args" value="-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD">
-      <os family="windows" />
-    </condition>
-    <condition property="googletest.cmake.args" value="-DBUILD_SHARED_LIBS=ON">
-      <os family="unix" />
-    </condition>
-
-    <cmake       name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" args="${googletest.cmake.args}" />
-    <cmake-build name="googletest" build="${googletest.dir}/build" source="${googletest.dir}" config="${build.configuration}" />
-  </target>
-
-  <target name="install" depends="-init, -googletest.install" description="Installs required software dependencies in third_party directory.">
-  </target>
-
 </project>

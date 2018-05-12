@@ -9,13 +9,13 @@ branches:
 env:
   global:
   - WIN32ARDUINO_HOME=$TRAVIS_BUILD_DIR
-  - GOOGLETEST_HOME=$TRAVIS_BUILD_DIR/third_party/googletest-release-1.6.0
+  - GOOGLETEST_HOME=$TRAVIS_BUILD_DIR/third_party/googletest
 
 install:
+
 - echo WIN32ARDUINO_HOME=$WIN32ARDUINO_HOME;
   echo GOOGLETEST_HOME=$GOOGLETEST_HOME;
-- cd $TRAVIS_BUILD_DIR/ci/ant;
-  ant install
+- cd $TRAVIS_BUILD_DIR/ci/ant
 
 script:
 - ant compile
