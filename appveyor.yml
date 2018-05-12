@@ -11,7 +11,7 @@
 # version format
 # version must contains build number to make sure that all commits are processed by appveyor.
 # If build number is not part of the version than appveyor build fails with the following message: "Build version x.y.z already exists."
-version: 2.1.0.{build}
+version: 2.2.0.{build}
 
 # branches to build
 branches:
@@ -27,7 +27,7 @@ skip_tags: true
 
 environment:
   WIN32ARDUINO_HOME: $(APPVEYOR_BUILD_FOLDER)
-  GOOGLETEST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\googletest-release-1.6.0
+  GOOGLETEST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\googletest
   
 # Build worker image (VM template)
 image: Visual Studio 2015
@@ -44,9 +44,9 @@ clone_folder: c:\projects\win32Arduino
 install:
 - cmd: echo WIN32ARDUINO_HOME=%WIN32ARDUINO_HOME%
 - cmd: echo GOOGLETEST_HOME=%GOOGLETEST_HOME%
+- cmd: git submodule update --init --recursive
 - ps: .\ci\appveyor\prepare_github_deploy.ps1
 - cmd: call .\ci\appveyor\ant_install.bat
-- cmd: call ant -f .\ci\ant\build.xml install
 - cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\install.bat
 - cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\list_env_var.bat
 
