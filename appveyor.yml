@@ -11,12 +11,12 @@
 # version format
 # version must contains build number to make sure that all commits are processed by appveyor.
 # If build number is not part of the version than appveyor build fails with the following message: "Build version x.y.z already exists."
-version: 2.2.0.{build}
+version: "{branch} (#{build})"
 
 # branches to build
 branches:
   only:
-    - submodule_gtest
+    - master
 
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
@@ -45,10 +45,7 @@ install:
 - cmd: echo WIN32ARDUINO_HOME=%WIN32ARDUINO_HOME%
 - cmd: echo GOOGLETEST_HOME=%GOOGLETEST_HOME%
 - cmd: git submodule update --init --recursive
-- ps: .\ci\appveyor\prepare_github_deploy.ps1
 - cmd: call .\ci\appveyor\ant_install.bat
-- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\install.bat
-- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\list_env_var.bat
 
 #---------------------------------#
 #       build configuration       #
@@ -65,8 +62,13 @@ configuration: Release
 #  - Debug
 #  - Release
 
-build_script:
-- cmd: call ant -f .\ci\ant\build.xml compile
+before_build:
+- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\before_build.bat
+- ps: . "$env:APPVEYOR_BUILD_FOLDER\ci\appveyor\read_version.ps1"
+- ps: . "$env:APPVEYOR_BUILD_FOLDER\ci\appveyor\prepare_github_deploy.ps1"
+
+build:
+  project: $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   
 #---------------------------------#
 #       tests configuration       #
@@ -74,10 +76,10 @@ build_script:
 
 # to run your custom scripts instead of automatic tests
 test_script:
-- cmd: call ant -f .\ci\ant\build.xml test
-- cmd: call c:\projects\win32Arduino\ci\appveyor\upload_test_results.bat
+- cmd: call ant -f %APPVEYOR_BUILD_FOLDER%\ci\ant\build.xml test
+- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\upload_test_results.bat
 - cmd: cd /d %APPVEYOR_BUILD_FOLDER%
-- cmd: call ant -f .\ci\ant\build.xml demos
+- cmd: call ant -f %APPVEYOR_BUILD_FOLDER%\ci\ant\build.xml demos
 
 #---------------------------------#
 #      artifacts configuration    #

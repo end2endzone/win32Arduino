@@ -3,8 +3,6 @@
 /publish
 /deploy
 /build
-/version_info.bat
-/version_info.sh
 /ci/ant/version_info.properties
 /src/demos/Constants/build
 /src/demos/Interrupts/build
@@ -12,3 +10,4 @@
 /src/demos/Progmem1/build
 /src/demos/Progmem2/build
 /src/demos/Progmem3/build
+/version

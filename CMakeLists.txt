@@ -44,8 +44,7 @@ MESSAGE("")
 
 # Generate version files for different systems
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/src/win32Arduino/version.h.in"        "${PROJECT_BINARY_DIR}/src/win32Arduino/version.h")
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version_info.bat.in"                  "${CMAKE_CURRENT_SOURCE_DIR}/version_info.bat")
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version_info.sh.in"                   "${CMAKE_CURRENT_SOURCE_DIR}/version_info.sh")
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version.in"                           "${CMAKE_CURRENT_SOURCE_DIR}/version")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties.in"    "${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties")
 
 # Add source directories

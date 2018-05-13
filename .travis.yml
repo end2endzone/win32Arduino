@@ -12,7 +12,6 @@ env:
   - GOOGLETEST_HOME=$TRAVIS_BUILD_DIR/third_party/googletest
 
 install:
-
 - echo WIN32ARDUINO_HOME=$WIN32ARDUINO_HOME;
   echo GOOGLETEST_HOME=$GOOGLETEST_HOME;
 - cd $TRAVIS_BUILD_DIR/ci/ant
