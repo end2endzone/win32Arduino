@@ -21,8 +21,5 @@ script:
 - ant test
 - ant demos
 
-after_success:
-- echo THIS IS AFTER SUCCESS!
-
 notifications:
   email: true

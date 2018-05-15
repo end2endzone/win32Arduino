@@ -78,7 +78,6 @@ build:
 test_script:
 - cmd: call ant -f %APPVEYOR_BUILD_FOLDER%\ci\ant\build.xml test
 - cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\upload_test_results.bat
-- cmd: cd /d %APPVEYOR_BUILD_FOLDER%
 - cmd: call ant -f %APPVEYOR_BUILD_FOLDER%\ci\ant\build.xml demos
 
 #---------------------------------#
