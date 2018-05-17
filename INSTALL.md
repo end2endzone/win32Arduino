@@ -1,25 +1,17 @@
-# Installing #
+# Install #
 
 The library does not need to be installed on the system (it does not provide an installation package). It is deployed using a zip archive which only contains the source code which must be compiled to be used by other applications and libraries.
 
-The following steps shows how to install the library:
+The following steps show how to install the library:
 
-1) Download the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\third_party\win32Arduino`).
+1) Download the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\win32Arduino` or `~/dev/win32Arduino`).
 
-2) Compile source code as specified in the [Building](#building) section.
-
-3) Define the following environment variables on the system so that other projects may find the library:
-
-| Name                     | Value                                        |
-|--------------------------|----------------------------------------------|
-|  WIN32ARDUINO_HOME       | c:\projects\third_party\win32Arduino         |
-
-Note that the `WIN32ARDUINO_HOME` variable should match the actual directory where the source code was extracted.
+2) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted so that other projects may find the library.
 
 
 
 
-# Building #
+# Build #
 
 This section explains how to compile and build the software and how to get a development environment ready.
 
@@ -62,79 +54,29 @@ These are the base requirements to build and use win32Arduino:
 
 ## Build steps ##
 
-### Google C++ testing framework ###
+1) Follow [install](#Install) instructions specified at the beginning of this document.
 
-1) Download googletest source code as a [zip file](https://github.com/google/googletest/archive/release-1.6.0.zip) to your computer and extract to a temporary directory (for example `c:\projects\third_party\googletest` or `~/dev/third_party/googletest`).
+2) Set the `GOOGLETEST_HOME` environment variable such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/third_party/googletest`.
 
-2) Define the following environment variable so that other projects knows where to find googletest package:
-
-| Name                     | Value                                                                  |
-|--------------------------|------------------------------------------------------------------------|
-|  GOOGLETEST_HOME         | `c:\projects\third_party\googletest` or `~/dev/third_party/googletest` |
-
-Note that the `GOOGLETEST_HOME` variable should match the actual directory where the source code was extracted.
- 
-3) Generate the Visual Studio solution or the Makefile using the following commands:
-
-   * cd $GOOGLETEST_HOME
-   * mkdir build
-   * cd build
-   * cmake ..
-
-Note: Windows users should use the following cmake options for compilation: `-Dgtest_force_shared_crt=ON -DCMAKE_CXX_FLAGS_DEBUG=/MDd -DCMAKE_CXX_FLAGS_RELEASE=/MD`
-
-4) Build the source code
-   1) On Windows, open the generated Visual Studio solution file located in `$GOOGLETEST_HOME\build\gtest.sln`.
-   2) On Linux, build the project using `make` command.
-
-Note: The compilation of _Google C++ testing framework_ can be automated using the `ant install` command. See [Continuous Integration](#continuous-integration) for details.
-
- 
- 
-
-### win32Arduino ###
-
-1) Follow [install](#Installing) instructions specified at the beginning of this document.
- 
-2) Generate the _Visual Studio solution_ or the _Makefile_ using the following commands:
+3) Set the _Visual Studio solution_ or the _Makefile_ using the following commands:
 
    * cd $WIN32ARDUINO_HOME
    * mkdir build
    * cd build
    * cmake ..
 
-3) Build the source code
-   1) On Windows, open the generated Visual Studio solution file located in `$WIN32ARDUINO_HOME\build\win32Arduino.sln`.
-   2) On Linux, build the project using `make` command.
-
-Note: The compilation of _win32Arduino_ can be automated using the `ant compile` command. See [Continuous Integration](#continuous-integration) for details.
+3) Build the source code:
+   1) On Windows, run `cmake --build . --config Release` or open `win32Arduino.sln` with Visual Studio.
+   2) On Linux, run `make` command.   
 
 
 
 
-### win32Arduino deploy package ###
+## Deploy ##
 
 The library does not provide an installation package. It is deployed using a zip archive which only contains the source code.
 
 GitHub automatically provides zip archives of all the source code hosted on its platform. No deploy package is required for the library.
-
-
-
-
-## Disabling win32Arduino's unit tests ##
-
-This section explains how to disable compilation of win32Arduino's own unit tests which are not required for testing another library.
-
-1) Edit the file `/CMakeLists.txt`.
-2) Add the following at the end of the document: 
-
-```CMake
-set_target_properties(win32Arduino_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-```
-
-3) Compile source code according to instructions specified in [Building](#building) section.
-
-Note: Disabling win32Arduino's unit tests can be automated using the `ant disable_unittest` command. See [Continuous Integration](#continuous-integration) for details.
 
 
 
@@ -152,8 +94,6 @@ Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.
 
 The latest test results are available at the beginning of the [README.md](README.md) file.
 
-Note: Test case execution can be automated using the `ant test` command. See [Continuous Integration](#continuous-integration) for details.
-
 
 
 
@@ -166,7 +106,7 @@ win32Arduino is using [Apache Ant](https://ant.apache.org/index.html) command-li
 
 ## Build servers ##
 
-win32Arduino supports multiple continuous integration services (build server). To make the build process across all services the same, it is recommended to use the following ant scripts.
+win32Arduino supports multiple continuous integration services (build servers). To make the build process identical across all services, it is recommended to use the following ant scripts.
 
 
 
@@ -180,9 +120,7 @@ The project support the following `ant target`:
 | clean            | Delete build, deploy and publish directories.                                                    |
 | compile          | Build all source files.                                                                          |
 | demos            | Build all arduino demo files using win32Arduino.                                                 |
-| disable_unittest | Disable the compilation of project `win32Arduino_unittest`.                                      |
 | install          | Installs required software dependencies in third_party directory.                                |
-| reset            | Delete all build artifacts and third_parties.                                                    |
 | test             | Executes unit tests.                                                                             |
 
 
