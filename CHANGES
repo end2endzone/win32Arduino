@@ -1,6 +1,7 @@
 Changes for 2.2.0:
 
 * New feature: New version handling code for scripts: Replaced `version_info.*` files by `/version` which is generated when running cmake. It is now up to each platform to parse the file and extract the current version.
+* Fixed issue #22 - Replace googletest third party library download by a git submodule
 
 Changes for 2.1.0:
 

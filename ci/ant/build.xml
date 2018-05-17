@@ -12,8 +12,6 @@
 
   <include file="macros.xml"/>
 
-  <target name="debug" depends="-init, -findConfiguration" />
-
   <target name="-init" depends="" description="">
 
     <!--Define current time for logs-->
@@ -45,20 +43,6 @@
     <required-property name="build.configuration" />
     
     <echo>Found build configuration: ${build.configuration}</echo>
-  </target>
-
-  <target name="disable_unittest" description="Disable the compilation of project `win32Arduino_unittest`." depends="-init" >
-    <local name="targetfile" />
-    <property name="targetfile" value="${home.dir}\CMakeLists.txt" />
-    <echo>Disabling unit tests from ${targetfile}...</echo>
-
-    <echo file="${targetfile}" append="true">set_target_properties(win32Arduino_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)${line.separator}</echo>
-
-    <echo>Writing file ${targetfile} completed.</echo>
-  </target>
-
-  <target name="reset" description="Delete all build artifacts and third_parties." depends="-init, clean" >
-    <delete dir="${thirdparty.dir}" />
   </target>
 
   <target name="clean" description="Delete build, deploy and publish directories." depends="-init" >

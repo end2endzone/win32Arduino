@@ -120,7 +120,6 @@ The project support the following `ant target`:
 | clean            | Delete build, deploy and publish directories.                                                    |
 | compile          | Build all source files.                                                                          |
 | demos            | Build all arduino demo files using win32Arduino.                                                 |
-| install          | Installs required software dependencies in third_party directory.                                |
 | test             | Executes unit tests.                                                                             |
 
 
