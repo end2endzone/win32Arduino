@@ -26,8 +26,9 @@ skip_tags: true
 #---------------------------------#
 
 environment:
-  WIN32ARDUINO_HOME: $(APPVEYOR_BUILD_FOLDER)
   GOOGLETEST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\googletest
+  RAPIDASSIST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\RapidAssist
+  WIN32ARDUINO_HOME: $(APPVEYOR_BUILD_FOLDER)
   
 # Build worker image (VM template)
 image: Visual Studio 2015
@@ -42,8 +43,9 @@ clone_folder: c:\projects\win32Arduino
 
 # scripts that run after cloning repository
 install:
-- cmd: echo WIN32ARDUINO_HOME=%WIN32ARDUINO_HOME%
 - cmd: echo GOOGLETEST_HOME=%GOOGLETEST_HOME%
+- cmd: echo RAPIDASSIST_HOME=%RAPIDASSIST_HOME%
+- cmd: echo WIN32ARDUINO_HOME=%WIN32ARDUINO_HOME%
 - cmd: git submodule update --init --recursive
 - cmd: call .\ci\appveyor\ant_install.bat
 
