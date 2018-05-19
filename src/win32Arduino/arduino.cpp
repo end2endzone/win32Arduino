@@ -5,8 +5,7 @@
 #include "arduino.h"
 #include "IncrementalClockStrategy.h"
 #include "RealtimeClockStrategy.h"
-#include "stringfunc.h"
-#include "nativefunc.h"
+#include "rapidassist\strings.h"
 
 static const uint8_t DEFAULT_STATUS_REGISTER = 130;
 static const uint8_t DEFAULT_NO_INTERRUPTS_STATUS_REGISTER = 2;

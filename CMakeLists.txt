@@ -63,14 +63,25 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties.in"  
 add_subdirectory(src/win32Arduino)
 add_subdirectory(src/win32Arduino_unittest)
 
+# Add googletest to project
+if (NOT TARGET gtest)
+  if (WIN32)
+    # https://stackoverflow.com/a/12546288
+    # Force building googletest in `Multi-threaded Debug DLL (/MDd)` and `Multi-threaded DLL (/MD)`
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  endif()
+  add_subdirectory($ENV{GOOGLETEST_HOME})
+  set_target_properties(gtest_main PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+endif()
+
+# Add RapidAssist to project
+if (NOT TARGET rapidassist)
+  add_subdirectory($ENV{RAPIDASSIST_HOME})
+  set_target_properties(rapidassist_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+endif()
+
 # Define project dependencies
 add_dependencies(win32Arduino_unittest win32Arduino)
-
-# Add googletest to project
-if (WIN32)
-  # https://stackoverflow.com/a/12546288
-  # Force building googletest in `Multi-threaded Debug DLL (/MDd)` and `Multi-threaded DLL (/MD)`
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-endif()
-add_subdirectory($ENV{GOOGLETEST_HOME})
-set_target_properties(gtest_main PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+add_dependencies(win32Arduino_unittest gtest)
+add_dependencies(win32Arduino_unittest rapidassist)
+add_dependencies(win32Arduino rapidassist)

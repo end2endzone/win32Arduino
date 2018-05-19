@@ -4,22 +4,23 @@
 
 #include <gtest/gtest.h>
 
-#include "gtesthelper.h"
+#include "rapidassist\gtesthelp.h"
+
+using namespace ra::gtesthelp;
 
 int main(int argc, char **argv)
 {
   //define default values for xml output report
-  gTestHelper & hlp = gTestHelper::getInstance();
-  if (hlp.isProcessorX86())
+  if (isProcessorX86())
   {
-    if (hlp.isDebugCode())
+    if (isDebugCode())
       ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x86.debug.xml";
     else
       ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x86.release.xml";
   }
-  else if (hlp.isProcessorX64())
+  else if (isProcessorX64())
   {
-    if (hlp.isDebugCode())
+    if (isDebugCode())
       ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x64.debug.xml";
     else
       ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x64.release.xml";
