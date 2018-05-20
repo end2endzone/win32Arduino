@@ -59,6 +59,13 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/src/win32Arduino/version.h.in"      
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version.in"                           "${CMAKE_CURRENT_SOURCE_DIR}/version")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties.in"    "${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties")
 
+if(NOT EXISTS "$ENV{GOOGLETEST_HOME}")
+  message(FATAL_ERROR "Could not find GOOGLETEST_HOME environment variable")
+endif()
+if(NOT EXISTS "$ENV{RAPIDASSIST_HOME}")
+  message(FATAL_ERROR "Could not find RAPIDASSIST_HOME environment variable")
+endif()
+
 # Add source directories
 add_subdirectory(src/win32Arduino)
 add_subdirectory(test)
