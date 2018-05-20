@@ -26,8 +26,8 @@ skip_tags: true
 #---------------------------------#
 
 environment:
-  GOOGLETEST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\googletest
-  RAPIDASSIST_HOME: $(APPVEYOR_BUILD_FOLDER)\third_party\RapidAssist
+  GOOGLETEST_HOME: $(APPVEYOR_BUILD_FOLDER)\lib\googletest
+  RAPIDASSIST_HOME: $(APPVEYOR_BUILD_FOLDER)\lib\RapidAssist
   WIN32ARDUINO_HOME: $(APPVEYOR_BUILD_FOLDER)
   
 # Build worker image (VM template)

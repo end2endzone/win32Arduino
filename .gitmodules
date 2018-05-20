@@ -1,6 +1,6 @@
-[submodule "third_party/googletest"]
-	path = third_party/googletest
-	url = https://github.com/google/googletest.git
-[submodule "third_party/RapidAssist"]
-	path = third_party/RapidAssist
+[submodule "lib/RapidAssist"]
+	path = lib/RapidAssist
 	url = https://github.com/end2endzone/RapidAssist.git
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = https://github.com/google/googletest.git

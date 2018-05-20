@@ -8,8 +8,8 @@ branches:
   - master
 env:
   global:
-  - GOOGLETEST_HOME=$TRAVIS_BUILD_DIR/third_party/googletest
-  - RAPIDASSIST_HOME=$TRAVIS_BUILD_DIR/third_party/RapidAssist
+  - GOOGLETEST_HOME=$TRAVIS_BUILD_DIR/lib/googletest
+  - RAPIDASSIST_HOME=$TRAVIS_BUILD_DIR/lib/RapidAssist
   - WIN32ARDUINO_HOME=$TRAVIS_BUILD_DIR
 
 install:
