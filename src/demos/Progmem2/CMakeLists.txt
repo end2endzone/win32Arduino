@@ -25,7 +25,7 @@ MESSAGE( STATUS "CMAKE_SYSTEM_NAME:        " ${CMAKE_SYSTEM_NAME} )
 MESSAGE( STATUS "CMAKE_SYSTEM_VERSION:     " ${CMAKE_SYSTEM_VERSION} )
 MESSAGE( STATUS "CMAKE_SYSTEM_PROCESSOR:   " ${CMAKE_SYSTEM_PROCESSOR} )
 
-include_directories($ENV{WIN32ARDUINO_HOME}/src/win32Arduino)
+include_directories($ENV{WIN32ARDUINO_HOME}/include)
 link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
 
 add_executable(demo main.cpp )
@@ -34,5 +34,5 @@ if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-target_link_libraries(demo debug     win32Arduino)
-target_link_libraries(demo optimized win32Arduino)
+target_link_libraries(demo debug     win32Arduino rapidassist)
+target_link_libraries(demo optimized win32Arduino rapidassist)
