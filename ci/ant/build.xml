@@ -7,7 +7,7 @@
   <property name="deploy.dir" location="${home.dir}/deploy" />
   <property name="publish.dir" location="${home.dir}/publish" />
   <property name="build.dir" location="${home.dir}/build" />
-  <property name="thirdparty.dir" location="${home.dir}/third_party" />
+  <property name="lib.dir" location="${home.dir}/lib" />
   <property name="demo.dir" location="${home.dir}/src/demos" />
 
   <include file="macros.xml"/>
@@ -30,12 +30,12 @@
     <echo>  Deploy Dir :      ${deploy.dir}</echo>
     <echo>  Build Dir :       ${build.dir}</echo>
     <echo>  Publish Dir :     ${publish.dir}</echo>
-    <echo>  Third Party Dir : ${thirdparty.dir}</echo>
+    <echo>  Lib Dir :         ${lib.dir}</echo>
 
     <mkdir dir="${deploy.dir}" />
     <mkdir dir="${build.dir}" />
     <mkdir dir="${publish.dir}" />
-    <mkdir dir="${thirdparty.dir}" />
+    <mkdir dir="${lib.dir}" />
   </target>
 
   <target name="-findConfiguration" depends="-init" description="Defines variable 'build.configuration' based on the current system">
