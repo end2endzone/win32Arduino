@@ -1,4 +1,4 @@
-include_directories(${PROJECT_SOURCE_DIR}/src/win32Arduino)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 include_directories($ENV{RAPIDASSIST_HOME}/include)

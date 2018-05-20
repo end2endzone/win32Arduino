@@ -55,13 +55,13 @@ MESSAGE("WIN32ARDUINO_VERSION_STRING: ${WIN32ARDUINO_VERSION_STRING}")
 MESSAGE("")
 
 # Generate version files for different systems
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/src/win32Arduino/version.h.in"        "${PROJECT_BINARY_DIR}/src/win32Arduino/version.h")
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/src/win32Arduino/version.h.in"        "${PROJECT_BINARY_DIR}/include/version.h")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version.in"                           "${CMAKE_CURRENT_SOURCE_DIR}/version")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties.in"    "${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties")
 
 # Add source directories
 add_subdirectory(src/win32Arduino)
-add_subdirectory(src/win32Arduino_unittest)
+add_subdirectory(test)
 
 # Add googletest to project
 if (NOT TARGET gtest)
@@ -82,6 +82,6 @@ endif()
 
 # Define project dependencies
 add_dependencies(win32Arduino_unittest win32Arduino)
-add_dependencies(win32Arduino_unittest gtest)
 add_dependencies(win32Arduino_unittest rapidassist)
+add_dependencies(win32Arduino_unittest gtest)
 add_dependencies(win32Arduino rapidassist)
