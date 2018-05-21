@@ -44,7 +44,19 @@ namespace testarduino
         break;
       case BIN:
         {
-          std::string allbits = std::bitset<sizeof(T)*8>(t).to_string();
+          std::string allbits;
+          switch(sizeof(T))
+          {
+          case 1:
+            allbits = std::bitset<sizeof(T)*8>(static_cast<int8_t>(t)).to_string();
+            break;
+          case 2:
+            allbits = std::bitset<sizeof(T)*8>(static_cast<int16_t>(t)).to_string();
+            break;
+          case 4:
+            allbits = std::bitset<sizeof(T)*8>(static_cast<int32_t>(t)).to_string();
+            break;
+          };
           while(!allbits.empty() && allbits[0] == '0') //trim leading 0
             allbits.erase(allbits.begin());
           out << allbits;
@@ -73,7 +85,19 @@ namespace testarduino
         break;
       case BIN:
         {
-          std::string allbits = std::bitset<sizeof(T)*8>(t).to_string();
+          std::string allbits;
+          switch(sizeof(T))
+          {
+          case 1:
+            allbits = std::bitset<sizeof(T)*8>(static_cast<int8_t>(t)).to_string();
+            break;
+          case 2:
+            allbits = std::bitset<sizeof(T)*8>(static_cast<int16_t>(t)).to_string();
+            break;
+          case 4:
+            allbits = std::bitset<sizeof(T)*8>(static_cast<int32_t>(t)).to_string();
+            break;
+          };
           while(!allbits.empty() && allbits[0] == '0') //trim leading 0
             allbits.erase(allbits.begin());
           out << allbits;
