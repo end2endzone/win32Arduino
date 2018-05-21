@@ -1,15 +1,23 @@
 #include "TestWin32Arduino.h"
 #include <string>
 #include "arduino.h"
+#include "util/atomic.h" //for ATOMIC_BLOCK and NONATOMIC_BLOCK macros
 #include "RealtimeClockStrategy.h"
 #include "IncrementalClockStrategy.h"
 
 namespace arduino { namespace test
 {
+  uint8_t SREG_INTERRUPTS_ENABLED;
+  uint8_t SREG_INTERRUPTS_DISABLED;
 
   //--------------------------------------------------------------------------------------------------
   void TestWin32Arduino::SetUp()
   {
+    //update SREG_INTERRUPTS_ENABLED and SREG_INTERRUPTS_DISABLED
+    noInterrupts();
+    SREG_INTERRUPTS_DISABLED = SREG;
+    interrupts();
+    SREG_INTERRUPTS_ENABLED = SREG;
   }
   //--------------------------------------------------------------------------------------------------
   void TestWin32Arduino::TearDown()
@@ -659,6 +667,48 @@ namespace arduino { namespace test
     ASSERT_EQ(1, gTestAttachMicrosecondsCallback.count); //assert callback was called
     ASSERT_NEAR(exitTime, startTime+3000, 2); //assert loop duration was really 3ms (with 2us epsilon)
     ASSERT_NEAR(EXPECTEDCALLBACKTIME, gTestAttachMicrosecondsCallback.callbackTime, 1); //assert actual callback time (with 1us epsilon)
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testAtomicBlockRestore)
+  {
+    SREG = 4;
+    ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+    {
+      ASSERT_EQ(SREG_INTERRUPTS_DISABLED, SREG); //assert that interrupts are disabled
+    }
+    ASSERT_EQ(4, SREG); //assert state restored
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testAtomicBlockForceOn)
+  {
+    SREG = 4;
+    ATOMIC_BLOCK(ATOMIC_FORCEON)
+    {
+      ASSERT_EQ(SREG_INTERRUPTS_DISABLED, SREG); //assert that interrupts are disabled
+    }
+    ASSERT_NE(4, SREG); //assert state not restored
+    ASSERT_TRUE(SREG_INTERRUPTS_ENABLED == SREG); //assert that interrupts are enabled
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testNonAtomicBlockRestore)
+  {
+    SREG = 4;
+    NONATOMIC_BLOCK(NONATOMIC_RESTORESTATE)
+    {
+      ASSERT_EQ(SREG_INTERRUPTS_ENABLED, SREG); //assert that interrupts are enabled
+    }
+    ASSERT_EQ(4, SREG); //assert state restored
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testAtomicBlockForceOff)
+  {
+    SREG = 4;
+    NONATOMIC_BLOCK(NONATOMIC_FORCEOFF)
+    {
+      ASSERT_EQ(SREG_INTERRUPTS_ENABLED, SREG); //assert that interrupts are enabled
+    }
+    ASSERT_NE(4, SREG); //assert state not restored
+    ASSERT_TRUE(SREG_INTERRUPTS_DISABLED == SREG); //assert that interrupts are disabled
   }
   //--------------------------------------------------------------------------------------------------
 } // End namespace test
