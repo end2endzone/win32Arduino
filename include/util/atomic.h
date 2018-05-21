@@ -2,36 +2,62 @@
 
 //Helper functions
 
-static inline uint8_t __atomicNoInterrupts(void)
-{
-  noInterrupts();
-  return 0; //initialize loop count to 0
-}
-
-static inline uint8_t __atomicInterrupts(void)
-{
-  interrupts();
-  return 0; //initialize loop count to 0
-}
-
-static inline uint8_t __atomicRestore(const uint8_t *__s)
-{
-  SREG = *__s;
-  return 1; //set loop count to 1
-}
+uint8_t __tmp; //use for allowing __atomic.enter() and leave() calls within a for loop
 
 //ATOMIC_BLOCK macro support:
+#define ATOMIC_RESTORESTATE 0
+#define ATOMIC_FORCEON      1
+class __ATOMIC
+{
+public:
+  uint8_t strategy;
+  uint8_t loopCount;
+  uint8_t save;
 
-#define ATOMIC_RESTORESTATE uint8_t __atom_sreg_save = SREG
-#define ATOMIC_FORCEON uint8_t __atom_sreg_save = 130
-static uint8_t __atomic_loop_count = 0;
-
-#define ATOMIC_BLOCK(type) for ( type, __atomic_loop_count = __atomicNoInterrupts(); __atomic_loop_count == 0; __atomic_loop_count = __atomicRestore(&__atom_sreg_save) )
+  uint8_t enter()
+  {
+    save = SREG;
+    noInterrupts();
+    return 0;
+  }
+  uint8_t leave()
+  {
+    if (strategy == ATOMIC_RESTORESTATE)
+      SREG = save;
+    else //ATOMIC_FORCEON
+      interrupts();
+    return 0;
+  }
+};
+__ATOMIC __atomic;
 
 //NONATOMIC_BLOCK macro support:
+#define NONATOMIC_RESTORESTATE 0
+#define NONATOMIC_FORCEOFF     1
+class __NONATOMIC
+{
+public:
+  uint8_t strategy;
+  uint8_t loopCount;
+  uint8_t save;
 
-#define NONATOMIC_RESTORESTATE uint8_t __non_atom_sreg_save = SREG
-#define NONATOMIC_FORCEOFF uint8_t __non_atom_sreg_save = 2
-static uint8_t __non_atomic_loop_count = 0;
+  uint8_t enter()
+  {
+    save = SREG;
+    interrupts();
+    return 0;
+  }
+  uint8_t leave()
+  {
+    if (strategy == NONATOMIC_RESTORESTATE)
+      SREG = save;
+    else //NONATOMIC_FORCEOFF
+      noInterrupts();
+    return 0;
+  }
+};
+__NONATOMIC __non_atomic;
 
-#define NONATOMIC_BLOCK(type) for ( type, __non_atomic_loop_count = __atomicInterrupts(); __non_atomic_loop_count == 0; __non_atomic_loop_count = __atomicRestore(&__non_atom_sreg_save) )
+
+#define ATOMIC_BLOCK(type)    for ( __atomic.strategy = type,     __atomic.loopCount = 0,     __tmp = __atomic.enter();     __atomic.loopCount == 0;     __atomic.loopCount++,     __tmp = __atomic.leave() )
+#define NONATOMIC_BLOCK(type) for ( __non_atomic.strategy = type, __non_atomic.loopCount = 0, __tmp = __non_atomic.enter(); __non_atomic.loopCount == 0; __non_atomic.loopCount++, __tmp = __non_atomic.leave() )
