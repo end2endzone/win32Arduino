@@ -16,12 +16,15 @@ install:
 - echo GOOGLETEST_HOME=$GOOGLETEST_HOME;
 - echo RAPIDASSIST_HOME=$RAPIDASSIST_HOME;
 - echo WIN32ARDUINO_HOME=$WIN32ARDUINO_HOME;
-- cd $TRAVIS_BUILD_DIR/ci/ant
 
 script:
-- ant compile
-- ant test
-- ant demos
+- cd $TRAVIS_BUILD_DIR;
+  mkdir build;
+  cd build;
+  cmake ..
+- make
+- cd $TRAVIS_BUILD_DIR/build/bin;
+  ./win32Arduino_unittest
 
 notifications:
   email: true

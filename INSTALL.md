@@ -93,39 +93,3 @@ To run tests, open a shell prompt and browse to the `build/bin` folder and run `
 Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
 
 The latest test results are available at the beginning of the [README.md](README.md) file.
-
-
-
-
-# Continuous Integration #
-
-win32Arduino is using [Apache Ant](https://ant.apache.org/index.html) command-line tool to help building software. It provides compatibility for all scripts across all supported platforms.
-
-
-
-
-## Build servers ##
-
-win32Arduino supports multiple continuous integration services (build servers). To make the build process identical across all services, it is recommended to use the following ant scripts.
-
-
-
-
-## Ant targets ##
-
-The project support the following `ant target`:
-
-| Target           | Description                                                                                      |
-|------------------|--------------------------------------------------------------------------------------------------|
-| clean            | Delete build, deploy and publish directories.                                                    |
-| compile          | Build all source files.                                                                          |
-| demos            | Build all arduino demo files using win32Arduino.                                                 |
-| test             | Executes unit tests.                                                                             |
-
-
-To execute a target, navigate to the `/ci/ant` directory and enter the following command:
-```
-ant [targetname]
-```
-
-Note: the following project help information can be generated using the `ant -p` command.

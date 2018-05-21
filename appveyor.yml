@@ -47,14 +47,13 @@ install:
 - cmd: echo RAPIDASSIST_HOME=%RAPIDASSIST_HOME%
 - cmd: echo WIN32ARDUINO_HOME=%WIN32ARDUINO_HOME%
 - cmd: git submodule update --init --recursive
-- cmd: call .\ci\appveyor\ant_install.bat
 
 #---------------------------------#
 #       build configuration       #
 #---------------------------------#
 
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
-#platform: x86
+platform: x86
 
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
@@ -78,9 +77,8 @@ build:
 
 # to run your custom scripts instead of automatic tests
 test_script:
-- cmd: call ant -f %APPVEYOR_BUILD_FOLDER%\ci\ant\build.xml test
-- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\upload_test_results.bat
-- cmd: call ant -f %APPVEYOR_BUILD_FOLDER%\ci\ant\build.xml demos
+- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\test_script.bat
+- ps: . "$env:APPVEYOR_BUILD_FOLDER\ci\appveyor\UploadJUnitFiles.ps1" -Path $env:APPVEYOR_BUILD_FOLDER
 
 #---------------------------------#
 #      artifacts configuration    #

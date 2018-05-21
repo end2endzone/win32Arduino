@@ -57,7 +57,6 @@ MESSAGE("")
 # Generate version files for different systems
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/src/win32Arduino/version.h.in"        "${PROJECT_BINARY_DIR}/include/version.h")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version.in"                           "${CMAKE_CURRENT_SOURCE_DIR}/version")
-CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties.in"    "${CMAKE_CURRENT_SOURCE_DIR}/ci/ant/version_info.properties")
 
 # Validate mandatory environment variables.
 if(NOT EXISTS "$ENV{GOOGLETEST_HOME}")
