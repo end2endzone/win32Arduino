@@ -85,7 +85,7 @@ test_script:
 #---------------------------------#
 
 artifacts:
-- path: .\publish\win32Arduino_unittest.x86.release.xml
+- path: .\build\bin\Release\win32Arduino_unittest.x86.release.xml
   name: win32ArduinoTest.x86.release.xml
   
 #---------------------------------#
