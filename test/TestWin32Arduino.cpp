@@ -337,6 +337,17 @@ namespace arduino { namespace test
     Serial.print("Hello World from ");
     Serial.print(__FUNCTION__);
     Serial.println("() function!");
+
+    int value = 35;
+    Serial.println("int value = 35;");
+    Serial.print("Serial.println(value, DEC): ");
+    Serial.println(value, DEC);
+    Serial.print("Serial.println(value, HEX): ");
+    Serial.println(value, HEX);
+    Serial.print("Serial.println(value, OCT): ");
+    Serial.println(value, OCT);
+    Serial.print("Serial.println(value, BIN): ");
+    Serial.println(value, BIN);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testClockDiff)

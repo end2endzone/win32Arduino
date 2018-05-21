@@ -3,6 +3,12 @@
 
 #include "arduino.h"
 #include <sstream>
+#include <bitset>
+
+#define DEC 10
+#define HEX 16
+#define OCT 8
+#define BIN 2
 
 namespace testarduino
 {
@@ -20,18 +26,60 @@ namespace testarduino
 
     //Note: http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.2
     template <class T>
-    inline void print(const T & t, int /*iRadix*/)
+    inline void print(const T & t, int iRadix)
     {
+      //See https://www.arduino.cc/en/Serial/Print
+
       std::stringstream out;
-      out << t;
+      switch(iRadix)
+      {
+      case DEC:
+        out << t;
+        break;
+      case HEX:
+        out << std::hex << t;
+        break;
+      case OCT:
+        out << std::oct << t;
+        break;
+      case BIN:
+        {
+          std::string allbits = std::bitset<sizeof(T)*8>(t).to_string();
+          while(!allbits.empty() && allbits[0] == '0') //trim leading 0
+            allbits.erase(allbits.begin());
+          out << allbits;
+        }
+        break;
+      };
       printString(out.str().c_str());
     }
 
     template <class T>
-    inline void println(const T & t, int /*iRadix*/)
+    inline void println(const T & t, int iRadix)
     {
+      //See https://www.arduino.cc/en/Serial/Print
+
       std::stringstream out;
-      out << t;
+      switch(iRadix)
+      {
+      case DEC:
+        out << t;
+        break;
+      case HEX:
+        out << std::hex << t;
+        break;
+      case OCT:
+        out << std::oct << t;
+        break;
+      case BIN:
+        {
+          std::string allbits = std::bitset<sizeof(T)*8>(t).to_string();
+          while(!allbits.empty() && allbits[0] == '0') //trim leading 0
+            allbits.erase(allbits.begin());
+          out << allbits;
+        }
+        break;
+      };
       printlnString(out.str().c_str());
     }
 
@@ -56,29 +104,21 @@ namespace testarduino
   };
 
   //specializations
-  template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t, int /*iRadix*/)
+  template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t, int iRadix)
   {
-    std::stringstream out;
-    out << (int)t;
-    printString(out.str().c_str());
+    SerialPrinter::print<uint16_t>(t, iRadix);
   }
-  template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t, int /*iRadix*/)
+  template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t, int iRadix)
   {
-    std::stringstream out;
-    out << (int)t;
-    printlnString(out.str().c_str());
+    SerialPrinter::print<uint16_t>(t, iRadix);
   }
   template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t)
   {
-    std::stringstream out;
-    out << (int)t;
-    printString(out.str().c_str());
+    SerialPrinter::print<uint16_t>(t);
   }
   template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t)
   {
-    std::stringstream out;
-    out << (int)t;
-    printlnString(out.str().c_str());
+    SerialPrinter::print<uint16_t>(t);
   }
 
 } //testarduino
