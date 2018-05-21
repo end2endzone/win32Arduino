@@ -731,7 +731,8 @@ void cli()
   //add function callback handler
   testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
-  noInterrupts();
+  //same as noInterrupts();
+  SREG = DEFAULT_NO_INTERRUPTS_STATUS_REGISTER;
 }
 
 void noInterrupts()
