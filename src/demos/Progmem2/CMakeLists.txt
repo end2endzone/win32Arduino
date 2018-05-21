@@ -1,29 +1,11 @@
 cmake_minimum_required(VERSION 3.4.3)
-project(demo)
+project(Progmem2)
 
 # Set the output folder where your program will be created
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(   LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-MESSAGE( STATUS "CMAKE_BINARY_DIR:         " ${CMAKE_BINARY_DIR} )
-MESSAGE( STATUS "CMAKE_CURRENT_BINARY_DIR: " ${CMAKE_CURRENT_BINARY_DIR} )
-MESSAGE( STATUS "CMAKE_SOURCE_DIR:         " ${CMAKE_SOURCE_DIR} )
-MESSAGE( STATUS "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR} )
-MESSAGE( STATUS "PROJECT_BINARY_DIR:       " ${PROJECT_BINARY_DIR} )
-MESSAGE( STATUS "PROJECT_SOURCE_DIR:       " ${PROJECT_SOURCE_DIR} )
-MESSAGE( STATUS "EXECUTABLE_OUTPUT_PATH:   " ${EXECUTABLE_OUTPUT_PATH} )
-MESSAGE( STATUS "LIBRARY_OUTPUT_PATH:      " ${LIBRARY_OUTPUT_PATH} )
-MESSAGE( STATUS "CMAKE_MODULE_PATH:        " ${CMAKE_MODULE_PATH} )
-MESSAGE( STATUS "CMAKE_COMMAND:            " ${CMAKE_COMMAND} )
-MESSAGE( STATUS "CMAKE_ROOT:               " ${CMAKE_ROOT} )
-MESSAGE( STATUS "CMAKE_CURRENT_LIST_FILE:  " ${CMAKE_CURRENT_LIST_FILE} )
-MESSAGE( STATUS "CMAKE_CURRENT_LIST_LINE:  " ${CMAKE_CURRENT_LIST_LINE} )
-MESSAGE( STATUS "CMAKE_INCLUDE_PATH:       " ${CMAKE_INCLUDE_PATH} )
-MESSAGE( STATUS "CMAKE_LIBRARY_PATH:       " ${CMAKE_LIBRARY_PATH} )
-MESSAGE( STATUS "CMAKE_SYSTEM:             " ${CMAKE_SYSTEM} )
-MESSAGE( STATUS "CMAKE_SYSTEM_NAME:        " ${CMAKE_SYSTEM_NAME} )
-MESSAGE( STATUS "CMAKE_SYSTEM_VERSION:     " ${CMAKE_SYSTEM_VERSION} )
-MESSAGE( STATUS "CMAKE_SYSTEM_PROCESSOR:   " ${CMAKE_SYSTEM_PROCESSOR} )
+MESSAGE( STATUS "Adding demo project : " ${PROJECT_NAME} )
 
 # Validate mandatory environment variables.
 if(NOT EXISTS "$ENV{WIN32ARDUINO_HOME}")
@@ -33,11 +15,11 @@ endif()
 include_directories($ENV{WIN32ARDUINO_HOME}/include)
 link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
 
-add_executable(demo main.cpp )
+add_executable(Progmem2 main.cpp )
 
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-target_link_libraries(demo debug     win32Arduino rapidassist)
-target_link_libraries(demo optimized win32Arduino rapidassist)
+target_link_libraries(Progmem2 debug     win32Arduino rapidassist)
+target_link_libraries(Progmem2 optimized win32Arduino rapidassist)

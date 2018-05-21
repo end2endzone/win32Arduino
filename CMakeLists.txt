@@ -93,3 +93,32 @@ add_dependencies(win32Arduino_unittest win32Arduino)
 add_dependencies(win32Arduino_unittest rapidassist)
 add_dependencies(win32Arduino_unittest gtest)
 add_dependencies(win32Arduino rapidassist)
+
+# Add all demos to the project unless the user has specified otherwise.
+option(BUILD_DEMO_PROJECTS "Build all demo projects" ON)
+if(BUILD_DEMO_PROJECTS)
+  add_subdirectory(src/demos/Constants)
+  add_subdirectory(src/demos/Interrupts)
+  add_subdirectory(src/demos/MicrosOverflow)
+  add_subdirectory(src/demos/Progmem1)
+  add_subdirectory(src/demos/Progmem2)
+  add_subdirectory(src/demos/Progmem3)
+
+  add_dependencies(Constants win32Arduino)
+  add_dependencies(Interrupts win32Arduino)
+  add_dependencies(MicrosOverflow win32Arduino)
+  add_dependencies(Progmem1 win32Arduino)
+  add_dependencies(Progmem2 win32Arduino)
+  add_dependencies(Progmem3 win32Arduino)
+
+  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+  set_target_properties(Constants      PROPERTIES FOLDER "Demos")
+  set_target_properties(Interrupts     PROPERTIES FOLDER "Demos")
+  set_target_properties(MicrosOverflow PROPERTIES FOLDER "Demos")
+  set_target_properties(Progmem1       PROPERTIES FOLDER "Demos")
+  set_target_properties(Progmem2       PROPERTIES FOLDER "Demos")
+  set_target_properties(Progmem3       PROPERTIES FOLDER "Demos")
+endif()
+
+# Remove BUILD_DEMO_PROJECTS from the cache so calling `cmake ..` again will default BUILD_DEMO_PROJECTS to ON again.
+unset(BUILD_DEMO_PROJECTS CACHE)
