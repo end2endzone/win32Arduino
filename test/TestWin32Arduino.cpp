@@ -6,6 +6,7 @@
 #include "IncrementalClockStrategy.h"
 #include "rapidassist\gtesthelp.h"
 #include "rapidassist\filesystem.h"
+#include "rapidassist\time_.h"
 
 namespace arduino { namespace test
 {
@@ -68,30 +69,34 @@ namespace arduino { namespace test
     static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000;
     static const uint32_t EXPECTED_ELAPSED_MICROS = EXPECTED_ELAPSED_MILLIS*1000;
 
+    ra::time::waitNextSecond(); //synchronize to a new second in wall clock
+
     uint32_t value1 = micros();
-    delay(EXPECTED_ELAPSED_MILLIS);
+    ra::time::waitNextSecond(); //loop for 1 second
     uint32_t value2 = micros();
 
     ASSERT_GT(value2, value1);
 
     uint32_t actualElapsedMicros = value2-value1;
-    ASSERT_NEAR(EXPECTED_ELAPSED_MICROS, actualElapsedMicros, 15*1000); //no usec precision, only milliseconds. Allows 15ms epsilon which is Windows's Sleep() function resolution
+    ASSERT_NEAR(EXPECTED_ELAPSED_MICROS, actualElapsedMicros, 15*1000); //Allows 15ms epsilon
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMillisRealtime)
   {
     testarduino::setClockStrategy(&testarduino::RealtimeClockStrategy::getInstance());
 
-    static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000;
+    static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000; //1 second
+
+    ra::time::waitNextSecond(); //synchronize to a new second in wall clock
 
     uint32_t value1 = millis();
-    delay(EXPECTED_ELAPSED_MILLIS);
+    ra::time::waitNextSecond(); //loop for 1 second
     uint32_t value2 = millis();
 
     ASSERT_GT(value2, value1);
 
     uint32_t actualElapsedMillis = value2-value1;
-    ASSERT_NEAR(EXPECTED_ELAPSED_MILLIS, actualElapsedMillis, 15); //Allows 15ms epsilon which is Windows's Sleep() function resolution
+    ASSERT_NEAR(EXPECTED_ELAPSED_MILLIS, actualElapsedMillis, 15); //Allows 15ms epsilon
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testMicrosSimulation)
@@ -408,21 +413,6 @@ namespace arduino { namespace test
     ASSERT_EQ(std::string("1.2346"),  lines[6]);
 
     int a = 0;
-  }
-  //--------------------------------------------------------------------------------------------------
-  TEST_F(TestWin32Arduino, testClockDiff)
-  {
-#ifdef _WIN32
-    //Win32 clock_t are milliseconds
-    clock_t timeStart = 200;
-    clock_t timeEnd   = 201;
-#else
-    //linux clock_t is microseconds
-    clock_t timeStart = 200*1000;
-    clock_t timeEnd   = 201*1000;
-#endif
-    double diff = testarduino::RealtimeClockStrategy::clockDiff(timeEnd, timeStart);
-    EXPECT_NEAR(diff, 1.0, 0.000001);
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testDelayMicroseconds)
