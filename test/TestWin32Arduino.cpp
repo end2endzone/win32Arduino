@@ -4,6 +4,8 @@
 #include "util/atomic.h" //for ATOMIC_BLOCK and NONATOMIC_BLOCK macros
 #include "RealtimeClockStrategy.h"
 #include "IncrementalClockStrategy.h"
+#include "rapidassist\gtesthelp.h"
+#include "rapidassist\filesystem.h"
 
 namespace arduino { namespace test
 {
@@ -340,7 +342,7 @@ namespace arduino { namespace test
     SREG = before;
   }
   //--------------------------------------------------------------------------------------------------
-  TEST_F(TestWin32Arduino, testSerial)
+  TEST_F(TestWin32Arduino, demoSerial)
   {
     Serial.print("Hello World from ");
     Serial.print(__FUNCTION__);
@@ -356,6 +358,56 @@ namespace arduino { namespace test
     Serial.println(value, OCT);
     Serial.print("Serial.println(value, BIN): ");
     Serial.println(value, BIN);
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testSerial)
+  {
+    //push current log file. Pop when leaving the function.
+    struct LOG_FILE_PUSH_POP
+    {
+      LOG_FILE_PUSH_POP()
+      {
+        logFile = testarduino::getLogFile();
+      }
+      ~LOG_FILE_PUSH_POP()
+      {
+        testarduino::setLogFile(logFile.c_str());
+      }
+      std::string logFile;
+    } __logFilePop;
+
+    //create new log file
+    std::string logFile = ra::gtesthelp::getTestQualifiedName();
+    if (ra::filesystem::fileExists(logFile.c_str()))
+    {
+      ASSERT_TRUE( ra::filesystem::deleteFile(logFile.c_str()) );
+    }
+    testarduino::setLogFile(logFile.c_str());
+
+    //print to the log file
+    Serial.println(78, BIN); // gives "1001110"
+    Serial.println(78, OCT); // gives "116"
+    Serial.println(78, DEC); // gives "78"
+    Serial.println(78, HEX); // gives "4E"
+    Serial.println(1.23456, 0); // gives "1"
+    Serial.println(1.23456, 2); // gives "1.23"
+    Serial.println(1.23456, 4); // gives "1.2346"
+
+    //disable logging at this point
+    testarduino::setLogFile("");
+
+    //load log file
+    ra::strings::StringVector lines;
+    ASSERT_TRUE( ra::gtesthelp::getTextFileContent(logFile.c_str(), lines) );
+    ASSERT_EQ(std::string("1001110"), lines[0]);
+    ASSERT_EQ(std::string("116"),     lines[1]);
+    ASSERT_EQ(std::string("78"),      lines[2]);
+    ASSERT_EQ(std::string("4E"),      lines[3]);
+    ASSERT_EQ(std::string("1"),       lines[4]);
+    ASSERT_EQ(std::string("1.23"),    lines[5]);
+    ASSERT_EQ(std::string("1.2346"),  lines[6]);
+
+    int a = 0;
   }
   //--------------------------------------------------------------------------------------------------
   TEST_F(TestWin32Arduino, testClockDiff)

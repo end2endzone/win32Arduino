@@ -4,6 +4,8 @@
 #include "arduino.h"
 #include <sstream>
 #include <bitset>
+#include <iomanip> //for std::precision
+#include <ios> //for std::uppercase
 
 #define DEC 10
 #define HEX 16
@@ -17,6 +19,8 @@ namespace testarduino
   public:
 
     static void begin(uint16_t baudrate);
+    static void begin(int16_t baudrate); //prevents warning when calling 'Serial.begin(115200)'
+    static void begin(int baudrate); //prevents warning when calling 'Serial.begin(115200)'
     static void printString(const char * iValue);
     static void printlnString(const char * iValue);
 
@@ -26,7 +30,7 @@ namespace testarduino
 
     //Note: http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.2
     template <class T>
-    inline void print(const T & t, int iRadix)
+    inline void print(const T & t, int iRadix = DEC)
     {
       //See https://www.arduino.cc/en/Serial/Print
 
@@ -37,7 +41,7 @@ namespace testarduino
         out << t;
         break;
       case HEX:
-        out << std::hex << t;
+        out << std::uppercase << std::hex << t;
         break;
       case OCT:
         out << std::oct << t;
@@ -67,7 +71,7 @@ namespace testarduino
     }
 
     template <class T>
-    inline void println(const T & t, int iRadix)
+    inline void println(const T & t, int iRadix = DEC)
     {
       //See https://www.arduino.cc/en/Serial/Print
 
@@ -78,7 +82,7 @@ namespace testarduino
         out << t;
         break;
       case HEX:
-        out << std::hex << t;
+        out << std::uppercase << std::hex << t;
         break;
       case OCT:
         out << std::oct << t;
@@ -107,22 +111,19 @@ namespace testarduino
       printlnString(out.str().c_str());
     }
 
-    template <class T>
-    inline void print(const T & t)
+    inline void print(const char * t)
     {
       std::stringstream out;
       out << t;
       printString(out.str().c_str());
     }
 
-    template <class T>
-    inline void println(const T & t)
+    inline void println(const char * t)
     {
       std::stringstream out;
       out << t;
       printlnString(out.str().c_str());
     }
-
 
     static void println();
   };
@@ -136,13 +137,45 @@ namespace testarduino
   {
     SerialPrinter::print<uint16_t>(t, iRadix);
   }
-  template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t)
+
+  template<> inline void SerialPrinter::print<int8_t>(const int8_t & t, int iRadix)
   {
-    SerialPrinter::print<uint16_t>(t);
+    SerialPrinter::print<int16_t>(t, iRadix);
   }
-  template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t)
+  template<> inline void SerialPrinter::println<int8_t>(const int8_t & t, int iRadix)
   {
-    SerialPrinter::print<uint16_t>(t);
+    SerialPrinter::print<int16_t>(t, iRadix);
+  }
+
+  const char * getFloatPrecisionFormat(int iPrecision);
+  static const size_t SERIALPRINTER_FLOAT_BUFFER_SIZE = 48;
+
+  //float
+  template<> inline void SerialPrinter::print<float>(const float & t, int iPrecision)
+  {
+    char buffer[SERIALPRINTER_FLOAT_BUFFER_SIZE];
+    sprintf(buffer, getFloatPrecisionFormat(iPrecision), t);
+    printString(buffer);
+  }
+  template<> inline void SerialPrinter::println<float>(const float & t, int iPrecision)
+  {
+    char buffer[SERIALPRINTER_FLOAT_BUFFER_SIZE];
+    sprintf(buffer, getFloatPrecisionFormat(iPrecision), t);
+    printlnString(buffer);
+  }
+
+  //float
+  template<> inline void SerialPrinter::print<double>(const double & t, int iPrecision)
+  {
+    char buffer[SERIALPRINTER_FLOAT_BUFFER_SIZE];
+    sprintf(buffer, getFloatPrecisionFormat(iPrecision), t);
+    printString(buffer);
+  }
+  template<> inline void SerialPrinter::println<double>(const double & t, int iPrecision)
+  {
+    char buffer[SERIALPRINTER_FLOAT_BUFFER_SIZE];
+    sprintf(buffer, getFloatPrecisionFormat(iPrecision), t);
+    printlnString(buffer);
   }
 
 } //testarduino
