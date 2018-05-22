@@ -747,6 +747,19 @@ void noInterrupts()
   SREG = DEFAULT_NO_INTERRUPTS_STATUS_REGISTER;
 }
 
+void sei()
+{
+  //log function call
+  std::string funcArgs; funcArgs << __FUNCTION__ << "();";
+  testarduino::log(funcArgs.c_str());
+ 
+  //add function callback handler
+  testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+
+  //same as interrupts();
+  SREG = DEFAULT_STATUS_REGISTER;
+}
+
 void interrupts()
 {
   //log function call

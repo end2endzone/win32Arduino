@@ -162,6 +162,7 @@ typedef unsigned char byte;
 #define TWO_PI 6.283185307179586476925286766559
 #define DEG_TO_RAD 0.017453292519943295769236907684886
 #define RAD_TO_DEG 57.295779513082320876798154814105
+#define EULER 2.718281828459045235360287471352
 
 void tone(byte iPin, uint16_t freq, uint32_t duration);
 void noTone(byte iPin);
@@ -185,50 +186,14 @@ void delay(uint32_t value);
 void delayMicroseconds(uint16_t value);
 
 //math macros
-
-#define abs(x) ((x)>0?(x):-(x))
-//template<typename T>
-//T abs(T x)
-//{
-//  if (x < 0)
-//    return -x;
-//  else
-//    return x;
-//}
-
-#define max(a,b) ((a)>(b)?(a):(b))
-//template<typename T>
-//T max(T x, T y)
-//{
-//  if (x > y)
-//    return x;
-//  else
-//    return y;
-//}
-
 #define min(a,b) ((a)<(b)?(a):(b))
-//template<typename T>
-//T min(T x, T y)
-//{
-//  if (x < y)
-//    return x;
-//  else
-//    return y;
-//}
-
+#define max(a,b) ((a)>(b)?(a):(b))
+#define abs(x) ((x)>0?(x):-(x))
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
-//template<typename T>
-//T constrain(T x, T a, T b)
-//{
-//  if (x < a)
-//    return a;
-//  else if (x > b)
-//    return b;
-//  else
-//    return x;
-//}
-
-#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+#define round(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+#define radians(deg) ((deg)*DEG_TO_RAD)
+#define degrees(rad) ((rad)*RAD_TO_DEG)
+#define sq(x) ((x)*(x))
 
 template<typename T>
 T map(T x, T in_min, T in_max, T out_min, T out_max)
@@ -245,7 +210,8 @@ void attachInterrupt(uint8_t pin, ISR func, uint8_t mode);
 void detachInterrupt(uint8_t pin);
 
 extern uint8_t SREG;
-void cli();
+void cli(); //same as noInterrupts()
+void sei(); //same as interrupts()
 void noInterrupts();
 void interrupts();
 
@@ -271,65 +237,14 @@ int32_t random(int32_t min, int32_t max);
 int32_t random(int32_t max);
 
 //Bits and Bytes
-//-lowByte()
-//-highByte()
-//-bitRead()
-//-bitWrite()
-//-bitSet()
-//-bitClear()
-//-bit()
-
 #define lowByte(w) ((uint8_t) ((w) & 0xff))
-//template<typename T>
-//uint8_t lowByte(T x)
-//{
-//  const uint8_t * bytes = (uint8_t*)&x;
-//  uint8_t lowByteIndex = 0;
-//  return bytes[lowByteIndex];
-//}
-
 #define highByte(w) ((uint8_t) ((w) >> 8))
-//template<typename T>
-//uint8_t highByte(T x)
-//{
-//  const uint8_t * bytes = (uint8_t*)&x;
-//  uint8_t highByteIndex = sizeof(T)-1;
-//  return bytes[highByteIndex];
-//}
 
+//bit manipulation macros
 #define bitRead(value, bit) (((value) >> (bit)) & 0x01)
-//template<typename T>
-//T bitRead(const T & x, T n)
-//{
-//  return ( (x & (1<<n)) >> n );
-//}
-
 #define bitSet(value, bit) ((value) |= (1UL << (bit)))
-//template<typename T>
-//void bitSet(T & x, T n)
-//{
-//  x |= (1<<n);
-//}
-
 #define bitClear(value, bit) ((value) &= ~(1UL << (bit)))
-//template<typename T>
-//void bitClear(T & x, T n)
-//{
-//  x &= ~((T)1<<n);
-//}
-
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
-//template<typename T>
-//void bitWrite(T & x, T n, T b)
-//{
-//  x = (x & ~(1<<n)) | (b<<n);
-//}
-
 #define bit(b) (1UL << (b))
-//template<typename T>
-//T bit(T n)
-//{
-//  return ((T)1<<n);
-//}
 
 #endif //WIN32ARDUINO_H
