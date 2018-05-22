@@ -31,7 +31,7 @@ namespace testarduino
 
     //Note: http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.2
     template <class T>
-    inline void print(const T & t, int iRadix = DEC)
+    inline void print(const T & t, int iRadix)
     {
       //See https://www.arduino.cc/en/Serial/Print
 
@@ -72,7 +72,7 @@ namespace testarduino
     }
 
     template <class T>
-    inline void println(const T & t, int iRadix = DEC)
+    inline void println(const T & t, int iRadix)
     {
       //See https://www.arduino.cc/en/Serial/Print
 
@@ -112,24 +112,31 @@ namespace testarduino
       printlnString(out.str().c_str());
     }
 
-    inline void print(const char * t)
+    //inline void print(const char * t)
+    template <class T>
+    inline void print(const T & t)
     {
       std::stringstream out;
       out << t;
       printString(out.str().c_str());
     }
 
-    inline void println(const char * t)
+    //inline void println(const char * t)
+    template <class T>
+    inline void println(const T & t)
     {
       std::stringstream out;
       out << t;
       printlnString(out.str().c_str());
     }
+    
 
     static void println();
   };
 
   //specializations
+  
+  //specializations: force 8 bit integer to 16 bits
   template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t, int iRadix)
   {
     SerialPrinter::print<uint16_t>(t, iRadix);
@@ -148,10 +155,55 @@ namespace testarduino
     SerialPrinter::print<int16_t>(t, iRadix);
   }
 
+  template<> inline void SerialPrinter::print<uint8_t>(const uint8_t & t)
+  {
+    SerialPrinter::print<uint16_t>(t);
+  }
+  template<> inline void SerialPrinter::println<uint8_t>(const uint8_t & t)
+  {
+    SerialPrinter::print<uint16_t>(t);
+  }
+
+  template<> inline void SerialPrinter::print<int8_t>(const int8_t & t)
+  {
+    SerialPrinter::print<int16_t>(t);
+  }
+  template<> inline void SerialPrinter::println<int8_t>(const int8_t & t)
+  {
+    SerialPrinter::print<int16_t>(t);
+  }
+
+  //specializations: handle cstr pointer
+  typedef const char * CHAR_PTR;
+  template<> inline void SerialPrinter::print<CHAR_PTR>(const CHAR_PTR & t)
+  {
+    std::stringstream out;
+    out << t;
+    printString(out.str().c_str());
+  }
+  template<> inline void SerialPrinter::println<CHAR_PTR>(const CHAR_PTR & t)
+  {
+    std::stringstream out;
+    out << t;
+    printlnString(out.str().c_str());
+  }
+  template<> inline void SerialPrinter::print<CHAR_PTR>(const CHAR_PTR & t, int iRadix)
+  {
+    std::stringstream out;
+    out << t;
+    printString(out.str().c_str());
+  }
+  template<> inline void SerialPrinter::println<CHAR_PTR>(const CHAR_PTR & t, int iRadix)
+  {
+    std::stringstream out;
+    out << t;
+    printlnString(out.str().c_str());
+  }
+  
   const char * getFloatPrecisionFormat(int iPrecision);
   static const size_t SERIALPRINTER_FLOAT_BUFFER_SIZE = 48;
 
-  //float
+  //specializations: float
   template<> inline void SerialPrinter::print<float>(const float & t, int iPrecision)
   {
     char buffer[SERIALPRINTER_FLOAT_BUFFER_SIZE];
@@ -165,7 +217,7 @@ namespace testarduino
     printlnString(buffer);
   }
 
-  //float
+  //specializations: double
   template<> inline void SerialPrinter::print<double>(const double & t, int iPrecision)
   {
     char buffer[SERIALPRINTER_FLOAT_BUFFER_SIZE];
