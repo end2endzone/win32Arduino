@@ -4,9 +4,9 @@
 #include "util/atomic.h" //for ATOMIC_BLOCK and NONATOMIC_BLOCK macros
 #include "RealtimeClockStrategy.h"
 #include "IncrementalClockStrategy.h"
-#include "rapidassist\gtesthelp.h"
-#include "rapidassist\filesystem.h"
-#include "rapidassist\time_.h"
+#include "rapidassist/gtesthelp.h"
+#include "rapidassist/filesystem.h"
+#include "rapidassist/time_.h"
 
 namespace arduino { namespace test
 {
