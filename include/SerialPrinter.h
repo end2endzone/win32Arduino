@@ -112,7 +112,6 @@ namespace testarduino
       printlnString(out.str().c_str());
     }
 
-    //inline void print(const char * t)
     template <class T>
     inline void print(const T & t)
     {
@@ -121,7 +120,6 @@ namespace testarduino
       printString(out.str().c_str());
     }
 
-    //inline void println(const char * t)
     template <class T>
     inline void println(const T & t)
     {
@@ -129,7 +127,6 @@ namespace testarduino
       out << t;
       printlnString(out.str().c_str());
     }
-    
 
     static void println();
   };
