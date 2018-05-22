@@ -6,6 +6,7 @@
 #include <bitset>
 #include <iomanip> //for std::precision
 #include <ios> //for std::uppercase
+#include <cstdio> //for sprintf
 
 #define DEC 10
 #define HEX 16
