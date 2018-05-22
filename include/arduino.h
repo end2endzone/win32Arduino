@@ -51,6 +51,11 @@ namespace testarduino
 
   //logging support
   ///<summary>
+  ///Provides the path of the current log file. See also function log()
+  ///</summary>
+  const char * getLogFile();
+
+  ///<summary>
   ///Defines the path of the log file. See also function log()
   ///</summary>
   void setLogFile(const char * iFilePath);

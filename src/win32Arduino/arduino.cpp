@@ -49,6 +49,10 @@ namespace testarduino
   //function logging support
   std::string gLogFile = "arduino.log";
   std::string gPreviousLogFile;
+  const char * getLogFile()
+  {
+    return gLogFile.c_str();
+  }
   void setLogFile(const char * iFilePath)
   {
     gLogFile = iFilePath;
