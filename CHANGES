@@ -4,6 +4,7 @@ Changes for 2.2.0:
 * New feature: Implemented support for Serial.print(value, radix) with DEC, HEX, OCT and BIN values.
 * Using 'c++ best practices' file structure (/include /src /lib /test)
 * Fixed issue #13 - Realtime clock strategy using microseconds timer.
+* Fixed issue #14 - Implement pinMode() function properly.
 * Fixed issue #19 - ATOMIC_BLOCK macro.
 * Fixed issue #22 - Replace downloaded googletest third party library by a git submodule.
 * Fixed issue #25 - Use RapidAssist as a git submodule.

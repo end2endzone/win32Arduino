@@ -10,6 +10,12 @@
 namespace testarduino
 {
   ///<summary>
+  ///Provides the internal number of supported pins.
+  ///</summary>
+  ///<returns>Returns the internal number of supported pin.</returns>
+  uint8_t getNumPins();
+
+  ///<summary>
   ///Sets the analog value of a pin for tests.
   ///</summary>
   ///<param name="pin">The pin number</param>
@@ -36,6 +42,13 @@ namespace testarduino
   ///<param name="pin">The pin number</param>
   ///<returns>Returns the internal digital value of the pin.</returns>
   uint16_t getPinDigitalValue(const uint8_t & pin);
+
+  ///<summary>
+  ///Provides the internal mode of the specified pin. See also pinMode().
+  ///</summary>
+  ///<param name="pin">The pin number</param>
+  ///<returns>Returns the internal mode of the specified pin.</returns>
+  uint8_t getPinMode(uint8_t pin);
 
   ///<summary>
   ///Resets all internal states to their default values.

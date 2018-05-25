@@ -31,9 +31,10 @@ namespace testarduino
   {
     uint16_t value; //10 bits to support analog values
     Interrupt interrupt;
+    uint8_t mode;
   };
 
-  static const size_t NUM_PINS = 256;
+  static const uint8_t NUM_PINS = 200;
   static PIN_REGISTRY pins[NUM_PINS] = {0};
 
   //---------------------------------------------------------------------------
@@ -172,7 +173,10 @@ namespace testarduino
   //---------------------------------------------------------------------------
 
   void setPinAnalogValue(const uint8_t & pin, const uint16_t & value)
-  {
+   {
+    if (pin >= NUM_PINS)
+      return;
+
     uint16_t newValue = value;
     newValue = (newValue)%(1<<10);  //limit pin values to 10 bits
 
@@ -214,6 +218,16 @@ namespace testarduino
       return LOW;
     else
       return HIGH;
+  }
+
+  uint8_t getPinMode(uint8_t pin)
+  {
+    return pins[pin].mode;
+  }
+
+  uint8_t getNumPins()
+  {
+    return NUM_PINS;
   }
 
   //---------------------------------------------------------------------------
@@ -444,6 +458,7 @@ namespace testarduino
       pins[i].value = 0;
       pins[i].interrupt.func = 0;
       pins[i].interrupt.mode = 0;
+      pins[i].mode = INPUT;
     }
 
     //callback functions
@@ -490,13 +505,24 @@ testarduino::SerialPrinter Serial;
 //https://www.arduino.cc/en/Reference/HomePage
 
 void pinMode(uint8_t pin, uint8_t mode)
-{
+ {
+  if (pin >= testarduino::NUM_PINS)
+    return;
+
   //log function call
   std::string funcArgs; funcArgs << __FUNCTION__ << "(" << pin << "," << testarduino::toPinModeString(mode) << ");";
   testarduino::log(funcArgs.c_str());
  
   //add function callback handler
   testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
+
+  testarduino::pins[pin].mode = mode;
+
+  if (mode == INPUT_PULLUP)
+  {
+    //enable internal pull-up resistor
+    testarduino::setPinDigitalValue(pin, HIGH);
+  }
 }
 
 void digitalWrite(uint8_t pin, uint8_t value)
@@ -525,12 +551,10 @@ uint8_t digitalRead(uint8_t pin)
   testarduino::FunctionCallbackHandler fHandler(__FUNCTION__);
 
   //update pin state
-  static const uint8_t DIGITAL_LOW = (uint8_t)LOW;
-  static const uint8_t DIGITAL_HIGH = (uint8_t)HIGH;
   if (testarduino::getPinDigitalValue(pin) == 0)
-    return DIGITAL_LOW;
+    return (uint8_t)LOW;
   else
-    return DIGITAL_HIGH;
+    return (uint8_t)HIGH;
 }
 
 void analogWrite(uint8_t pin, uint16_t value)

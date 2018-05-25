@@ -753,5 +753,75 @@ namespace arduino { namespace test
     ASSERT_TRUE(SREG_INTERRUPTS_DISABLED == SREG); //assert that interrupts are disabled
   }
   //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testPinModeDefault)
+  {
+    testarduino::reset();
+    for(uint8_t i=0; i<testarduino::getNumPins(); i++)
+    {
+      ASSERT_EQ(INPUT, testarduino::getPinMode(i));
+    }
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testPinModeInput)
+  {
+    testarduino::reset();
+
+    //init
+    uint8_t pin = 0;
+    ASSERT_EQ(INPUT, testarduino::getPinMode(pin));
+    testarduino::setPinDigitalValue(pin, LOW);
+
+    //define as pullup
+    pinMode(pin, INPUT);
+
+    //assert that internal pullup resistor is NOT active
+    ASSERT_EQ( digitalRead(pin), LOW );
+
+    //simulate a button press (pullup)
+    testarduino::setPinDigitalValue(pin, HIGH);
+    ASSERT_EQ( digitalRead(pin), HIGH );
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testPinModeInputPullUp)
+  {
+    testarduino::reset();
+
+    //init
+    uint8_t pin = 0;
+    ASSERT_EQ(INPUT, testarduino::getPinMode(pin));
+    testarduino::setPinDigitalValue(pin, LOW);
+
+    //define as pullup
+    pinMode(pin, INPUT_PULLUP);
+
+    //assert that internal pullup resistor is active
+    ASSERT_EQ( digitalRead(pin), HIGH );
+
+    //simulate a button press
+    testarduino::setPinDigitalValue(pin, 0); //pull-down
+    ASSERT_EQ( digitalRead(pin), LOW );
+  }
+  //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testPinModeInputPullUpManual)
+  {
+    testarduino::reset();
+
+    //init
+    uint8_t pin = 0;
+    ASSERT_EQ(INPUT, testarduino::getPinMode(pin));
+    testarduino::setPinDigitalValue(pin, LOW);
+
+    //define as input
+    pinMode(pin, INPUT);
+    digitalWrite(pin, HIGH); //turn on internal pull-up resistor
+
+    //assert that internal pullup resistor is active
+    ASSERT_EQ( digitalRead(pin), HIGH );
+
+    //simulate a button press
+    testarduino::setPinDigitalValue(pin, 0); //pull-down
+    ASSERT_EQ( digitalRead(pin), LOW );
+  }
+  //--------------------------------------------------------------------------------------------------
 } // End namespace test
 } // End namespace arduino
