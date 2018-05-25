@@ -1,13 +1,12 @@
 # Install #
 
-The library does not need to be installed on the system (it does not provide an installation package). It is deployed using a zip archive which only contains the source code which must be compiled to be used by other applications and libraries.
+The library does not provide an installation package. It is deployed using a zip archive which only contains source code. Other applications/libraries must compile the source code locally to use the library functionalities.
 
-The following steps show how to install the library:
+The following steps show how other projects can find and use the library:
 
 1) Download the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\win32Arduino` or `~/dev/win32Arduino`).
 
-2) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted so that other projects may find the library.
-
+2) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted.
 
 
 
@@ -54,29 +53,33 @@ These are the base requirements to build and use win32Arduino:
 
 ## Build steps ##
 
-1) Follow [install](#Install) instructions specified at the beginning of this document.
+The following steps show how to build the library:
 
-2) Set the `GOOGLETEST_HOME` environment variable such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/third_party/googletest`.
+1) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted.
 
-3) Set the _Visual Studio solution_ or the _Makefile_ using the following commands:
+2) Define the `GOOGLETEST_HOME` environment variable such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/lib/googletest`.
+
+4) Configure the _Visual Studio solution_ or the _Makefile_ using the following commands:
 
    * cd $WIN32ARDUINO_HOME
    * mkdir build
    * cd build
    * cmake ..
 
-3) Build the source code:
+5) Build the source code:
    1) On Windows, run `cmake --build . --config Release` or open `win32Arduino.sln` with Visual Studio.
    2) On Linux, run `make` command.   
 
 
 
+### Build options ###
 
-## Deploy ##
+The library support the `WIN32ARDUINO_BUILD_DEMO_PROJECTS` build option. This boolean flag is used to control generation of the library demo targets. The flag is set to `ON` by default.
 
-The library does not provide an installation package. It is deployed using a zip archive which only contains the source code.
-
-GitHub automatically provides zip archives of all the source code hosted on its platform. No deploy package is required for the library.
+To disable the generation of win32Arduino demo targets, run the following command at the cmake configuration time:
+```cmake
+cmake -DWIN32ARDUINO_BUILD_DEMO_PROJECTS=OFF ..
+```
 
 
 
