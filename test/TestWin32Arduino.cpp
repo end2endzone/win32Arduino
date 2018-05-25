@@ -823,5 +823,32 @@ namespace arduino { namespace test
     ASSERT_EQ( digitalRead(pin), LOW );
   }
   //--------------------------------------------------------------------------------------------------
+  TEST_F(TestWin32Arduino, testAnalogToDigitalConversion)
+  {
+    testarduino::reset();
+
+    //init
+    uint8_t pin = 0;
+    pinMode(pin, INPUT);
+
+    //test
+    testarduino::setPinAnalogValue(pin, 52); // 52/1023*5.0 = 0.25V
+    ASSERT_EQ( LOW, digitalRead(pin) );
+    
+    //test
+    testarduino::setPinAnalogValue(pin, 1000); // 1000/1023*5.0 = 4.88V
+    ASSERT_EQ( HIGH, digitalRead(pin) );
+
+    //test 3.3V HIGH as specified by https://www.arduino.cc/reference/en/language/variables/constants/constants/
+    testarduino::setPinAnalogValue(pin, 620); // 2.0*1023/3.3 = 620 analog
+    ASSERT_EQ( HIGH, digitalRead(pin) );
+
+    //test 5.0V HIGH as specified by https://www.arduino.cc/reference/en/language/variables/constants/constants/
+    testarduino::setPinAnalogValue(pin, 613); // 3.0*1023/5.0 = 613.8 analog
+    ASSERT_EQ( HIGH, digitalRead(pin) );
+    testarduino::setPinAnalogValue(pin, 614);
+    ASSERT_EQ( HIGH, digitalRead(pin) );
+  }
+  //--------------------------------------------------------------------------------------------------
 } // End namespace test
 } // End namespace arduino

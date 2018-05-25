@@ -7,6 +7,13 @@
 #include "RealtimeClockStrategy.h"
 #include "rapidassist/strings.h"
 
+
+//analog to digital converter
+//See https://www.arduino.cc/reference/en/language/variables/constants/constants/
+static const uint8_t DEFAULT_HIGH_PIN_THRESHOLD_5V = (uint8_t)(3*1023/5);     //   5V pins which are 3.0V and higher are read as HIGH
+static const uint8_t DEFAULT_HIGH_PIN_THRESHOLD_3V = (uint8_t)(2*1023*10/33); // 3.3V pins which are 2.0V and higher are read as HIGH
+static const uint8_t DEFAULT_ANALOG_TO_DIGITAL_THREASHOLD = min(DEFAULT_HIGH_PIN_THRESHOLD_3V, DEFAULT_HIGH_PIN_THRESHOLD_5V); //allow both 3.3V pins and 5V pins to be read properly
+
 static const uint8_t DEFAULT_STATUS_REGISTER = 130;
 static const uint8_t DEFAULT_NO_INTERRUPTS_STATUS_REGISTER = 2;
 uint8_t SREG = DEFAULT_STATUS_REGISTER;
@@ -176,7 +183,7 @@ namespace testarduino
    {
     if (pin >= NUM_PINS)
       return;
-
+    
     uint16_t newValue = value;
     newValue = (newValue)%(1<<10);  //limit pin values to 10 bits
 
@@ -213,8 +220,9 @@ namespace testarduino
 
   uint16_t getPinDigitalValue(const uint8_t & pin)
   {
+    //See https://www.arduino.cc/reference/en/language/variables/constants/constants/
     uint16_t value = getPinAnalogValue(pin);
-    if (value == 0)
+    if (value < DEFAULT_ANALOG_TO_DIGITAL_THREASHOLD)
       return LOW;
     else
       return HIGH;
