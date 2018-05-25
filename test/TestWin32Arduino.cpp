@@ -455,7 +455,7 @@ namespace arduino { namespace test
     static const uint16_t MULTIPLICATOR = 31;
     static const uint16_t ADD = 59;
 
-    for(int pin=0; pin<=255; pin++)
+    for(uint8_t pin=0; pin<testarduino::getNumPins(); pin++)
     {
       uint16_t value = POWER*POWER*pin + MULTIPLICATOR*pin + ADD+pin;
       value = value % (1<<10);
@@ -474,12 +474,12 @@ namespace arduino { namespace test
   TEST_F(TestWin32Arduino, testReset)
   {
     //test pin values
-    for(int pin=0; pin<=255; pin++)
+    for(uint8_t pin=0; pin<testarduino::getNumPins(); pin++)
     {
       testarduino::setPinAnalogValue(pin, 111);
     }
     testarduino::reset();
-    for(int pin=0; pin<=255; pin++)
+    for(uint8_t pin=0; pin<testarduino::getNumPins(); pin++)
     {
       ASSERT_EQ(0, testarduino::getPinAnalogValue(pin));
     }
