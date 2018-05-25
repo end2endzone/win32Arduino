@@ -15,16 +15,17 @@ static const uint8_t DEFAULT_HIGH_PIN_THRESHOLD_3V = (uint8_t)(2*1023*10/33); //
 static const uint8_t DEFAULT_ANALOG_TO_DIGITAL_THREASHOLD = min(DEFAULT_HIGH_PIN_THRESHOLD_3V, DEFAULT_HIGH_PIN_THRESHOLD_5V); //allow both 3.3V pins and 5V pins to be read properly
 
 static const uint8_t DEFAULT_STATUS_REGISTER = 130;
+static const uint8_t DEFAULT_INTERRUPTS_STATUS_REGISTER = DEFAULT_STATUS_REGISTER;
 static const uint8_t DEFAULT_NO_INTERRUPTS_STATUS_REGISTER = 2;
 uint8_t SREG = DEFAULT_STATUS_REGISTER;
+
+static const uint16_t MAX_ANALOG_PIN_VALUE = 1023;
 
 namespace testarduino
 {
   //---------------------------------------------------------------------------
   //                              PINS DATA
   //---------------------------------------------------------------------------
-
-  static const uint16_t MAX_PIN_VALUE = 1023;
 
   //pins data
   struct Interrupt
@@ -215,7 +216,7 @@ namespace testarduino
     if (value == LOW)
       setPinAnalogValue(pin, 0);
     else
-      setPinAnalogValue(pin, MAX_PIN_VALUE);
+      setPinAnalogValue(pin, MAX_ANALOG_PIN_VALUE);
   }
 
   uint16_t getPinDigitalValue(const uint8_t & pin)
