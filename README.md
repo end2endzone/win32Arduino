@@ -33,10 +33,9 @@ Limitations:
 * Pins specific functionality is disabled. In other words, all pins are identical and shall considered supporting analog and digital values.
 * AVR, POWER, SERIAL, SPI, I2C is not supported.
 * PWM is not supported. Simulating PWM changes over time on each PWM pins is hard.
-* Pins pullup and pulldown resistors are not supported.
 * Pin resolution functions (`analogReadResolution()` and `analogWriteResolution()`) is not implemented. Pins values is always stored using a resolution of 10 bits.
 * Shift functions (`shiftIn()` and `shiftOut()`) are not implemented.
-* The following functions are also empty shells: `tone()`, `noTone()`, `pinMode()` and `pulseIn()`.
+* The following functions are also empty shells: `tone()`, `noTone()` and `pulseIn()`.
 
 
 

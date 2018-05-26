@@ -57,7 +57,7 @@ The following steps show how to build the library:
 
 1) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted.
 
-2) Define the `GOOGLETEST_HOME` environment variable such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/lib/googletest`.
+2) Define the environment variable `GOOGLETEST_HOME` such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/lib/googletest`.
 
 4) Configure the _Visual Studio solution_ or the _Makefile_ using the following commands:
 
