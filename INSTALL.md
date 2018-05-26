@@ -74,13 +74,23 @@ The following steps show how to build the library:
 
 ### Build options ###
 
-The library support the `WIN32ARDUINO_BUILD_DEMO_PROJECTS` build option. This boolean flag is used to control generation of the library demo targets. The flag is set to `ON` by default.
+**WIN32ARDUINO_BUILD_DEMO_PROJECTS:**
 
-To disable the generation of win32Arduino demo targets, run the following command at the cmake configuration time:
+The library support the `WIN32ARDUINO_BUILD_DEMO_PROJECTS` build option. This boolean flag is used to control generation of the library demo targets. The flag is set to `OFF` by default.
+
+To enable the generation of win32Arduino demo targets, run the following command at the cmake configuration time:
 ```cmake
-cmake -DWIN32ARDUINO_BUILD_DEMO_PROJECTS=OFF ..
+cmake -DWIN32ARDUINO_BUILD_DEMO_PROJECTS=ON ..
 ```
 
+**WIN32ARDUINO_BUILD_TEST:**
+
+The library support the `WIN32ARDUINO_BUILD_TEST` build option. This boolean flag is used to control generation of the library unit test targets. The flag is set to `OFF` by default.
+
+To enable the generation of win32Arduino unit test targets, run the following command at the cmake configuration time:
+```cmake
+cmake -DWIN32ARDUINO_BUILD_TEST=ON ..
+```
 
 
 

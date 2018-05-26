@@ -37,7 +37,9 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+#------------------------------------------------------------------------------------------------------------
 # Define product version according to Semantic Versioning v2.0.0 https://semver.org/
+#------------------------------------------------------------------------------------------------------------
 MESSAGE("")
 SET(WIN32ARDUINO_MAJOR_VERSION 2)
 SET(WIN32ARDUINO_MINOR_VERSION 2)
@@ -58,7 +60,9 @@ MESSAGE("")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/src/win32Arduino/version.h.in"        "${PROJECT_BINARY_DIR}/include/version.h")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/version.in"                           "${CMAKE_CURRENT_SOURCE_DIR}/version")
 
+#------------------------------------------------------------------------------------------------------------
 # Validate mandatory environment variables.
+#------------------------------------------------------------------------------------------------------------
 if(NOT EXISTS "$ENV{GOOGLETEST_HOME}")
   message(FATAL_ERROR "Could not find GOOGLETEST_HOME environment variable")
 endif()
@@ -66,35 +70,56 @@ if(NOT EXISTS "$ENV{RAPIDASSIST_HOME}")
   message(FATAL_ERROR "Could not find RAPIDASSIST_HOME environment variable")
 endif()
 
+#------------------------------------------------------------------------------------------------------------
 # Add source directories
+#------------------------------------------------------------------------------------------------------------
 add_subdirectory(src/win32Arduino)
-add_subdirectory(test)
 
-# Add googletest to project
-if (NOT TARGET gtest)
-  if (WIN32)
-    # https://stackoverflow.com/a/12546288
-    # Force building googletest in `Multi-threaded Debug DLL (/MDd)` and `Multi-threaded DLL (/MD)`
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+#------------------------------------------------------------------------------------------------------------
+# unit tests
+#------------------------------------------------------------------------------------------------------------
+option(WIN32ARDUINO_BUILD_TEST "Build all win32Arduino tests" OFF)
+if(WIN32ARDUINO_BUILD_TEST)
+  add_subdirectory(test)
+
+  # googletest
+  if (NOT TARGET gtest)
+    if (WIN32)
+      # https://stackoverflow.com/a/12546288
+      # Force building googletest in `Multi-threaded Debug DLL (/MDd)` and `Multi-threaded DLL (/MD)`
+      set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    endif()
+    add_subdirectory($ENV{GOOGLETEST_HOME})
+    set_target_properties(gtest_main PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
   endif()
-  add_subdirectory($ENV{GOOGLETEST_HOME})
-  set_target_properties(gtest_main PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
+
+  # Define project dependencies
+  add_dependencies(win32Arduino_unittest win32Arduino)
+  add_dependencies(win32Arduino_unittest gtest)
 endif()
 
-# Add RapidAssist to project
+#------------------------------------------------------------------------------------------------------------
+# Add dependencies
+#------------------------------------------------------------------------------------------------------------
+# RapidAssist
 if (NOT TARGET rapidassist)
-  add_subdirectory($ENV{RAPIDASSIST_HOME})
-  set_target_properties(rapidassist_unittest PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
-endif()
+  # Force not building RapidAssist unit test
+  SET(RAPIDASSIST_BUILD_TEST OFF)
 
-# Define project dependencies
-add_dependencies(win32Arduino_unittest win32Arduino)
-add_dependencies(win32Arduino_unittest rapidassist)
-add_dependencies(win32Arduino_unittest gtest)
+  add_subdirectory($ENV{RAPIDASSIST_HOME})
+endif()
 add_dependencies(win32Arduino rapidassist)
 
+if(WIN32ARDUINO_BUILD_TEST)
+  add_dependencies(win32Arduino_unittest rapidassist)
+endif()
+# Remove WIN32ARDUINO_BUILD_TEST from the cache so calling `cmake ..` again will reset the flag to default value.
+unset(WIN32ARDUINO_BUILD_TEST CACHE)
+
+#------------------------------------------------------------------------------------------------------------
 # Add all demos to the project unless the user has specified otherwise.
-option(WIN32ARDUINO_BUILD_DEMO_PROJECTS "Build all demo projects" ON)
+#------------------------------------------------------------------------------------------------------------
+option(WIN32ARDUINO_BUILD_DEMO_PROJECTS "Build all demo projects" OFF)
 if(WIN32ARDUINO_BUILD_DEMO_PROJECTS)
   add_subdirectory(src/demos/Atomic1)
   add_subdirectory(src/demos/Atomic2)
@@ -125,5 +150,5 @@ if(WIN32ARDUINO_BUILD_DEMO_PROJECTS)
   set_target_properties(Progmem3       PROPERTIES FOLDER "win32Arduino demos")
 endif()
 
-# Remove BUILD_DEMO_PROJECTS from the cache so calling `cmake ..` again will default BUILD_DEMO_PROJECTS to ON again.
-unset(BUILD_DEMO_PROJECTS CACHE)
+# Remove WIN32ARDUINO_BUILD_DEMO_PROJECTS from the cache so calling `cmake ..` again will reset the flag to default value.
+unset(WIN32ARDUINO_BUILD_DEMO_PROJECTS CACHE)

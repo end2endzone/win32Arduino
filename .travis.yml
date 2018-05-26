@@ -21,7 +21,7 @@ script:
 - cd $TRAVIS_BUILD_DIR;
   mkdir build;
   cd build;
-  cmake ..
+  cmake -DWIN32ARDUINO_BUILD_TEST=ON -DWIN32ARDUINO_BUILD_DEMO_PROJECTS=ON ..
 - make
 - cd $TRAVIS_BUILD_DIR/build/bin;
   ./win32Arduino_unittest
