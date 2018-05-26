@@ -81,7 +81,7 @@ The following instructions show how to create a unit test executable for your li
 
 This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
 
-1) Compile googletest and win32Arduino libraries as specified in [INSTALL.md](INSTALL.md).
+1) Compile win32Arduino libraries as specified in [INSTALL.md](INSTALL.md).
 
 2) Open Visual Studio and create a new win32 console application.
 

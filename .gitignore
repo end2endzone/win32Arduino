@@ -4,10 +4,10 @@
 /deploy
 /build
 /ci/ant/version_info.properties
-/src/demos/Constants/build
-/src/demos/Interrupts/build
-/src/demos/MicrosOverflow/build
-/src/demos/Progmem1/build
-/src/demos/Progmem2/build
-/src/demos/Progmem3/build
+/samples/Constants/build
+/samples/Interrupts/build
+/samples/MicrosOverflow/build
+/samples/Progmem1/build
+/samples/Progmem2/build
+/samples/Progmem3/build
 /version

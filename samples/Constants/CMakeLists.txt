@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.4.3)
-project(Progmem3)
+project(Constants)
 
 # Set the output folder where your program will be created
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(   LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-MESSAGE( STATUS "Adding demo project : " ${PROJECT_NAME} )
+MESSAGE( STATUS "Adding sample project : " ${PROJECT_NAME} )
 
 # Validate mandatory environment variables.
 if(NOT EXISTS "$ENV{WIN32ARDUINO_HOME}")
@@ -15,11 +15,11 @@ endif()
 include_directories($ENV{WIN32ARDUINO_HOME}/include)
 link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
 
-add_executable(Progmem3 main.cpp )
+add_executable(Constants main.cpp )
 
 if (WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-target_link_libraries(Progmem3 debug     win32Arduino rapidassist)
-target_link_libraries(Progmem3 optimized win32Arduino rapidassist)
+target_link_libraries(Constants debug     win32Arduino rapidassist)
+target_link_libraries(Constants optimized win32Arduino rapidassist)
