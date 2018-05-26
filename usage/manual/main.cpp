@@ -6,10 +6,10 @@
 int main(int argc, char **argv)
 {
   //define default values for xml output report
-#ifdef _DEBUG
-  ::testing::GTEST_FLAG(output) = "xml:TestProject_unittest.debug.xml";
-#else
+#ifdef NDEBUG
   ::testing::GTEST_FLAG(output) = "xml:TestProjecto_unittest.release.xml";
+#else
+  ::testing::GTEST_FLAG(output) = "xml:TestProject_unittest.debug.xml";
 #endif
 
   ::testing::GTEST_FLAG(filter) = "*";

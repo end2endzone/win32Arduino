@@ -16,7 +16,7 @@ Statistics:
 
 # win32Arduino #
 
-win32Arduino is a Windows implementation (win32) of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
+win32Arduino is a Windows/Linux implementation of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
 
 The library allows to easily unit test an arduino library using your testing framework of choice. For instance, the unit tests of win32Arduino library are executed using the [Google Test framework](http://github.com/google/googletest).
 
@@ -49,45 +49,35 @@ The following instructions show how to use the library.
 
 ## Testing your own library ##
 
-A library source code must be added to a win32 project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
+Arduino library source code must be added to a win32/linux project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
 
 For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
 
 
 
-### 1) Update an existing cmake project ###
+### 1) Convert your library project to cmake ###
 
-This is the recommended way to use win32Arduino. This method assumes that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
+This is the recommended way to use win32Arduino. This method assumes that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables. It also assumes your library source code and your unit tests are located in the same directory.
 
-Edit your project's `CMakeLists.txt` and add the following lines:
+The following instructions show how to create a unit test executable for your library:
 
-```CMake
-include_directories($ENV{GOOGLETEST_HOME}/include)
-link_directories($ENV{GOOGLETEST_HOME}/build)
+1) Copy the files from directory `/usage/convert` to your existing project.
 
-include_directories($ENV{WIN32ARDUINO_HOME}/src/win32Arduino)
-link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
-```
+2) Open a command prompt and navigate to your project.
 
-Locate the `target_link_libraries()` entries and add `win32Arduino gtest` before the closing parenthesis (at the end).
+3) Configure the _Visual Studio solution_ or the _Makefile_ using the following commands:
 
+   * mkdir build
+   * cd build
+   * cmake ..
 
-
-### 2) Convert your existing project to cmake ###
-
-Another option is to convert your existing project to use cmake. This method assumes that your library source code and your unit tests are located in the same directory.
-
-1) Copy the files from directory `/samples/convert` to your existing project.
-
-2) Open a file explorer and navigate to your existing project.
-
-3) Execute the file `visualstudio.bat` which will generate a valid Visual Studio solution under the `build` directory.
-
-4) Navigate to the `build` directory and open `TestProject.sln` file.
+4) Build the source code:
+   1) On Windows, run `cmake --build . --config Release` or open the solution file with Visual Studio.
+   2) On Linux, run `make` command.   
 
 
 
-### 3) Create your test project manually with Visual Studio ###
+### 2) Create your test project manually with Visual Studio ###
 
 This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
 
@@ -97,15 +87,15 @@ This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_
 
 3) Modify the project properties to find Google Test and win32Arduino include and library. Add the following values to the project properties:
 
-| Name                             | Value                                                                                             |
-|----------------------------------|---------------------------------------------------------------------------------------------------|
-|  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/src/win32Arduino;                                 |
-|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration);$(WIN32ARDUINO_HOME)/build/bin/$(Configuration);        |
-|  Additional Dependencies         | gtest.lib;win32Arduino.lib;                                                                       |
+| Name                             | Value                                                                                                                                      |
+|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+|  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/include;                                                                                   |
+|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration);$(WIN32ARDUINO_HOME)/build/bin/$(Configuration);$(RAPIDASSIST_HOME)/build/bin/$(Configuration);  |
+|  Additional Dependencies         | gtest.lib;win32Arduino.lib;rapidassist.lib;                                                                                                |
 
 4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
 
-5) Configure the main() function to launch Google Test's RUN_ALL_TESTS() macro. The file `/samples/manual/main.cpp` is a good start point.
+5) Configure the main() function to launch Google Test's RUN_ALL_TESTS() macro. The file `/usage/manual/main.cpp` is a good start point.
 
 6) Compile the project.
 
