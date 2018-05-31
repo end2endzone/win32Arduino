@@ -92,6 +92,15 @@ To enable the generation of win32Arduino unit test targets, run the following co
 cmake -DWIN32ARDUINO_BUILD_TEST=ON ..
 ```
 
+**WIN32ARDUINO_BUILD_DOC:**
+
+The library support the `WIN32ARDUINO_BUILD_DOC` build option. This boolean flag is used to control generation of the doxygen documentation targets. The flag is set to `OFF` by default.
+
+To enable the generation of doxygen documentation targets, run the following command at the cmake configuration time:
+```cmake
+cmake -DWIN32ARDUINO_BUILD_DOC=ON ..
+```
+
 
 
 # Testing #
