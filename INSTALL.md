@@ -74,33 +74,18 @@ The following steps show how to build the library:
 
 ### Build options ###
 
-**WIN32ARDUINO_BUILD_SAMPLES:**
+The following table shows the supported build options:
 
-The library support the `WIN32ARDUINO_BUILD_SAMPLES` build option. This boolean flag is used to control generation of the library samples. The flag is set to `OFF` by default.
+| Name | Type | Default | Usage |
+|------|------|:-------:|-------|
+| WIN32ARDUINO_BUILD_SAMPLES | BOOL | OFF | Enable/disable the generation of library samples. |
+| WIN32ARDUINO_BUILD_TEST    | BOOL | OFF | Enable/disable the generation of unit tests target. |
+| WIN32ARDUINO_BUILD_DOC     | BOOL | OFF | Enable/disable the generation of API documentation target. |
 
-To enable the generation of win32Arduino samples, run the following command at the cmake configuration time:
+To enable a build option, run the following command at the cmake configuration time:
 ```cmake
-cmake -DWIN32ARDUINO_BUILD_SAMPLES=ON ..
+cmake -D<BUILD-OPTION-NAME>=ON ..
 ```
-
-**WIN32ARDUINO_BUILD_TEST:**
-
-The library support the `WIN32ARDUINO_BUILD_TEST` build option. This boolean flag is used to control generation of the library unit test targets. The flag is set to `OFF` by default.
-
-To enable the generation of win32Arduino unit test targets, run the following command at the cmake configuration time:
-```cmake
-cmake -DWIN32ARDUINO_BUILD_TEST=ON ..
-```
-
-**WIN32ARDUINO_BUILD_DOC:**
-
-The library support the `WIN32ARDUINO_BUILD_DOC` build option. This boolean flag is used to control generation of the doxygen documentation targets. The flag is set to `OFF` by default.
-
-To enable the generation of doxygen documentation targets, run the following command at the cmake configuration time:
-```cmake
-cmake -DWIN32ARDUINO_BUILD_DOC=ON ..
-```
-
 
 
 # Testing #
