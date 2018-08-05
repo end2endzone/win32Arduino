@@ -1,6 +1,0 @@
-[submodule "lib/RapidAssist"]
-	path = lib/RapidAssist
-	url = https://github.com/end2endzone/RapidAssist.git
-[submodule "lib/googletest"]
-	path = lib/googletest
-	url = https://github.com/google/googletest.git
