@@ -18,7 +18,7 @@ echo ===========================================================================
 cd $TRAVIS_BUILD_DIR
 mkdir -p build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_LOCATION -DWIN32ARDUINO_BUILD_TEST=ON -DWIN32ARDUINO_BUILD_SAMPLES=OFF ..
+cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_LOCATION -DWIN32ARDUINO_BUILD_TEST=ON -DWIN32ARDUINO_BUILD_SAMPLES=ON ..
 
 echo ============================================================================
 echo Compiling...

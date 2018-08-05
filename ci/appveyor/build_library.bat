@@ -16,7 +16,7 @@ echo ===========================================================================
 cd /d %APPVEYOR_BUILD_FOLDER%
 mkdir build >NUL 2>NUL
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=%INSTALL_LOCATION% -DWIN32ARDUINO_BUILD_TEST=ON -DWIN32ARDUINO_BUILD_SAMPLES=OFF ..
+cmake -DCMAKE_INSTALL_PREFIX=%INSTALL_LOCATION% -DWIN32ARDUINO_BUILD_TEST=ON -DWIN32ARDUINO_BUILD_SAMPLES=ON ..
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo ============================================================================
