@@ -14,7 +14,7 @@ echo rapidassist_DIR=$rapidassist_DIR
 echo ============================================================================
 echo Cloning RapidAssist into $TRAVIS_BUILD_DIR/third_parties/RapidAssist
 echo ============================================================================
-mkdir $TRAVIS_BUILD_DIR/third_parties >/dev/null 2>/dev/null
+mkdir -p $TRAVIS_BUILD_DIR/third_parties
 cd $TRAVIS_BUILD_DIR/third_parties
 git clone "https://github.com/end2endzone/RapidAssist.git"
 cd RapidAssist
