@@ -67,7 +67,7 @@ N/A
 
 The library comes with unit tests for demonstration purpose.
 
-Test are build using the Google Test v1.6.0 framework. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md).  
+Test are build using the Google Test v1.8.0 framework. For more information on how googletest is working, see the [google test documentation primer](https://github.com/google/googletest/blob/release-1.8.0/googletest/docs/V1_6_Primer.md).  
 
 Test are found in file [TestButtonLibrary.cpp](TestButtonLibrary.cpp).
 
