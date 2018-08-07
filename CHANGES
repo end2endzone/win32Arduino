@@ -1,6 +1,7 @@
 Changes for 2.3.0:
 
 * New feature: Added support for doxygen API documentation. See build option `WIN32ARDUINO_BUILD_DOC` for details.
+* Fixed issue #28 - Implement 'make install' command support.
 
 Changes for 2.2.0:
 
