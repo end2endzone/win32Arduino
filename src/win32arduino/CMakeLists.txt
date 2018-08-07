@@ -1,11 +1,11 @@
 set(WIN32ARDUINO_HEADER_FILES ""
-  ${CMAKE_SOURCE_DIR}/include/arduino.h
-  ${CMAKE_SOURCE_DIR}/include/IClockStrategy.h
-  ${CMAKE_SOURCE_DIR}/include/IncrementalClockStrategy.h
-  ${CMAKE_SOURCE_DIR}/include/RealtimeClockStrategy.h
-  ${CMAKE_SOURCE_DIR}/include/SerialPrinter.h
-  ${CMAKE_SOURCE_DIR}/include/avr/pgmspace.h
-  ${CMAKE_SOURCE_DIR}/include/util/atomic.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/arduino.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/IClockStrategy.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/IncrementalClockStrategy.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/RealtimeClockStrategy.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/SerialPrinter.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/avr/pgmspace.h
+  ${WIN32ARDUINO_INCLUDE_DIR}/util/atomic.h
 )
 
 add_library(win32Arduino STATIC
