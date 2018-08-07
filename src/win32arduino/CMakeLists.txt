@@ -8,7 +8,7 @@ set(WIN32ARDUINO_HEADER_FILES ""
   ${WIN32ARDUINO_INCLUDE_DIR}/util/atomic.h
 )
 
-add_library(win32Arduino STATIC
+add_library(win32arduino STATIC
   ${WIN32ARDUINO_HEADER_FILES}
   ${WIN32ARDUINO_EXPORT_HEADER}
   ${WIN32ARDUINO_VERSION_HEADER}
@@ -20,18 +20,18 @@ add_library(win32Arduino STATIC
 )
 
 # Force CMAKE_DEBUG_POSTFIX for executables
-set_target_properties(win32Arduino PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+set_target_properties(win32arduino PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 # Define include directories for exported code.
-target_include_directories(win32Arduino
+target_include_directories(win32arduino
   PUBLIC
     $<INSTALL_INTERFACE:${WIN32ARDUINO_INSTALL_INCLUDE_DIR}>  # for clients using the installed library.
   PRIVATE
     ${GTEST_INCLUDE_DIR}
 )
-target_link_libraries(win32Arduino PUBLIC rapidassist PRIVATE ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
+target_link_libraries(win32arduino PUBLIC rapidassist PRIVATE ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
 
-install(TARGETS win32Arduino
+install(TARGETS win32arduino
         EXPORT win32arduino-targets
         ARCHIVE DESTINATION ${WIN32ARDUINO_INSTALL_LIB_DIR}
         LIBRARY DESTINATION ${WIN32ARDUINO_INSTALL_LIB_DIR}

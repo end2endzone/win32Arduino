@@ -9,5 +9,5 @@ MESSAGE( STATUS "Adding sample project : " ${PROJECT_NAME} )
 
 add_executable(Interrupts main.cpp)
 
-target_link_libraries(Interrupts debug     win32Arduino rapidassist)
-target_link_libraries(Interrupts optimized win32Arduino rapidassist)
+target_link_libraries(Interrupts debug     win32arduino rapidassist)
+target_link_libraries(Interrupts optimized win32arduino rapidassist)

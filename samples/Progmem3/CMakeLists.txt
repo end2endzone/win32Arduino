@@ -9,5 +9,5 @@ MESSAGE( STATUS "Adding sample project : " ${PROJECT_NAME} )
 
 add_executable(Progmem3 main.cpp)
 
-target_link_libraries(Progmem3 debug     win32Arduino rapidassist)
-target_link_libraries(Progmem3 optimized win32Arduino rapidassist)
+target_link_libraries(Progmem3 debug     win32arduino rapidassist)
+target_link_libraries(Progmem3 optimized win32arduino rapidassist)

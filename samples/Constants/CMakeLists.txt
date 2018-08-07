@@ -9,5 +9,5 @@ MESSAGE( STATUS "Adding sample project : " ${PROJECT_NAME} )
 
 add_executable(Constants main.cpp)
 
-target_link_libraries(Constants debug     win32Arduino rapidassist)
-target_link_libraries(Constants optimized win32Arduino rapidassist)
+target_link_libraries(Constants debug     win32arduino rapidassist)
+target_link_libraries(Constants optimized win32arduino rapidassist)

@@ -21,8 +21,8 @@ set_target_properties(win32arduino_unittest PROPERTIES DEBUG_POSTFIX ${CMAKE_DEB
 
 target_include_directories(win32arduino_unittest PRIVATE rapidassist)
 target_include_directories(win32arduino_unittest PRIVATE ${GTEST_INCLUDE_DIR})
-add_dependencies(win32arduino_unittest rapidassist)
-target_link_libraries(win32arduino_unittest PUBLIC rapidassist win32Arduino ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
+add_dependencies(win32arduino_unittest win32arduino)
+target_link_libraries(win32arduino_unittest PUBLIC rapidassist win32arduino ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
 
 install(TARGETS win32arduino_unittest
         EXPORT win32arduino-targets
