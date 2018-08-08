@@ -62,6 +62,7 @@ before_build:
 
 build_script:
 - cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\build_library.bat
+- cmd: call %APPVEYOR_BUILD_FOLDER%\ci\appveyor\build_buttonlibrary.bat
 
 #---------------------------------#
 #       tests configuration       #

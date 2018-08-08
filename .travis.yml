@@ -14,6 +14,8 @@ script:
   ./install_rapidassist.sh;
 - cd $TRAVIS_BUILD_DIR/ci/travis;
   ./build_library.sh;
+- cd $TRAVIS_BUILD_DIR/ci/travis;
+  ./build_buttonlibrary.sh;
 - cd $TRAVIS_BUILD_DIR/build/bin;
   ./win32arduino_unittest || true; #do not fail build even if a test fails.
 
