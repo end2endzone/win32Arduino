@@ -1,6 +1,6 @@
 #include "TestDemo.h"
 #include <string>
-#include "arduino.h"
+#include "Arduino.h"
 #include "IncrementalClockStrategy.h"
 
 namespace arduino { namespace test

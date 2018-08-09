@@ -3,7 +3,7 @@
 
 #include "TestButtonLibrary.h"
 #include <string>
-#include "arduino.h"
+#include "Arduino.h"
 #include "IncrementalClockStrategy.h"
 #include "ButtonLibrary.h"
 

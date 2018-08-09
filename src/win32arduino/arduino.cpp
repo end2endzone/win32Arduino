@@ -2,7 +2,7 @@
 
 #include <stdarg.h> //for functions with "..." arguments
  #include <cstdlib>
-#include "arduino.h"
+#include "Arduino.h"
 #include "IncrementalClockStrategy.h"
 #include "RealtimeClockStrategy.h"
 #include "rapidassist/strings.h"

@@ -12,6 +12,7 @@ find_package(GTest REQUIRED)
 find_package(rapidassist 0.4.0 REQUIRED)
 find_package(win32arduino 2.3.0 REQUIRED)
 
+
 ##############################################################################################################################################
 # Project settings
 ##############################################################################################################################################
@@ -33,8 +34,11 @@ add_executable(TestProject
 )
 
 #include directories
-target_include_directories(TestProject PRIVATE ${PROJECT_SOURCE_DIR}/src) # Library folder
-target_include_directories(TestProject PRIVATE ${GTEST_INCLUDE_DIR})
+target_include_directories(TestProject
+  PRIVATE ${PROJECT_SOURCE_DIR}/src       # Arduino Library folder
+  ${GTEST_INCLUDE_DIR}
+  win32arduino
+)
 
 # Unit test projects requires to link with pthread if also linking with gtest
 if(NOT WIN32)
@@ -42,4 +46,5 @@ if(NOT WIN32)
 endif()
 
 #link libraries
-target_link_libraries(TestProject PRIVATE win32Arduino rapidassist ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
+target_link_libraries(TestProject PRIVATE win32arduino rapidassist ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
+
