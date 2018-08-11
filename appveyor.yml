@@ -16,7 +16,7 @@ version: "{branch} (#{build})"
 # branches to build
 branches:
   only:
-    - master
+    - prerelease-v2.2.x
 
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
