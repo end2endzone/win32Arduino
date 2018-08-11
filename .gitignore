@@ -1,13 +1,10 @@
-/samples/TestProject1/build
-/samples/TestProject2/build
-/publish
-/deploy
 /build
-/ci/ant/version_info.properties
+/install
+/third_parties
 /samples/Constants/build
 /samples/Interrupts/build
 /samples/MicrosOverflow/build
 /samples/Progmem1/build
 /samples/Progmem2/build
 /samples/Progmem3/build
-/version
+/temp

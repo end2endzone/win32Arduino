@@ -1,6 +1,6 @@
 #include "TestWin32Arduino.h"
 #include <string>
-#include "arduino.h"
+#include "Arduino.h"
 #include "util/atomic.h" //for ATOMIC_BLOCK and NONATOMIC_BLOCK macros
 #include "RealtimeClockStrategy.h"
 #include "IncrementalClockStrategy.h"

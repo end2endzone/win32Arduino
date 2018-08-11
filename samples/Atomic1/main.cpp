@@ -1,4 +1,4 @@
-#include "arduino.h"
+#include "Arduino.h"
 
 //include arduino source code
 #include "Atomic1.ino"

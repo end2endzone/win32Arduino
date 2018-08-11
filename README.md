@@ -1,33 +1,43 @@
-![win32Arduino logo](https://github.com/end2endzone/win32Arduino/raw/master/docs/win32Arduino-splashscreen.png)
-
+# win32Arduino #
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Github Releases](https://img.shields.io/github/release/end2endzone/win32Arduino.svg)](https://github.com/end2endzone/win32Arduino/releases)
-[![AppVeyor Build Status](https://img.shields.io/appveyor/ci/end2endzone/win32Arduino/master.svg?logo=appveyor)](https://ci.appveyor.com/project/end2endzone/win32Arduino)
-[![AppVeyor Tests Status](https://img.shields.io/appveyor/tests/end2endzone/win32Arduino/master.svg?logo=appveyor)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master/tests)
-[![Travis Build Status](https://img.shields.io/travis/end2endzone/win32Arduino/master.svg?logo=travis&style=flat)](https://travis-ci.org/end2endzone/win32Arduino)
-
-Statistics:
-
-| AppVeyor | Travic CI |
-|----------|-----------|
-| [![Statistics](https://buildstats.info/appveyor/chart/end2endzone/win32Arduino)](https://ci.appveyor.com/project/end2endzone/win32Arduino/branch/master) | [![Statistics](https://buildstats.info/travisci/chart/end2endzone/win32Arduino)](https://travis-ci.org/end2endzone/win32Arduino) |
-
-
-
-# win32Arduino #
 
 win32Arduino is a Windows/Linux implementation of arduino functions. It allows a developer to unit test an arduino library outside of the arduino platform.
 
 The library allows to easily unit test an arduino library using your testing framework of choice. For instance, the unit tests of win32Arduino library are executed using the [Google Test framework](http://github.com/google/googletest).
 
-It's main features are:
-*  Implements many arduino functions.
-*  Support all functions that reads or writes values to pins.
-*  Advanced time handling mechanism. Supports realtime, incremental or custom `millis()` and `micros()` functions to simulate time.
-*  Call history and logging support. Calls to the `Serial` class are also forwarded to the output log file.
+
+
+## Status ##
+
+Build:
+
+| Service | Build | Tests |
+|----|-------|-------|
+| AppVeyor | [![Build status](https://img.shields.io/appveyor/ci/end2endzone/win32Arduino/master.svg?logo=appveyor)](https://ci.appveyor.com/project/end2endzone/win32arduino) | [![Tests status](https://img.shields.io/appveyor/tests/end2endzone/win32arduino/master.svg?logo=appveyor)](https://ci.appveyor.com/project/end2endzone/win32arduino/branch/master/tests) |
+| Travis CI | [![Build Status](https://img.shields.io/travis/end2endzone/win32Arduino/master.svg?logo=travis&style=flat)](https://travis-ci.org/end2endzone/win32Arduino) |  |
+
+Statistics:
+
+| AppVeyor | Travic CI |
+|----------|-----------|
+| [![Statistics](https://buildstats.info/appveyor/chart/end2endzone/win32arduino)](https://ci.appveyor.com/project/end2endzone/win32arduino/branch/master) | [![Statistics](https://buildstats.info/travisci/chart/end2endzone/win32Arduino)](https://travis-ci.org/end2endzone/win32Arduino) |
+
+
+
+
+# Features #
+
+The main features of the library are:
+
+* Implements many arduino functions.
+* Support all functions that reads or writes values to pins.
+* Advanced time handling mechanism. Supports realtime, incremental or custom `millis()` and `micros()` functions to simulate time.
+* Call history and logging support. Calls to the `Serial` class are also forwarded to the output log file.
 * Attach function callbacks to any native arduino function.
 * Attach function callbacks to `millis()` or `macros()` functions for time based event programming.
 * Supports interrupts functions: `attachInterrupt()`, `cli()`, `noInterrupts()`, `interrupts()` and `SREG` registry.
+
 
 Limitations:
 * Pins specific functionality is disabled. In other words, all pins are identical and shall considered supporting analog and digital values.
@@ -49,55 +59,55 @@ The following instructions show how to use the library.
 
 ## Testing your own library ##
 
-Arduino library source code must be added to a win32/linux project to be compiled and tested. The following instructions show how to easily test your own library with win32Arduino.
+Arduino library source code must be added to a win32/linux project to be compiled and tested outside of the arduino environment.
 
-For clarity, unit test are written using the Google Test framework. This section assumes that you are already familiar with the googletest API.
-
-
-
-### 1) Convert your library project to cmake ###
-
-This is the recommended way to use win32Arduino. This method assumes that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables. It also assumes your library source code and your unit tests are located in the same directory.
-
-The following instructions show how to create a unit test executable for your library:
-
-1) Copy the files from directory `/usage/convert` to your existing project.
-
-2) Open a command prompt and navigate to your project.
-
-3) Configure the _Visual Studio solution_ or the _Makefile_ using the following commands:
-
-   * mkdir build
-   * cd build
-   * cmake ..
-
-4) Build the source code:
-   1) On Windows, run `cmake --build . --config Release` or open the solution file with Visual Studio.
-   2) On Linux, run `make` command.   
+The following instructions show how to test your own library with win32Arduino.
 
 
 
-### 2) Create your test project manually with Visual Studio ###
+### 1) Verify library prerequisites ###
 
-This method assume that you already defined `GOOGLETEST_HOME` and `WIN32ARDUINO_HOME` environment variables.
+To be compatible with the files provided by win32Arduino, an arduino library must implement the [Arduino IDE 1.5: Library specification](https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification).
 
-1) Compile win32Arduino libraries as specified in [INSTALL.md](INSTALL.md).
+Source files must be stored in `src/` directory.
 
-2) Open Visual Studio and create a new win32 console application.
+Unit tests are expected to be written using the [Google Test framework](https://github.com/google/googletest/). This guide assumes that you are already familiar with the googletest API.
 
-3) Modify the project properties to find Google Test and win32Arduino include and library. Add the following values to the project properties:
+Unit test files must be stored in `test/` directory.
 
-| Name                             | Value                                                                                                                                      |
-|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-|  Additional Include Directories  | $(GOOGLETEST_HOME)/include;$(WIN32ARDUINO_HOME)/include;                                                                                   |
-|  Additional Library Directories  | $(GOOGLETEST_HOME)/build/$(Configuration);$(WIN32ARDUINO_HOME)/build/bin/$(Configuration);$(RAPIDASSIST_HOME)/build/bin/$(Configuration);  |
-|  Additional Dependencies         | gtest.lib;win32Arduino.lib;rapidassist.lib;                                                                                                |
 
-4) Add your library and unit test source code files to the project by drag and dropping the files on the project.
 
-5) Configure the main() function to launch Google Test's RUN_ALL_TESTS() macro. The file `/usage/manual/main.cpp` is a good start point.
+### 2) Copy CMake template files to your library project ###
 
-6) Compile the project.
+The win32Arduino expect your arduino library project to be compatible with the CMake build system. CMake build system is used to generate a platform-specific (Windows or Linux) build environment.
+
+win32Arduino provides template files that must be copied from `/usage/template/` directory into the arduino library project.
+
+In case of conflict (if the copied files already exist or if your library is already using CMake), you must merge the files manually.
+
+
+
+### 3) Build library unit tests ###
+
+To generate the Windows or Linux project files, open a command prompt, browse to your arduino library directory and enter the following commands:
+
+```
+mkdir build
+cd build
+cmake ..
+```
+
+To build the project, enter the following command (based on your platform):
+  1) On Windows, run `cmake --build . --config Release`.
+  2) On Linux, run `make` command.
+  
+
+  
+### Troubleshooting ###
+
+The `CMakeLists.txt` file is expecting to find your test files in the `test/` directory and your library source files in the `src/` directory.
+
+Note that `CMakeLists.txt` file does not automatically search for dependencies. If the tested arduino library depends on another, you must manually edit the `CMakeLists.txt` file and add the required lines to resolve all dependencies and have a successful build.
 
 
 

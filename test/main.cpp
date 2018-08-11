@@ -14,16 +14,16 @@ int main(int argc, char **argv)
   if (isProcessorX86())
   {
     if (isDebugCode())
-      ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x86.debug.xml";
+      ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x86.debug.xml";
     else
-      ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x86.release.xml";
+      ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x86.release.xml";
   }
   else if (isProcessorX64())
   {
     if (isDebugCode())
-      ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x64.debug.xml";
+      ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x64.debug.xml";
     else
-      ::testing::GTEST_FLAG(output) = "xml:win32Arduino_unittest.x64.release.xml";
+      ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x64.release.xml";
   }
 
   ::testing::GTEST_FLAG(filter) = "*";

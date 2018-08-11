@@ -1,7 +1,7 @@
 #ifndef SERIALPRINTER_H
 #define SERIALPRINTER_H
 
-#include "arduino.h"
+#include "Arduino.h"
 #include <sstream>
 #include <bitset>
 #include <iomanip> //for std::precision

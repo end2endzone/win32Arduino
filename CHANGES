@@ -1,6 +1,8 @@
 Changes for 2.3.0:
 
 * New feature: Added support for doxygen API documentation. See build option `WIN32ARDUINO_BUILD_DOC` for details.
+* Fixed issue #28 - Implement 'make install' command support.
+* Fixed issue #29 - Define if `Arduino.h` or `arduino.h`
 
 Changes for 2.2.0:
 

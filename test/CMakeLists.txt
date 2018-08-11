@@ -1,13 +1,7 @@
-include_directories(${PROJECT_SOURCE_DIR}/include)
-link_directories(${LIBRARY_OUTPUT_PATH})
-
-include_directories($ENV{RAPIDASSIST_HOME}/include)
-link_directories($ENV{RAPIDASSIST_HOME}/build)
-
-include_directories($ENV{GOOGLETEST_HOME}/include)
-link_directories($ENV{GOOGLETEST_HOME}/build)
-
-add_executable(win32Arduino_unittest
+add_executable(win32arduino_unittest
+  ${RAPIDASSIST_EXPORT_HEADER}
+  ${RAPIDASSIST_VERSION_HEADER}
+  ${RAPIDASSIST_CONFIG_HEADER}
   main.cpp
   TestGetLastCommand.h
   TestGetLastCommand.cpp
@@ -17,9 +11,22 @@ add_executable(win32Arduino_unittest
   TestDemo.cpp
 )
 
-if (WIN32)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+# Unit test projects requires to link with pthread if also linking with gtest
+if(NOT WIN32)
+  set(PTHREAD_LIBRARIES -pthread)
 endif()
 
-target_link_libraries(win32Arduino_unittest debug     win32Arduino rapidassist gtest)
-target_link_libraries(win32Arduino_unittest optimized win32Arduino rapidassist gtest)
+# Force CMAKE_DEBUG_POSTFIX for executables
+set_target_properties(win32arduino_unittest PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+
+target_include_directories(win32arduino_unittest PRIVATE rapidassist)
+target_include_directories(win32arduino_unittest PRIVATE ${GTEST_INCLUDE_DIR})
+add_dependencies(win32arduino_unittest win32arduino)
+target_link_libraries(win32arduino_unittest PUBLIC rapidassist win32arduino ${PTHREAD_LIBRARIES} ${GTEST_LIBRARIES} )
+
+install(TARGETS win32arduino_unittest
+        EXPORT win32arduino-targets
+        ARCHIVE DESTINATION ${WIN32ARDUINO_INSTALL_LIB_DIR}
+        LIBRARY DESTINATION ${WIN32ARDUINO_INSTALL_LIB_DIR}
+        RUNTIME DESTINATION ${WIN32ARDUINO_INSTALL_BIN_DIR}
+)

@@ -7,19 +7,7 @@ set(   LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 MESSAGE( STATUS "Adding sample project : " ${PROJECT_NAME} )
 
-# Validate mandatory environment variables.
-if(NOT EXISTS "$ENV{WIN32ARDUINO_HOME}")
-  message(FATAL_ERROR "Could not find WIN32ARDUINO_HOME environment variable")
-endif()
+add_executable(Progmem1 main.cpp)
 
-include_directories($ENV{WIN32ARDUINO_HOME}/include)
-link_directories($ENV{WIN32ARDUINO_HOME}/build/bin)
-
-add_executable(Progmem1 main.cpp )
-
-if (WIN32)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
-
-target_link_libraries(Progmem1 debug     win32Arduino rapidassist)
-target_link_libraries(Progmem1 optimized win32Arduino rapidassist)
+target_link_libraries(Progmem1 debug     win32arduino rapidassist)
+target_link_libraries(Progmem1 optimized win32arduino rapidassist)
