@@ -1,4 +1,8 @@
-Changes for 2.3.0:
+Changes for 2.2.2:
+
+* Fixed issue #30 - Missing build step in v2.2.1.
+
+Changes for 2.2.1:
 
 * New feature: Added support for doxygen API documentation. See build option `WIN32ARDUINO_BUILD_DOC` for details.
 

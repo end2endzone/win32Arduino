@@ -59,6 +59,8 @@ The following steps show how to build the library:
 
 2) Define the environment variable `GOOGLETEST_HOME` such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/lib/googletest`.
 
+3) Define the environment variable `RAPIDASSIST_HOME` such that `RAPIDASSIST_HOME=$WIN32ARDUINO_HOME/lib/RapidAssist`.
+
 4) Configure the _Visual Studio solution_ or the _Makefile_ using the following commands:
 
    * cd $WIN32ARDUINO_HOME
