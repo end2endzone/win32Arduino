@@ -1038,3 +1038,11 @@ int32_t random(int32_t max)
 
   return random(0, max);
 }
+
+void yield()
+{
+	//log function call
+	std::string funcArgs; funcArgs << __FUNCTION__ << "();";
+	testarduino::log(funcArgs.c_str());
+
+}
