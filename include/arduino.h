@@ -265,4 +265,6 @@ int32_t random(int32_t max);
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 #define bit(b) (1UL << (b))
 
+void yield();
+
 #endif //WIN32ARDUINO_H
