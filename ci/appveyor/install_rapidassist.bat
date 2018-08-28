@@ -35,7 +35,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 
 echo ============================================================================
-echo Installing into %GTEST_ROOT%
+echo Installing into %rapidassist_DIR%
 echo ============================================================================
 cmake --build . --config Release --target INSTALL
 if %errorlevel% neq 0 exit /b %errorlevel%
