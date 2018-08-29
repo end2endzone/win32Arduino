@@ -1,3 +1,9 @@
+Changes for 2.2.3:
+
+* Fixed issue #21 - /ci/ant/setupenv.bat is missing. Updated documentation appropriately.
+* Fixed issue #32 - rapidassist outside of win32arduino. Created 'Submodule dependencies' section in INSTALL.md documentation.
+* Fixed issue #33 - Wrong syntax for variables on windows. Created both Windows and Linux build step sections.
+
 Changes for 2.2.2:
 
 * Fixed issue #30 - Missing build step in v2.2.1.

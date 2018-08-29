@@ -4,9 +4,11 @@ The library does not provide an installation package. It is deployed using a zip
 
 The following steps show how other projects can find and use the library:
 
-1) Download the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) and extract the content to a local directory (for example `c:\projects\win32Arduino` or `~/dev/win32Arduino`).
+1) [Clone](https://git-scm.com/docs/git-clone) the source code from an existing [tags](http://github.com/end2endzone/win32Arduino/tags) into a local directory (for example `c:\projects\win32Arduino` or `~/dev/win32Arduino`).
 
-2) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted.
+2) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was cloned.
+
+3) Build the source code according to the build instructions. 
 
 
 
@@ -20,17 +22,26 @@ This section explains how to compile and build the software and how to get a dev
 ## Prerequisites ##
 
 
+### Submodule dependencies ###
+
+win32Arduino uses [git submodules](https://git-scm.com/docs/git-submodule) to automatically handle dependencies to other git repositories.
+
+The following submodules are required for compiling the library:
+* [Google C++ Testing Framework v1.6.0](https://github.com/google/googletest/tree/release-1.6.0)
+* [RapidAssist v0.3.4](https://github.com/end2endzone/RapidAssist/tree/v0.3.4)
+
+After cloning the repository, submodule dependencies must be updated using `git submodule update --init --recursive` command run at the root of the repository. The submodule dependencies are stored in `lib/` directory.
+
+If the source code was downloaded from a zip archive, all submodule directories in the archive are empty and must be downloaded manually. Please make sure that downloaded version matches the version expected by win32Arduino.
+
+The submodule dependencies does not need to be build and install individually before building win32Arduino source code. They will be included as part of the win32Arduino's build system at cmake configuration time.
+
+
+
 ### Software Requirements ###
 The following software must be installed on the system for compiling source code:
 
-* [Google C++ Testing Framework v1.6.0](https://github.com/google/googletest/tree/release-1.6.0) (untested with other versions)
 * [CMake](http://www.cmake.org/) v3.4.3 (or newer)
-
-
-For using [Continuous Integration](#continuous-integration) scripts, the following software must be installed on the system:
-
-* [Java SE Runtime Environment](http://www.oracle.com/technetwork/java/javase/downloads/index.html) version 8 (or newer).
-* [Apache Ant(TM)](https://ant.apache.org/bindownload.cgi) version 1.8.4 (or newer)
 
 
 
@@ -53,24 +64,74 @@ These are the base requirements to build and use win32Arduino:
 
 ## Build steps ##
 
-The following steps show how to build the library:
+The following steps show how to build the library for each specific platform:
 
-1) Define the environment variable `WIN32ARDUINO_HOME` to the location where the source code was extracted.
 
-2) Define the environment variable `GOOGLETEST_HOME` such that `GOOGLETEST_HOME=$WIN32ARDUINO_HOME/lib/googletest`.
+### Windows ###
 
-3) Define the environment variable `RAPIDASSIST_HOME` such that `RAPIDASSIST_HOME=$WIN32ARDUINO_HOME/lib/RapidAssist`.
+1) Open a command prompt and browse to the location where the source code was extracted.
 
-4) Configure the _Visual Studio solution_ or the _Makefile_ using the following commands:
+2) Define the environment variable `WIN32ARDUINO_HOME` by executing the following command:
+
+`set WIN32ARDUINO_HOME=%cd%`
+
+Note that `%cd%` is an environment variable that expands to the path of the current directory.
+
+3) Define the environment variable `GOOGLETEST_HOME` by executing the following command:
+
+`set GOOGLETEST_HOME=%WIN32ARDUINO_HOME%\lib\googletest`
+
+4) Define the environment variable `RAPIDASSIST_HOME` by executing the following command:
+
+`set RAPIDASSIST_HOME=%WIN32ARDUINO_HOME%\lib\RapidAssist`
+
+5) Generate Visual Studio solution by executing the following commands:
+
+   * cd /d %WIN32ARDUINO_HOME%
+   * mkdir build
+   * cd build
+   * cmake ..
+
+6) Build the source code.
+   1) From the command line using the command: `cmake --build . --config Release`.
+   
+   or
+   
+   2) From the Visual Studio IDE (aka GUI) by executing the following:
+
+      * Click on `win32Arduino.sln` to open Visual Studio IDE.
+      * Click on menu `Build` and select `Build Solution`. (The `F7` key also launches the compiler)
+      * Wait for the compilation to complete.
+      * Exit Visual Studio.
+
+
+
+### Linux ###
+
+1) Open a terminal and browse to the location where the source code was extracted.
+
+2) Define the environment variable `WIN32ARDUINO_HOME` by executing the following command:
+
+`export WIN32ARDUINO_HOME=$PWD`
+
+Note that `$PWD` is an environment variable that expands to the path of the current directory.
+
+3) Define the environment variable `GOOGLETEST_HOME` by executing the following command:
+
+`export GOOGLETEST_HOME=$WIN32ARDUINO_HOME/lib/googletest`
+
+4) Define the environment variable `RAPIDASSIST_HOME` by executing the following command:
+
+`export RAPIDASSIST_HOME=$WIN32ARDUINO_HOME/lib/RapidAssist`
+
+5) Generate the _Makefile_ using the following commands:
 
    * cd $WIN32ARDUINO_HOME
    * mkdir build
    * cd build
    * cmake ..
 
-5) Build the source code:
-   1) On Windows, run `cmake --build . --config Release` or open `win32Arduino.sln` with Visual Studio.
-   2) On Linux, run `make` command.   
+6) Build the source code from the command line using the command: `make`.
 
 
 
@@ -102,3 +163,4 @@ To run tests, open a shell prompt and browse to the `build/bin` folder and run `
 Test results are saved in junit format in file `win32Arduino_unittest.x86.debug.xml` or `win32Arduino_unittest.x86.release.xml` depending on the selected configuration.
 
 The latest test results are available at the beginning of the [README.md](README.md) file.
+
