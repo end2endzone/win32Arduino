@@ -28,9 +28,9 @@
 #include "util/atomic.h" //for ATOMIC_BLOCK and NONATOMIC_BLOCK macros
 #include "RealtimeClockStrategy.h"
 #include "IncrementalClockStrategy.h"
-#include "rapidassist/gtesthelp.h"
+#include "rapidassist/testing.h"
 #include "rapidassist/filesystem.h"
-#include "rapidassist/time_.h"
+#include "rapidassist/timing.h"
 
 namespace arduino { namespace test
 {
@@ -93,10 +93,10 @@ namespace arduino { namespace test
     static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000;
     static const uint32_t EXPECTED_ELAPSED_MICROS = EXPECTED_ELAPSED_MILLIS*1000;
 
-    ra::time::waitNextSecond(); //synchronize to a new second in wall clock
+    ra::timing::WaitNextSecond(); //synchronize to a new second in wall clock
 
     uint32_t value1 = micros();
-    ra::time::waitNextSecond(); //loop for 1 second
+    ra::timing::WaitNextSecond(); //loop for 1 second
     uint32_t value2 = micros();
 
     ASSERT_GT(value2, value1);
@@ -111,10 +111,10 @@ namespace arduino { namespace test
 
     static const uint32_t EXPECTED_ELAPSED_MILLIS = 1000; //1 second
 
-    ra::time::waitNextSecond(); //synchronize to a new second in wall clock
+    ra::timing::WaitNextSecond(); //synchronize to a new second in wall clock
 
     uint32_t value1 = millis();
-    ra::time::waitNextSecond(); //loop for 1 second
+    ra::timing::WaitNextSecond(); //loop for 1 second
     uint32_t value2 = millis();
 
     ASSERT_GT(value2, value1);
@@ -406,10 +406,10 @@ namespace arduino { namespace test
     } __logFilePop;
 
     //create new log file
-    std::string logFile = ra::gtesthelp::getTestQualifiedName();
-    if (ra::filesystem::fileExists(logFile.c_str()))
+    std::string logFile = ra::testing::GetTestQualifiedName();
+    if (ra::filesystem::FileExists(logFile.c_str()))
     {
-      ASSERT_TRUE( ra::filesystem::deleteFile(logFile.c_str()) );
+      ASSERT_TRUE( ra::filesystem::DeleteFile(logFile.c_str()) );
     }
     testarduino::setLogFile(logFile.c_str());
 
@@ -427,7 +427,7 @@ namespace arduino { namespace test
 
     //load log file
     ra::strings::StringVector lines;
-    ASSERT_TRUE( ra::gtesthelp::getTextFileContent(logFile.c_str(), lines) );
+    ASSERT_TRUE( ra::filesystem::ReadTextFile(logFile.c_str(), lines) );
     ASSERT_EQ(std::string("1001110"), lines[0]);
     ASSERT_EQ(std::string("116"),     lines[1]);
     ASSERT_EQ(std::string("78"),      lines[2]);

@@ -28,23 +28,23 @@
 
 #include <gtest/gtest.h>
 
-#include "rapidassist/gtesthelp.h"
+#include "rapidassist/environment.h"
 
-using namespace ra::gtesthelp;
+using namespace ra::environment;
 
 int main(int argc, char **argv)
 {
   //define default values for xml output report
-  if (isProcessorX86())
+  if (IsProcess32Bit())
   {
-    if (isDebugCode())
+    if (IsConfigurationDebug())
       ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x86.debug.xml";
     else
       ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x86.release.xml";
   }
-  else if (isProcessorX64())
+  else if (IsProcess64Bit())
   {
-    if (isDebugCode())
+    if (IsConfigurationDebug())
       ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x64.debug.xml";
     else
       ::testing::GTEST_FLAG(output) = "xml:win32arduino_unittest.x64.release.xml";
