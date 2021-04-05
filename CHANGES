@@ -1,6 +1,12 @@
+Changes for 2.4.0:
+
+* Fixed issue #38: Change api functions to match officials signatures of Arduino.h
+
+
 Changes for 2.3.1:
 
 * New feature: Using RapidAssist 0.5.0
+
 
 Changes for 2.3.0:
 
@@ -8,6 +14,7 @@ Changes for 2.3.0:
 * Fixed issue #28 - Implement 'make install' command support.
 * Fixed issue #29 - Define if `Arduino.h` or `arduino.h`
 * Fixed issue #27 - License header in all files.
+
 
 Changes for 2.2.0:
 
@@ -24,6 +31,7 @@ Changes for 2.2.0:
 * Fixed issue #22 - Replace downloaded googletest third party library by a git submodule.
 * Fixed issue #25 - Use RapidAssist as a git submodule.
 
+
 Changes for 2.1.0:
 
 * Fixed issue #15 - win32Arduino on Linux
@@ -32,6 +40,7 @@ Changes for 2.1.0:
 * New feature: Now using Apache Ant for most build automation tasks.
 * New feature: Implemented support for Travis CI build server.
 * New feature: Building actual Arduino tutorials is now part of the test procedure. See `/src/demos` or `ant demos` for details.
+
 
 Changes for 2.0.0:
 
@@ -43,11 +52,13 @@ Changes for 2.0.0:
 * Fixed issue #11 - Create new API functions for attachFunctionCallback().
 * Fixed issue #12 - Move time handling code from arduino.cpp to new independent classes.
 
+
 Changes for 1.4.0:
 
 * Fixed issue #4: Move non-arduino functions to the library namespace
 * New feature: Renamed testWin32Arduino to win32Arduino_unittest.
 * New feature: Renamed win32arduino to win32Arduino.
+
 
 Changes for 1.3.39:
 
@@ -57,13 +68,16 @@ Changes for 1.3.39:
 * New feature: Fixed constants definitions based on Arduino Nano v3 values
 * New feature: Removed support for HIGH and LOW interrupts support which is creating too much confusion.
 
+
 Changes for 1.2.30:
 
 * New feature: Fixed tone() signature to match arduino's IDE.
 
+
 Changes for 1.1.28:
 
 * New feature: Implemented both simulated & realtime clock handling. The desired strategy is user selectable.
+
 
 Changes for 1.0.21:
 

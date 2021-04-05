@@ -206,26 +206,26 @@ typedef unsigned char byte;
 #define RAD_TO_DEG 57.295779513082320876798154814105
 #define EULER 2.718281828459045235360287471352
 
-void tone(byte iPin, uint16_t freq, uint32_t duration);
-void noTone(byte iPin);
+void tone(uint8_t _pin, unsigned int frequency, unsigned long duration = 0);
+void noTone(uint8_t _pin);
 
 extern testarduino::SerialPrinter Serial;
 
 void pinMode(uint8_t pin, uint8_t mode);
+int digitalRead(uint8_t pin);
+int analogRead(uint8_t pin);
 void digitalWrite(uint8_t pin, uint8_t value);
-uint8_t digitalRead(uint8_t pin);
-void analogWrite(uint8_t pin, uint16_t value);
-uint16_t analogRead(uint8_t pin);
+void analogWrite(uint8_t pin, int value);
 void analogReadResolution(uint8_t bits);
 void analogWriteResolution(uint8_t bits);
 void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t data);
 uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder);
-uint32_t pulseIn(uint8_t pin, uint8_t digitalState, uint32_t timeout);
-uint32_t pulseIn(uint8_t pin, uint8_t digitalState);
-uint32_t micros();
-uint32_t millis();
-void delay(uint32_t value);
-void delayMicroseconds(uint16_t value);
+unsigned long pulseIn(uint8_t pin, uint8_t digitalState, uint32_t timeout);
+unsigned long pulseIn(uint8_t pin, uint8_t digitalState);
+unsigned long micros();
+unsigned long millis();
+void delay(unsigned long ms);
+void delayMicroseconds(unsigned int us);
 
 //math macros
 #define min(a,b) ((a)<(b)?(a):(b))
@@ -273,10 +273,9 @@ bool isUpperCase(int8_t value);
 bool isHexadecimalDigit(int8_t value);
 
 //Random Numbers
-void randomSeed(int16_t value);
-void randomSeed(int32_t value);
-int32_t random(int32_t min, int32_t max);
-int32_t random(int32_t max);
+void randomSeed(unsigned long value);
+long random(long min, long max);
+long random(long max);
 
 //Bits and Bytes
 #define lowByte(w) ((uint8_t) ((w) & 0xff))
