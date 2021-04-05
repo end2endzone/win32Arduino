@@ -123,7 +123,7 @@ include_directories(${WIN32ARDUINO_INCLUDE_DIR}   # public header files, for sou
 # Dependencies
 ##############################################################################################################################################
 find_package(GTest REQUIRED) #rapidassist requires GTest
-find_package(rapidassist 0.5.0 REQUIRED)
+find_package(rapidassist 0.9.1 REQUIRED)
 
 ##############################################################################################################################################
 # Subprojects

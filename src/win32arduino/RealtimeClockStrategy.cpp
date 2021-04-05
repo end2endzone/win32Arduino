@@ -24,7 +24,7 @@
 
 #include "RealtimeClockStrategy.h"
 
-#include "rapidassist/time_.h"
+#include "rapidassist/timing.h"
 
 namespace testarduino
 {
@@ -47,14 +47,14 @@ namespace testarduino
 
   uint32_t RealtimeClockStrategy::millis()
   {
-    double seconds = ra::time::getMillisecondsTimer();
+    double seconds = ra::timing::GetMillisecondsTimer();
     uint32_t milliseconds = (uint32_t)seconds*1000;
     return milliseconds;
   }
 
   uint32_t RealtimeClockStrategy::micros()
   {
-    double seconds = ra::time::getMicrosecondsTimer();
+    double seconds = ra::timing::GetMicrosecondsTimer();
     uint32_t microseconds = (uint32_t)seconds*1000*1000;
     return microseconds;
   }
